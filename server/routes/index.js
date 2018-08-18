@@ -76,11 +76,11 @@ function googleAuth(req,res,next){
 //SSR function import
 const ssr = require('./../views/ssr.js'); 
 router.get([ 
-    '/heatmap',
-    '/heatmap2',
+    '/heatmap/:status?', 
     '/',
     ], (req, res) => {
     let context = {};
+    initialState.authUser = req.user;
     const { preloadedState, content}  = ssr(req,context,initialState); 
     res.setHeader('Cache-Control', 'assets, max-age=604800') 
     res.render('index',{
@@ -93,6 +93,8 @@ router.get([
     '/manage/:status?/:page?'
     ], googleAuth,(req, res) => {
     let context = {};
+
+    initialState.authUser = req.user;
     const { preloadedState, content}  = ssr(req,context,initialState); 
     res.setHeader('Cache-Control', 'assets, max-age=604800') 
     res.render('index',{

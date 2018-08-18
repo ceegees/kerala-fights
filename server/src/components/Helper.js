@@ -409,10 +409,10 @@ export class HeaderSection extends Component {
         return <section className="top_section  "> 
             <nav className="w3-bar w3-blue" >
                 <div className="w3-left">
-                    <NavLink className="w3-bar-item w3-button" exact to="/">Kerala Flood Relief</NavLink>
+                    <a className="w3-bar-item w3-button" href="/">Kerala Flood Relief</a>
                 </div>
                 <div className="w3-right"> 
-                        <a className="w3-bar-item w3-button " href="/manage">Volunteer Login</a>
+                       {this.props.authUser ? <a className="w3-bar-item w3-button " href="/manage">Manage</a> : <a className="w3-bar-item w3-button " href="/manage">Volunteer Login</a>}
                         <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button ">Rescue Centers</a> 
                         <a target="_blank" href="https://www.keralarescue.in/contactus/" className="w3-bar-item w3-button ">Contact Rescue</a> 
                         <NavLink className="w3-bar-item w3-button " to="/heatmap">HeatMap</NavLink>

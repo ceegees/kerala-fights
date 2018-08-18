@@ -9,7 +9,12 @@ import Rescue from './Rescue';
 import DetailsModal from './DetailsModal';
 import RequestLister from './RequestLister';
 import StatusWidget from './StatusWidget.js';
+class DuplicateCheck extends Component{
 
+    render(){
+        return <div></div>
+    }
+}
 const DaashboardInfo =() => {
     return <div className="w3-container" style={{height:"100vh"}}>
         <h3>What to do </h3>
@@ -30,6 +35,12 @@ const DaashboardInfo =() => {
             <li>Mark the duplicates - and that way we will be able understand problem in hand</li>
             <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
         </ul>
+        <div>
+            <NavLink  to="/duplicates" 
+                className="w3-button w3-hide w3-block w3-orange w3-margin">
+                Check For duplicates
+            </NavLink>
+        </div>
         <StatusWidget/>
         
     </div>
@@ -112,7 +123,9 @@ class AdminDashboard extends Component{
 
         if (status == 'dashboard' ){
             content = <DaashboardInfo />
-        } else {
+        } else if(status == 'duplicate') {
+            content = <DuplicateCheck />
+        }else {
             content = <RequestLister 
                     page={page} 
                     status={status}  
@@ -127,11 +140,13 @@ class AdminDashboard extends Component{
                             Admin Dashoard
                         </NavLink>
                         <button className="w3-bar-item w3-button w3-small w3-green" onClick={this.newRequest.bind(this)}>New <span className="w3-hide-small">Request</span></button>
+                        <NavLink to="/heatmap" exact className="w3-bar-item w3-purple w3-small w3-button">
+                            HeatMap
+                        </NavLink>
                         <input className="w3-input w3-small w3-bar-item" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
                     </div>
                     <div className="w3-right ">
-                    <button className="w3-bar-item w3-small w3-sand w3-right  
-                        w3-button w3-right w3-hide-large w3-hide-medium" 
+                    <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium" 
                         onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                             {this.props.statusList.map(item=>{
                                 return <NavLink key={item.key}
@@ -155,7 +170,6 @@ class AdminDashboard extends Component{
                 </div>
                 <div className="w3-bar">
                     Filters  
-
                 </div>
                 {this.state.modal}
                 {content}

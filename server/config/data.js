@@ -22,7 +22,22 @@ module.exports = {
                         target:STATUS.CONFIRM
                     },
                     {
-                        text:'Sufficient Information Not availabe (6.Resolved)',
+                        text:'Retry (3.Retry)',
+                        value:'cleanup_retry',
+                        target:STATUS.RETRY
+                    },
+                    {
+                        text:'Need Help (4.Need Help)',
+                        value:'cleanup_need_help',
+                        target:STATUS.NEED_HELP
+                    },
+                    {
+                        text:'Is Safe Now (6.Resolved)',
+                        value:'cleanup_safe_now',
+                        target:STATUS.RESOLVED
+                    },
+                    {
+                        text:'Incrorrect Information / Spam (6.Resolved)',
                         value:'cleanup_no_info',
                         target:STATUS.RESOLVED
                     },
@@ -30,13 +45,7 @@ module.exports = {
                         text:'Duplicate Request (6.Resolved)',
                         value:'cleanup_duplicate',
                         target:STATUS.RESOLVED
-                    },
-                    
-                    {
-                        text:'Spam / Incorrect Informatoin (6.Resolved)',
-                        value:'cleanup_spam',
-                        target:STATUS.RESOLVED
-                    },
+                    }
                 ],
         },
         { 

@@ -3,7 +3,7 @@ import  React,{ Component } from 'react';
 import { FormTextField,FormTextarea,Spinner,Paginator ,SelectField,Reveal} from './Helper.js';  
 import axios from 'axios';
 import moment from 'moment';
-import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
+import {NavLink,Link,withRouter,Switch,Route} from 'react-router-dom';
 
 export default class RequestLister extends Component {
     constructor(arg){
@@ -16,6 +16,11 @@ export default class RequestLister extends Component {
         let {page=1,status ='new',search=''} = props;
         this.setState({data:null});
         if (status == 'search'){ 
+            search = page;
+            page = 1;
+        }
+
+        if (status == 'duplicates'){ 
             search = page;
             page = 1;
         }
@@ -59,10 +64,14 @@ export default class RequestLister extends Component {
                         Source:<a href={`https://www.keralarescue.in/request_details/${item.remoteId}/`}  target="_blank">{item.source}</a><br/>
                         District:{item.district}<br/>
                         Details:{item.information}<br/>
-                        Created:{moment(item.createdAt).fromNow()}
+                        Created:{moment(item.createdAt).fromNow()}<br/>
+                        {(status == 'duplicate' || status == 'search') ?
+                            [`Operator Status:${item.operatorStatus}`,<br/>, `Status : ${item.status}`]
+                         :null}
                         <div>
                         {item.json && item.json.tags.map(name => <div key={name} className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
                         </div>
+                        {item.parentId ? <Link to={`/manage/duplicates/${item.parentId}`} className="w3-display-topright  w3-small w3-button w3-amber" >Check Dupliates</Link>:null }
                         <button className="w3-display-bottomright  w3-small w3-button w3-green" 
                             onClick={this.props.showDetailModal.bind(this,item)}>Help</button>
                     </div>);
