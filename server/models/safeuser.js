@@ -2,8 +2,14 @@
 module.exports = (sequelize, DataTypes) => {
   var SafeUser = sequelize.define('SafeUser', {
     name: DataTypes.STRING,
-    phone_number: DataTypes.STRING,
-    current_location_type: DataTypes.STRING,
+    phoneNumber: { 
+      type: DataTypes.STRING,
+      field: 'phone_number'
+    },
+    currentLocationType: { 
+      type: DataTypes.STRING,
+      field: 'current_location_type'
+    },
     latLng: { 
       type: DataTypes.GEOMETRY('Point'),
       field:'lat_lng'

@@ -371,6 +371,38 @@ router.post('/add-rescue',function(req,res){
     }
         
 });
+
+
+router.post('/add-safe-user',function(req,res){ 
+    try {
+        const data = req.body;        
+        const passed = {
+            name: data.name,
+            phoneNumber: data.phoneNumber,
+            currentLocationType: data.currentLocationType,
+            contactInfo: data.contactInfo,
+            type: data.type,
+            creatorName: data.creatorName,
+            creatorPhone: data.creatorPhone,
+            latLng: {
+                type: 'Point',
+                coordinates: [data.location_lat,data.location_lon]
+            }
+        };
+
+        models.SafeUser.create(passed).then(resp => {
+            res.json(jsonSuccess({
+                db: resp,
+                passed: passed,
+                send: data
+            }));
+        })
+    } catch(ex){
+        console.log(ex);
+        res.json(jsonError('Missing parameters' , {...req.body}) );
+    }
+        
+});
 module.exports = router;
 
 

@@ -247,9 +247,9 @@ export class SelectField extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.valueChange) {
-            nextProps.valueChange(nextProps.name, nextProps.defaultValue);
-        }
+        // if (nextProps.valueChange) {
+        //     nextProps.valueChange(nextProps.name, nextProps.defaultValue);
+        // }
     }
 
     componentDidMount() {
@@ -332,7 +332,13 @@ export class GoogleMapWidget extends Component {
     componentDidMount () {
         this.initialiseGMap(10.10,76.65);
     }
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.setLocation && nextProps.setLocation != this.props.setLocation) {
+            this.setMarker(
+                nextProps.setLocation.lat,
+                nextProps.setLocation.lon
+            );
+        }
         if (nextProps.place == this.props.place) {
             return;
         }
@@ -348,7 +354,7 @@ export class GoogleMapWidget extends Component {
         this.setMarker(
             place.geometry.location.lat(),
             place.geometry.location.lng()
-        );   
+        ); 
     }
     setMarker(lat,lon){ 
         if (this.marker == null) {
