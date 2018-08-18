@@ -22,6 +22,9 @@ export default class RequestLister extends Component {
 
         if (status == 'duplicates'){ 
             search = page;
+            if (search == "1"){
+                search = "";
+            }
             page = 1;
         }
         axios.get(`/api/v1/rescue-list?status=${status}&page=${page}&q=${search}`).then(resp=>{
@@ -71,7 +74,7 @@ export default class RequestLister extends Component {
                         <div>
                         {item.json && item.json.tags.map(name => <div key={name} className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
                         </div>
-                        {item.parentId ? <Link to={`/manage/duplicates/${item.parentId}`} className="w3-display-topright  w3-small w3-button w3-amber" >Check Dupliates</Link>:null }
+                        {item.parentId ? <Link to={`/manage/duplicates/${item.parentId}`} className="w3-display-topright  w3-small w3-button w3-amber" >View Dupliates</Link>:null }
                         <button className="w3-display-bottomright  w3-small w3-button w3-green" 
                             onClick={this.props.showDetailModal.bind(this,item)}>Help</button>
                     </div>);
