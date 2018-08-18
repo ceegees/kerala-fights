@@ -133,6 +133,8 @@ class DetailsModal extends Component {
                     <RowItem name="Serverity" value={item.operatorSeverity == -1 ? 'Not Updated':item.operatorSeverity}  />
                     <RowItem name="Information" value={item.infomration} />
                     <RowItem name="Status" value={item.status} />
+
+                    <RowItem name="CreatedAt" value={moment(item.createdAt).fromNow()} />
                     <RowItem name="Volunteer Status" value={item.operatorStatus} />
                     <RowItem name="Volunteer Acted At" value={item.operatorLastUpdated} />
 

@@ -137,11 +137,13 @@ class AdminDashboard extends Component{
                             Admin Dashoard
                         </NavLink>
                         <button className="w3-bar-item w3-button w3-small w3-green" onClick={this.newRequest.bind(this)}>New <span className="w3-hide-small">Request</span></button>
+                        <NavLink to="/heatmap" exact className="w3-bar-item w3-purple w3-small w3-button">
+                            HeatMap
+                        </NavLink>
                         <input className="w3-input w3-small w3-bar-item" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
                     </div>
                     <div className="w3-right ">
-                    <button className="w3-bar-item w3-small w3-sand w3-right  
-                        w3-button w3-right w3-hide-large w3-hide-medium" 
+                    <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium" 
                         onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                             {this.props.statusList.map(item=>{
                                 return <NavLink key={item.key}
@@ -165,7 +167,6 @@ class AdminDashboard extends Component{
                 </div>
                 <div className="w3-bar">
                     Filters  
-
                 </div>
                 {this.state.modal}
                 {content}

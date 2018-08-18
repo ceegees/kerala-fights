@@ -285,6 +285,7 @@ router.get('/rescue-list',function(req,res){
 
     if (req.query.location){
         whereQuery = {
+            status:'NEW',
             latLng: {
                 [Op.ne] :null
             }

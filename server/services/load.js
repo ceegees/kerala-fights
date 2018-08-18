@@ -52,9 +52,9 @@ async function loadData(content){
         }
 
         if (exists){
-            exists.json.location = location;
-            console.log('Resaving');
-            await exists.save();
+            // exists.json.location = location;
+            // console.log('Resaving');
+            // await exists.save();
             continue;
         }
         const parent = await models.HelpRequest.findOne({

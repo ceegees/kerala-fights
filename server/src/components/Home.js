@@ -99,9 +99,9 @@ class Home extends Component {
         isFetching, works 
     } = this.props 
     return (
-       <div className="w3-container">
+       <div>
         <AppMessage />
-         <HeaderSection />
+         <HeaderSection authUser={this.props.authUser} />
         <div className="w3-content ">
             {this.state.modalContent}
             <div className="w3-padding-64">
