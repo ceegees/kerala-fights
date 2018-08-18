@@ -13,7 +13,7 @@ class FilterListContent extends React.Component {
                 filterLists.push(
                     <a
                         key={`${item.type}_${key}`}
-                        onClick={() => {this.handleFilterData(item.type, item.value, item.name)}}
+                        onClick={() => {this.props.handleFilterData(item.type, item.value, item.name)}}
                         className="w3-bar-item w3-button"
                     >{item.name}</a>
                 );
@@ -23,10 +23,10 @@ class FilterListContent extends React.Component {
                 filterLists.push(
                     <a  
                         key={`district_${key}`}
-                        onClick={() => {this.handleFilterData('district', districtMap[key], districtMap[key])}}
+                        onClick={() => {this.props.handleFilterData('district', filterOptions[key], filterOptions[key])}}
                         className="w3-bar-item w3-button"
                     >
-                        {districtMap[key]}
+                        {filterOptions[key]}
                     </a> 
                 );
             });
@@ -89,6 +89,8 @@ class FilterComponent extends React.Component {
                 }
             ],
         }
+
+        this.handleFilterData = this.handleFilterData.bind(this);
     }
 
     handleFilterData(filterType, filterValue, filterName) {
@@ -112,27 +114,36 @@ class FilterComponent extends React.Component {
         return (
             <div className="w3-bar w3-teal w3-top kf-top-bar-filter">
                 <div className="w3-dropdown-hover w3-teal">
-                    <button className="w3-button w3-teal w3-margin-right">
+                    <button className="w3-button w3-margin-right">
                         {filterLabels['sort']} <span className="kf-carot"></span>
                     </button>
                     <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        <FilterListContent filterOptions={sortConfig} />
+                        <FilterListContent
+                            filterOptions={sortConfig}
+                            handleFilterData={this.handleFilterData}
+                        />
                     </div>
                 </div>
                 <div className="w3-dropdown-hover w3-teal">
-                    <button className="w3-button w3-teal w3-margin-right">
+                    <button className="w3-button w3-margin-right">
                         {filterLabels['severity']} <span className="kf-carot"></span>
                     </button>
                     <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        <FilterListContent filterOptions={severityConfig} />
+                        <FilterListContent
+                            filterOptions={severityConfig}
+                            handleFilterData={this.handleFilterData}
+                        />
                     </div>
                 </div>
-                <div className="w3-dropdown-hover">
+                <div className="w3-dropdown-hover w3-teal">
                     <button className="w3-button w3-margin-right">
                         {filterLabels['district']} <span className="kf-carot"></span>
                     </button>
                     <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        <FilterListContent filterOptions={districtMap} />
+                        <FilterListContent
+                            filterOptions={districtMap}
+                            handleFilterData={this.handleFilterData}
+                        />
                     </div>
                 </div>
             </div>
