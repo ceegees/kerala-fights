@@ -11,39 +11,38 @@ import RequestLister from './RequestLister';
 import StatusWidget from './StatusWidget.js';
 import FilterComponent from './FilterComponent';
 
-
 const DaashboardInfo =() => {
-    return <div className="w3-container" style={{height:"100vh"}}>
-        <h3>What to do </h3>
-        <ul className="w3-ul">
-            <li><h4>The Workflow</h4>
-                <ul className="w3-ul">
-                    <ol>1.Check - for data correctness / Duplicates </ol>
-                    <ol>2.Call and Confirm -  that the person sill needs help , couple so call for requests that were raised couple of hours or a day back  </ol>
-                    <ol>3.Retry - If you are not able to Reach on previous step update status so that you can rertry </ol>
-                    <ol>4.Need Help -The Verified items that need help which you understood while calling </ol>
-                    <ol>5.Critical Issues   - The items that need urgent attention , We will co-ordinate with rescue teams and field volunteers to help this list</ol>
-                    <ol>6.Resolved - Shows you the resolved issues</ol>
-                </ul>
-            </li>
-        
-            <li>Ther are lot  duplicates , See if the requester have added duplicates. you can do this  by copying the phone number and searching on the searchbox above. Look at the list of requests and see if they are same , Keep the one with maximum information and mark the rest of them as duplicates , As phone number is there there </li>
-            <li>If you see data is duplicated , mark it as duplicate and resolve the issue</li>
-            <li>Mark the duplicates - and that way we will be able understand problem in hand</li>
-            <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
-        </ul>
-        <div>
-            <NavLink  to="/manage/duplicates" 
-                className="w3-button  w3-block w3-orange w3-margin">
-                Check For duplicates
-            </NavLink>
+    return (
+        <div className="w3-container" style={{minHeight:"100vh", paddingBottom: "100px"}}>
+            <h3>What to do </h3>
+            <ul className="w3-ul">
+                <li><h4>The Workflow</h4>
+                    <ul className="w3-ul">
+                        <ol>1.Check - for data correctness / Duplicates</ol>
+                        <ol>2.Call and Confirm - The person might sill need help, Call and Confirm the same.  </ol>
+                        <ol>3.Retry - If you are not able to reach on previous step, update status so that you can retry</ol>
+                        <ol>4.Need Help - The Verified requests that need help which you understood after the call.</ol>
+                        <ol>5.Escalated - The items that need urgent attention, we will co-ordinate with rescue teams and field volunteers to help this list</ol>
+                        <ol>6.Resolved - Shows the resolved issues</ol>
+                    </ul>
+                </li>
+            
+                <li>There are lot duplicates, see if the requester have added duplicates. you can do this by copying the phone number and searching on the searchbox above. Look at the list of requests and see if they are same, keep the one with maximum information and mark the rest of them as duplicates, as phone number is available there.</li>
+                <li>If you see data is duplicated, mark it as duplicate and resolve the issue.</li>
+                <li>Mark the duplicates - and that way we will be able understand problem in hand.</li>
+                <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
+            </ul>
+            <div>
+                <NavLink  to="/manage/duplicates" 
+                    className="w3-button  w3-block w3-orange w3-margin">
+                    Check For duplicates
+                </NavLink>
+            </div>
+            <StatusWidget/>
         </div>
-        <StatusWidget/>
-        
-    </div>
+    )
 }
  
-
 class AdminDashboard extends Component{
 
     constructor(arg) {
