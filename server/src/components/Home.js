@@ -16,6 +16,7 @@ class MarkSafeModal extends Component {
         </Reveal>
     }
 }
+
 class MarkElseSafeModal extends Component {
     render(){
         return <Reveal onClose={this.props.hideModal}>
@@ -107,8 +108,8 @@ class Home extends Component {
             <div className="w3-padding-64">
             <h1 className="w3-center">Application for handling Help Requests    </h1>
             <div className="w3-padding-64">
-            <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-hide  w3-margin-bottom w3-block w3-green">Mark Yourslevels Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
-            <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
+            <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark Yourslevels Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
+            <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
             
             <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
 
