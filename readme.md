@@ -4,12 +4,13 @@ make sure your system have
  - Node > 10
  - Postgresql
  - Enable PostGIS extension
- - DB configs are present /config/config.json
+ - DB configs are present /config/config.json 
   
 
 clone the repo directory
 ```
 npm install
+npm run prod
 ./node_modules/.bin/sequelize db:migrate
 pm2 start config/pm2
 ```
