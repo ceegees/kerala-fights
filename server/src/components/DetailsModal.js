@@ -9,7 +9,7 @@ import AppMessage from './AppMessage.js';
  
 import Rescue from './Rescue';
 const RowItem =({name,value}) => {
-    return <div >
+    return <div  >
         <span>{name}:</span>
         <span>{value}</span>
     </div>

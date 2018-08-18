@@ -109,33 +109,32 @@ class Home extends Component {
         <div className="w3-content ">
             {this.state.modalContent}
             <div className="w3-padding-64">
-            <h1 className="w3-center">Application for handling Help Requests    </h1>
-            <div className="w3-padding-64">
-            <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
-            <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
-            
-            <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
-
-            <button className="w3-button   w3-margin-bottom w3-block w3-orange" 
-            onClick={this.showModal.bind(this,'request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
-        </div>
-                    <div className="w3-row">
-                        <div className="w3-col m6 s12">
-                    <ul>
-                        <li>Volunteers can co-odinate on requests received</li>
-                        <li> make calls and update status </li>
-                        <li>  Mark complete Help requests to completion</li>
-                        <li>Currently added "Help requests" from keralarescue.in </li>
-                    </ul>
-                    </div>
-                        <div className="w3-col m6 s12">
-                        <StatusWidget />
-                        </div>
-                    </div> 
+                <h1 className="w3-center">Application for handling Help Requests    </h1>
+                <div className="w3-padding-64">
+                    <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
+                    <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
                     
-            </div>
-            <iframe src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"500px"}}></iframe>
-        </div> 
+                    <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
+
+                    <button className="w3-button   w3-margin-bottom w3-block w3-orange" 
+                    onClick={this.showModal.bind(this,'request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
+                </div>
+                <div className="w3-row">
+                    <div className="w3-col m6 s12">
+                        <ul>
+                            <li>Volunteers can co-odinate on requests received</li>
+                            <li> make calls and update status </li>
+                            <li>  Mark complete Help requests to completion</li>
+                            <li>Currently added "Help requests" from keralarescue.in </li>
+                        </ul>
+                    </div>
+                    <div className="w3-col m6 s12">
+                        <StatusWidget />
+                    </div> 
+                </div>
+                <iframe className="w3-margin-top" src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"500px"}}></iframe>
+            </div> 
+        </div>
 
         <footer className="w3-container w3-padding w3-center" 
             >

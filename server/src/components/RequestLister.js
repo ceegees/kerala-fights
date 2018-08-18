@@ -109,13 +109,11 @@ export default class RequestLister extends Component {
                     </div>);
             });
         }
-            return <div>
-                <div className="w3-padding" style={{minHeight:"100vh"}} >
+            return <div className="w3-padding" style={{minHeight:"100vh"}} >
                     {content}
                     <div className="w3-center ">
                     {pagination}
                     </div>
-                </div>
-            </div>
+                </div> 
     }
 }

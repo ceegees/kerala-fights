@@ -406,10 +406,10 @@ export class GoogleMapWidget extends Component {
 
 export class HeaderSection extends Component {
     render(){
-        return <section className="top_section  "> 
+        return <section className="top_section w3-top "> 
             <nav className="w3-bar w3-blue" >
                 <div className="w3-left">
-                    <a className="w3-bar-item w3-button" href="/">Kerala Flood Relief</a>
+                    <a className="w3-bar-item w3-button" href="/">Kerala Flood Relief - കേരളം പൊരുതുന്നു , ഒരുമിച്ച് </a>
                 </div>
                 <div className="w3-right"> 
                        {this.props.authUser ? <a className="w3-bar-item w3-button " href="/manage">Manage</a> : <a className="w3-bar-item w3-button " href="/manage">Volunteer Login</a>}

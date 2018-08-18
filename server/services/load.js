@@ -225,16 +225,14 @@ async function deDupe(){
         min(created_at) as min_created , 
         min(remote_id) as min_remote
     FROM 
-        help_requests 
-    WHERE
-        parent_id is NULL
+        help_requests  
     GROUP BY 
         phone_number 
     HAVING
         count(*) > 1
     ORDER BY
         total_requests DESC 
-    LIMIT 10`,{  
+    LIMIT 10000`,{  
         plain: false,
         raw: false,
         type: Sequelize.QueryTypes.SELECT

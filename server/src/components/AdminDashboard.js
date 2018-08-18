@@ -32,12 +32,10 @@ const DaashboardInfo =() => {
                 <li>Mark the duplicates - and that way we will be able understand problem in hand.</li>
                 <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
             </ul>
-            <div>
-                <NavLink  to="/manage/duplicates" 
-                    className="w3-button  w3-block w3-orange w3-margin">
-                    Check For duplicates
-                </NavLink>
-            </div>
+            <NavLink  to="/manage/duplicates" 
+                className="w3-button  w3-block w3-orange w3-margin-bottom">
+                Check For duplicates
+            </NavLink> 
             <StatusWidget/>
         </div>
     )
@@ -101,7 +99,7 @@ class AdminDashboard extends Component{
                     showDetailModal={this.showDetailModal.bind(this)} /> 
         }
         return (
-            <div className="" style={{background:"#EDEDED",marginTop:"20px"}} >
+            <div>
                 <AppMessage />
                 <div className="w3-bar w3-teal w3-top kf-top-bar">
                     <div className="w3-left">
@@ -115,8 +113,7 @@ class AdminDashboard extends Component{
                         <input className="w3-input w3-small w3-bar-item" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
                     </div>
                     <div className="w3-right ">
-                    <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium" 
-                        onClick={this.togggleMobile.bind(this)}>&#9776;</button>
+                        <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium"  onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                             {this.props.statusList.map(item=>{
                                 return <NavLink key={item.key}
                                 activeClassName="active" 
@@ -142,7 +139,6 @@ class AdminDashboard extends Component{
                 />
                 {this.state.modal}
                 {content}
-               
             </div>
         )
     }
