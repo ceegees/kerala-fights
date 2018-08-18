@@ -4,7 +4,6 @@ import axios from 'axios';
 
 export default class StatusWidget extends Component {
 
-
     constructor(arg){
         super(arg);
         this.state = { 

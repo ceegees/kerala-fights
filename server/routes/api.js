@@ -472,6 +472,7 @@ router.post('/rescue/volunteer/register', function(req,res) {
             resVol.set('type', type);
             resVol.set('latitude', latitude);
             resVol.set('longitude', longitude);
+            resVol.set('info', info);
             return resVol.save();
         } else {
             return resVol;
