@@ -105,7 +105,7 @@ class HeatMap extends Component {
         return <div>
             <AppMessage />
             <HeaderSection authUser={this.props.authUser}/>
-            <div className="w3-bar w3-teal kf-top-bar">
+            <div className="w3-bar w3-teal  kf-top-bar" style={{marginTop:"20px"}}>
                 <div className="w3-right "> 
                     {this.props.statusList.map(item=>{
                             return <NavLink key={item.key}
