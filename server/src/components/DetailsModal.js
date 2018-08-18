@@ -116,9 +116,6 @@ class DetailsModal extends Component {
         onClose={this.props.hideModal}
         openCls={this.props.openCls}>
        <div className="w3-container w3-padding ">   
-            <div className=" w3-center">
-                Update Status
-            </div> 
             <form >
                 <div className="w3-row-padding w3-margin-bottom">
                 <div className="w3-col l6 s12">
@@ -133,7 +130,6 @@ class DetailsModal extends Component {
                     <RowItem name="Serverity" value={item.operatorSeverity == -1 ? 'Not Updated':item.operatorSeverity}  />
                     <RowItem name="Information" value={item.infomration} />
                     <RowItem name="Status" value={item.status} />
-
                     <RowItem name="CreatedAt" value={moment(item.createdAt).fromNow()} />
                     <RowItem name="Volunteer Status" value={item.operatorStatus} />
                     <RowItem name="Volunteer Acted At" value={item.operatorLastUpdated} />
@@ -144,7 +140,9 @@ class DetailsModal extends Component {
                 </div>
             </div>
 
-                <FormTextarea 
+              
+                <div className="w3-row-padding">
+                    <div className="w3-col s12">  <FormTextarea 
                     label="Comments"
                     placeholder="Add your comments after action, eg: called them they are fine"
                     name="comments"
@@ -153,8 +151,8 @@ class DetailsModal extends Component {
                     value = {this.state.form.comments}
                     valueChange={this.changeFormValue.bind(this)}
                     errors = {this.state.errors.comments} 
-                />
-                <SelectField 
+                /></div>
+                    <div className="w3-col l6 s12"><SelectField 
                 label="How Severe is the issue"
                 id="severity_select"
                 name="severity"
@@ -171,9 +169,9 @@ class DetailsModal extends Component {
                    <option value="4">Urgent</option>
                    <option value="6">Very Urgent</option>
                    <option value="8">Life Threatening</option>
-                </SelectField>
-
-                <SelectField 
+                </SelectField></div>
+                    <div className="w3-col l6 s12">
+                    <SelectField 
                 label="Change Status"
                 name="status"
                 selectClass="w3-select w3-border"
@@ -186,6 +184,11 @@ class DetailsModal extends Component {
                    {obj && obj.nextStates.map(item => <option value={item.value}>{item.text}</option>)}
                  
                 </SelectField>
+                    </div>
+                </div>
+                
+
+               
                 <div className="w3-row w3-margin">
                     <button type="button" onClick={this.handleUpdate.bind(this)} className="w3-button w3-green w3-right w3-small">Update</button>
                 </div>

@@ -14,11 +14,7 @@ const routes =  [
     component: Home,
   },
   {
-    path:'/heatmap',
-    exact:true,
-    component:HeatMap
-  },  {
-    path:'/heatmap2',
+    path:'/heatmap/:status?',
     exact:true,
     component:HeatMap
   },
