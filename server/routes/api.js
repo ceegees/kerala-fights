@@ -251,7 +251,23 @@ router.get('/rescue-list',function(req,res){
     const state = statusList.find(i => i.key == params.status);
 
     let whereQuery = null;
-    if (req.query.q){
+    if (params.status == 'duplicates'){
+        if (params.q){
+            whereQuery = {
+                [Op.or] : {
+                    parentId:params.q,
+                    id:params.q
+                }
+            }
+        } else {
+            whereQuery = {
+                parentId:{
+                    [Op.ne] :null
+                }
+            }
+        }
+        
+    } else if (req.query.q){
         const parts = req.query.q.split('-');
         const ors = {
             phoneNumber:{
@@ -284,11 +300,13 @@ router.get('/rescue-list',function(req,res){
     }
 
     if (req.query.location){
-        whereQuery = {
-            status:'NEW',
+        whereQuery = { 
             latLng: {
                 [Op.ne] :null
             }
+        }
+        if (state){
+            whereQuery.status = state.db;
         }
     }
 

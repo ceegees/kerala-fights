@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
 import {HeaderSection} from './Helper';
-import axios from 'axios';
+import axios from 'axios';   
+import AppMessage from './AppMessage.js';
 
 import DetailsModal from './DetailsModal';
 class HeatMap extends Component {
@@ -16,7 +17,11 @@ class HeatMap extends Component {
     }
 
     fetchData(){
-        axios.get('/api/v1/rescue-list?location=1&per_page=3000&status=new').then(resp => {
+        this.markers.map(item =>{
+            item.setMap(null);
+        });
+        const {status = 'new'} = this.props.match.params;
+        axios.get(`/api/v1/rescue-list?location=1&per_page=3000&status=${status}`).then(resp => {
             resp.data.data.list.map(item => {
                 let lat = null,lng = null;
                 if(item.latLng && item.latLng.coordinates && item.latLng.coordinates.length == 2) {
@@ -42,6 +47,12 @@ class HeatMap extends Component {
     }
     hideModal(msg){
         this.setState({modal:null})
+    }
+
+    componentDidUpdate(nextProps,nextState){
+        if (nextProps.match.params.status != this.props.match.params.status){
+            this.fetchData();
+        }
     }
 
     showDetailModal(item){
@@ -81,21 +92,22 @@ class HeatMap extends Component {
     }
     render() {
         return <div>
+            <AppMessage />
             <HeaderSection authUser={this.props.authUser}/>
-            <div className="w3-bar w3-teal w3-top kf-top-bar">
+            <div className="w3-bar w3-teal kf-top-bar">
                 <div className="w3-right "> 
                     {this.props.statusList.map(item=>{
                             return <NavLink key={item.key}
                             activeClassName="active" 
                             className={`w3-bar-item w3-button w3-hide-small w3-small ${item.cls}`}
-                            to={`/manage/${item.key}`}>
+                            to={`/heatmap/${item.key}`}>
                                 {item.title}
                         </NavLink>
                     })} 
                 </div>
             </div>
             {this.state.modal}
-            <div id="google-map" style={{width:"100vw",height:"100vh"}}></div>
+            <div id="google-map" style={{width:"100vw",height:"90vh"}}></div>
         </div>
     }
 }
@@ -107,4 +119,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(HeatMap)
+export default connect(mapStateToProps)(withRouter(HeatMap))
