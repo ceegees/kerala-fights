@@ -36,8 +36,8 @@ const DaashboardInfo =() => {
             <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
         </ul>
         <div>
-            <NavLink  to="/duplicates" 
-                className="w3-button w3-hide w3-block w3-orange w3-margin">
+            <NavLink  to="/manage/duplicates" 
+                className="w3-button  w3-block w3-orange w3-margin">
                 Check For duplicates
             </NavLink>
         </div>
