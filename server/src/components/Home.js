@@ -131,6 +131,7 @@ class Home extends Component {
                     </div> 
                     
             </div>
+            <iframe src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"500px"}}></iframe>
         </div> 
 
         <footer className="w3-container w3-padding w3-center" 
