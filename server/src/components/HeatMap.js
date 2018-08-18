@@ -41,8 +41,13 @@ class HeatMap extends Component {
 
                 this.attachInfo(marker, item);
                 this.markers.push(marker); 
+
                 
             });
+            var markerCluster = new MarkerClusterer(this.map, this.markers, {
+                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+                });
+            
         });
     }
     hideModal(msg){
