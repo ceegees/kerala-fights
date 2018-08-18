@@ -9,6 +9,8 @@ import Rescue from './Rescue';
 import DetailsModal from './DetailsModal';
 import RequestLister from './RequestLister';
 import StatusWidget from './StatusWidget.js';
+import FilterComponent from './FilterComponent';
+
 class DuplicateCheck extends Component{
 
     render(){
@@ -113,6 +115,10 @@ class AdminDashboard extends Component{
     togggleMobile(){
         this.setState({mobileMenu:(this.state.mobileMenu == 'w3-hide')? 'w3-show' : 'w3-hide'})
     }
+    handleFilterData(filterData) {
+        console.log('fileter data from common compo', filterData);
+    }
+
     render () {
         let { page=1, status='dashboard' } = this.props.match.params;
         const {search} = this.state;
@@ -165,9 +171,9 @@ class AdminDashboard extends Component{
                         })} 
                     </div>
                 </div>
-                <div className="w3-bar">
-                    Filters  
-                </div>
+                <FilterComponent 
+                    handleFilterData={this.handleFilterData.bind(this)}
+                />
                 {this.state.modal}
                 {content}
                
