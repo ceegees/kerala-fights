@@ -13,13 +13,22 @@ class HeatMap extends Component {
             modal:null
         }
         this.map = null;
+        this.markerCluster = null;
         this.markers =[];
     }
 
     fetchData(){
+
+        if (this.markerCluster){
+            this.markerCluster.clearMarkers();
+            this.markerCluster.removeMarkers();
+            // this.markerCluster.setMap(null);
+        }
+        
         this.markers.map(item =>{
             item.setMap(null);
         });
+        
         const {status = 'new'} = this.props.match.params;
         axios.get(`/api/v1/rescue-list?location=1&per_page=3000&status=${status}`).then(resp => {
             resp.data.data.list.map(item => {
@@ -41,8 +50,11 @@ class HeatMap extends Component {
 
                 this.attachInfo(marker, item);
                 this.markers.push(marker); 
-                
             });
+            this.markerCluster = new MarkerClusterer(this.map, this.markers, {
+                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+            });
+            
         });
     }
     hideModal(msg){
