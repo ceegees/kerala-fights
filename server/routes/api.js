@@ -406,7 +406,9 @@ router.post('/add-safe-user',function(req,res){
             latLng: {
                 type: 'Point',
                 coordinates: [data.location_lat,data.location_lon]
-            }
+            },
+            latitude: data.location_lat,
+            longitude: data.location_lon
         };
 
         models.SafeUser.create(passed).then(resp => {

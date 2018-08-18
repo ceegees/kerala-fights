@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       field: 'contact_info'
     },
     type: DataTypes.STRING,
+    latitude: DataTypes.DECIMAL(10,7),
+    longitude: DataTypes.DECIMAL(10,7),
     creatorName: { 
       type: DataTypes.STRING,
       field: 'creator_name'
