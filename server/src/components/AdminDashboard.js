@@ -11,12 +11,7 @@ import RequestLister from './RequestLister';
 import StatusWidget from './StatusWidget.js';
 import FilterComponent from './FilterComponent';
 
-class DuplicateCheck extends Component{
 
-    render(){
-        return <div></div>
-    }
-}
 const DaashboardInfo =() => {
     return <div className="w3-container" style={{height:"100vh"}}>
         <h3>What to do </h3>
@@ -49,38 +44,6 @@ const DaashboardInfo =() => {
 }
  
 
- class DistrictSelect extends Component {
-
-    constructor(args){
-        super(args);
-        this.state = {
-            milestones:[]
-        }
-    }
-   
-
-    render() {
-        return <div className="w3-dropdown-hover" style={{position:"relative"}} >
-            <button className="w3-button w3-indigo">{this.props.milestone}
-                <span className="ion-chevron-down" style={{
-                    fontSize: "10px",
-                    marginLeft: "10px"
-            }}></span>
-            </button>
-            <div className="w3-dropdown-content w3-bar-block w3-border" style={{right:"0px"}}>
-                {this.state.milestones.map(item => {
-                    return <Link  key={item.id} 
-                        to={this.props.urlScheme.replace('MILESTONE',item.title)} className="w3-bar-item cgs-list-milestone w3-button">{item.title}
-                        {item.state != 'active' ? <span  className=" w3-tiny  w3-round w3-green">closed</span>:null}
-                        <span className="w3-tiny  w3-round w3-blue-gray">{moment(item.start_date).format("DD/MMM")}-{moment(item.due_date).format("DD/MMM")}</span>
-                    </Link>
-                })}
-            </div>
-        </div>   
-    }
-
-}
-
 class AdminDashboard extends Component{
 
     constructor(arg) {
@@ -104,10 +67,12 @@ class AdminDashboard extends Component{
 
     showDetailModal(item){
         const {status ='new'} = this.props.match.params;
-        this.setState({modal:<DetailsModal
-            item={item} 
-            status={status}
-            hideModal={this.hideModal.bind(this)}/>});
+        this.setState({
+            modal:<DetailsModal
+                item={item} 
+                status={status}
+                hideModal={this.hideModal.bind(this)}/>
+        });
     }
     newRequest(){
         this.setState({modal:<Rescue hideModal={this.hideModal.bind(this)} />})
@@ -129,12 +94,11 @@ class AdminDashboard extends Component{
 
         if (status == 'dashboard' ){
             content = <DaashboardInfo />
-        } else if(status == 'duplicate') {
-            content = <DuplicateCheck />
-        }else {
+        } else {
             content = <RequestLister 
                     page={page} 
                     status={status}  
+                    showMessage={this.props.showMessage}
                     showDetailModal={this.showDetailModal.bind(this)} /> 
         }
         return (

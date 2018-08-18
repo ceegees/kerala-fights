@@ -271,7 +271,7 @@ router.get('/rescue-list',function(req,res){
         const parts = req.query.q.split('-');
         const ors = {
             phoneNumber:{
-                [Op.like]:`${req.query.q}%`
+                [Op.eq]: req.query.q
             },
             personName:{
                 [Op.like]:`${req.query.q}%`
@@ -283,6 +283,7 @@ router.get('/rescue-list',function(req,res){
         if (!isNaN(parts[0]) && (""+parts[0]).length < 8){
             ors.id = parts[0];
             ors.parentId = parts[0];
+            ors.remoteId = parts[0];
         }
         whereQuery = {
            [Op.or] :ors

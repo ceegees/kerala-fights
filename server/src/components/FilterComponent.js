@@ -112,7 +112,7 @@ class FilterComponent extends React.Component {
         const { sortConfig, severityConfig, filterLabels } = this.state;
 
         return (
-            <div className="w3-bar w3-teal w3-top kf-top-bar-filter">
+            <div className="w3-bar w3-hide w3-teal w3-top kf-top-bar-filter">
                 <div className="w3-dropdown-hover w3-teal">
                     <button className="w3-button w3-margin-right">
                         {filterLabels['sort']} <span className="kf-carot"></span>

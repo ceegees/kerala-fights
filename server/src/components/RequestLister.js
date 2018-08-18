@@ -34,6 +34,21 @@ export default class RequestLister extends Component {
         });
     }
 
+    markDuplicate(item){
+        axios.post('/api/v1/rescue-update',{
+            id:item.id,
+            comments:'Duplicate Confirmed',
+            severity:1,
+            status:'cleanup_duplicate'
+        }).then(resp=>{
+            if(!resp.data.meta.success){
+                this.props.showMessage('fail',resp.data.meta.message);  
+                return   
+            }
+            this.props.showMessage('success','Changes updated'); 
+            this.fetchData(this.props);
+        });
+    }
     componentDidMount () {   
         this.fetchData(this.props);
     }
@@ -47,6 +62,7 @@ export default class RequestLister extends Component {
             this.fetchData(nextProps);       
         }
     }
+
     render(){
         const {data} = this.state;
         const {page=1 ,status='new'} = this.props;
@@ -59,29 +75,42 @@ export default class RequestLister extends Component {
              content = <div className="w3-padding-64 w3-large w3-center">The List is empty</div>
         } else {
             pagination = <Paginator data={data} status={status} page={page} />
+        
             content = data.list.map(item => { 
+                let inPageOption = null;
+                if(item.parentId){
+                    if (status == 'duplicates'  && item.status != 'RESOLVED' && item.parentId == page){
+                       inPageOption = <button onClick={this.markDuplicate.bind(this,item)} className="w3-display-topright w3-small w3-button w3-amber">Mark Duplicate
+                           of {item.parentId}-XXXX)</button> 
+                    } else if (page != item.parentId) {
+                        inPageOption = <Link to={`/manage/duplicates/${item.parentId}`}   
+                        className="w3-display-topright w3-small w3-button w3-amber" >
+                        View Dupliates</Link>
+                    }
+                } 
                 return (<div key={`item_${item.id}`} className="w3-display-container w3-white w3-margin w3-padding">
-                        CaseID:{`${item.id}-${item.remoteId}`}<br/><br/>
-                        Name:{item.personName}<br/>
-                        Phone: {item.phoneNumber}<br/>
-                        Source:<a href={`https://www.keralarescue.in/request_details/${item.remoteId}/`}  target="_blank">{item.source}</a><br/>
-                        District:{item.district}<br/>
-                        Details:{item.information}<br/>
-                        Created:{moment(item.createdAt).fromNow()}<br/>
-                        {(status == 'duplicate' || status == 'search') ?
+                        CaseID : {`${item.id}-${item.remoteId}`}<br/><br/>
+                        Name :{item.personName}<br/>
+                        Phone : {item.phoneNumber}<br/>
+                        Source :<a href={`https://www.keralarescue.in/request_details/${item.remoteId}/`}  target="_blank">{item.source}</a><br/>
+                        District :{item.district}<br/>
+                        Details  :{item.information}<br/>
+                        Created :{moment(item.createdAt).fromNow()}<br/>
+                        {(status == 'duplicates' || status == 'search') ?
                             [`Operator Status:${item.operatorStatus}`,<br/>, `Status : ${item.status}`]
                          :null}
                         <div>
-                        {item.json && item.json.tags.map(name => <div key={name} className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
+                        {item.json && item.json.tags.map(name => 
+                            <div key={name} className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
                         </div>
-                        {item.parentId ? <Link to={`/manage/duplicates/${item.parentId}`} className="w3-display-topright  w3-small w3-button w3-amber" >View Dupliates</Link>:null }
-                        <button className="w3-display-bottomright  w3-small w3-button w3-green" 
+                        {inPageOption}
+                        <button className="w3-display-bottomright w3-small w3-button w3-green" 
                             onClick={this.props.showDetailModal.bind(this,item)}>Help</button>
                     </div>);
             });
         }
             return <div>
-                <div style={{minHeight:"100vh"}} >
+                <div className="w3-padding" style={{minHeight:"100vh"}} >
                     {content}
                     <div className="w3-center ">
                     {pagination}

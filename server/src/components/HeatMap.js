@@ -19,16 +19,16 @@ class HeatMap extends Component {
 
     fetchData(){
 
-        if (this.markerCluster){
-            this.markerCluster.clearMarkers();
-            this.markerCluster.removeMarkers();
-            // this.markerCluster.setMap(null);
+        if(this.markerCluster){
+            console.log('clearmarker');
+            this.markerCluster.removeMarkers(this.markers);
+            this.markerCluster.repaint();
         }
-        
+
         this.markers.map(item =>{
             item.setMap(null);
         });
-        
+        this.markers = [];
         const {status = 'new'} = this.props.match.params;
         axios.get(`/api/v1/rescue-list?location=1&per_page=3000&status=${status}`).then(resp => {
             resp.data.data.list.map(item => {
@@ -96,10 +96,9 @@ class HeatMap extends Component {
                     featureType: 'transit.station',
                     stylers: [{ visibility: 'off' }]  // Turn off bus stations, train stations, etc.
                 }],
-            });
-            setTimeout(()=> {
-                this.fetchData();
-            },5000);
+            }); 
+            this.fetchData();
+        
         }  
     }
     render() {
