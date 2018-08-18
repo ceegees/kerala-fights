@@ -1,5 +1,5 @@
 {
-  "name": "CeegeesWebsite",
+  "name": "KeralaFights",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -67,9 +67,9 @@
     "tough-cookie-filestore": "0.0.1"
   },
   "keywords": [
-    "game",
-    "social",
-    "kazhutha"
+    "kerala",
+    "rescue",
+    "fights"
   ],
   "author": "giju@ceegees.in",
   "license": "ISC"
