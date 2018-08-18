@@ -9,7 +9,12 @@ import Rescue from './Rescue';
 import DetailsModal from './DetailsModal';
 import RequestLister from './RequestLister';
 import StatusWidget from './StatusWidget.js';
+class DuplicateCheck extends Component{
 
+    render(){
+        return <div></div>
+    }
+}
 const DaashboardInfo =() => {
     return <div className="w3-container" style={{height:"100vh"}}>
         <h3>What to do </h3>
@@ -30,6 +35,9 @@ const DaashboardInfo =() => {
             <li>Mark the duplicates - and that way we will be able understand problem in hand</li>
             <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
         </ul>
+        <div>
+            <NavLink  to="/duplicates" className="w3-button w3-hide w3-block w3-orange w3-margin" >Check For duplicates</NavLink>
+        </div>
         <StatusWidget/>
         
     </div>
@@ -112,7 +120,9 @@ class AdminDashboard extends Component{
 
         if (status == 'dashboard' ){
             content = <DaashboardInfo />
-        } else {
+        } else if(status == 'duplicate') {
+            content = <DuplicateCheck />
+        }else {
             content = <RequestLister 
                     page={page} 
                     status={status}  

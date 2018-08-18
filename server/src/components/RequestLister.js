@@ -59,7 +59,10 @@ export default class RequestLister extends Component {
                         Source:<a href={`https://www.keralarescue.in/request_details/${item.remoteId}/`}  target="_blank">{item.source}</a><br/>
                         District:{item.district}<br/>
                         Details:{item.information}<br/>
-                        Created:{moment(item.createdAt).fromNow()}
+                        Created:{moment(item.createdAt).fromNow()}<br/>
+                        {(status == 'duplicate' || status == 'search') ?
+                            [`Operator Status:${item.operatorStatus}`,<br/>, `Status : ${item.status}`]
+                         :null}
                         <div>
                         {item.json && item.json.tags.map(name => <div key={name} className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
                         </div>

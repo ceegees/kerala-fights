@@ -31,7 +31,11 @@ module.exports = {
                         value:'cleanup_duplicate',
                         target:STATUS.RESOLVED
                     },
-                    
+                    {
+                        text:'Need Help (4.Need Help)',
+                        value:'cleanup_need_help',
+                        target:STATUS.NEED_HELP
+                    },
                     {
                         text:'Spam / Incorrect Informatoin (6.Resolved)',
                         value:'cleanup_spam',

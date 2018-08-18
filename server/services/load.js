@@ -35,7 +35,26 @@ async function loadData(content){
                 source:source,
             }
         });
+
+
+        const cords = data.latlng.split(",");
+        let geoJson = null;
+        let location = null;
+        if (!isNaN(cords[0]) && !isNaN(cords[1])  && cords.length == 2 ){
+            geoJson =  {
+                type:'Point',
+                coordinates:cords
+            };
+            location = {
+                lat:parseFloat(cords[0]),
+                lon:parseFloat(cords[1])
+            };
+        }
+
         if (exists){
+            exists.json.location = location;
+            console.log('Resaving');
+            await exists.save();
             continue;
         }
         const parent = await models.HelpRequest.findOne({
@@ -47,14 +66,7 @@ async function loadData(content){
             ]
         });
         const tags = [];
-        const cords = data.latlng.split(",");
-        let geoJson = null;
-        if (!isNaN(cords[0]) && !isNaN(cords[1])  && cords.length == 2 ){
-            geoJson =  {
-                type:'Point',
-                coordinates:cords
-            };
-        }
+       
 
         if (data.needwater){
             tags.push('Need Water');
@@ -76,6 +88,7 @@ async function loadData(content){
         if (data.is_request_for_others){
             tags.push("Requesting for someone else");
             geoJson = null;
+            location = null;
         }
         if (data.needkit_util){
             tags.push("Need Kit");
@@ -98,6 +111,7 @@ async function loadData(content){
             status:data.status.toUpperCase(),
             information : data.needothers,
             json:{
+                location:location,
                 info :{
                     latLng:data.latlng,
                     loationAccuracy:data.latlng_accuracy,
@@ -262,7 +276,8 @@ function loadFromHTML(page = 1){
 if (process.argv.length > 2 ){
     option = process.argv[2];
     if (option == 'data'){
-        getContent(`https://www.keralarescue.in/data`)
+
+        getContent(`https://www.keralarescue.in/data/`)
         .then(resp=>{
             loadData(resp);
         });

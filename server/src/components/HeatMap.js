@@ -14,17 +14,24 @@ class HeatMap extends Component {
     fetchData(){
         axios.get('/api/v1/rescue-list?location=1&per_page=3000').then(resp => {
             resp.data.data.list.map(item => {
+                let lat = null,lng = null;
                 if(item.latLng && item.latLng.coordinates && item.latLng.coordinates.length == 2) {
-                    var marker = new google.maps.Marker({
-                        position: {
-                            lat:item.latLng.coordinates[0], 
-                            lng:item.latLng.coordinates[1]
-                        },
-                        map: this.map
-                    }); 
-                    this.markers.push(marker);
-                    console.log('new marker');
+                    lat = item.latLng.coordinates[0], 
+                    lng = item.latLng.coordinates[1]
+                } else if (item.json.location){
+                    lat = parseFloat(item.json.location.lat);
+                    lng = parseFloat(item.json.location.lon);
                 }
+                console.log(lat,lng);
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat:lat,
+                        lng:lng
+                    },
+                    map: this.map
+                }); 
+                this.markers.push(marker); 
+                
             });
         });
     }
