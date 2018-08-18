@@ -2,6 +2,42 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+class FilterListContent extends React.Component {
+
+    render() {
+        const filterLists = [];
+        const { filterOptions } = this.props;
+
+        if (Array.isArray(filterOptions)) {
+            filterOptions.map((item, key) => {
+                filterLists.push(
+                    <a
+                        key={`${item.type}_${key}`}
+                        onClick={() => {this.handleFilterData(item.type, item.value, item.name)}}
+                        className="w3-bar-item w3-button"
+                    >{item.name}</a>
+                );
+            });
+        } else if (!Array.isArray(filterOptions) && typeof(filterOptions) === "object") {
+            Object.keys(filterOptions).forEach((key) => {
+                filterLists.push(
+                    <a  
+                        key={`district_${key}`}
+                        onClick={() => {this.handleFilterData('district', districtMap[key], districtMap[key])}}
+                        className="w3-bar-item w3-button"
+                    >
+                        {districtMap[key]}
+                    </a> 
+                );
+            });
+        }
+
+        return (
+            filterLists
+        );
+    }
+}
+
 class FilterComponent extends React.Component {
     constructor (props) {
         super(props);
@@ -15,32 +51,39 @@ class FilterComponent extends React.Component {
             filterData: {},
             severityConfig: [
                 {
+                    type: 'severity',
                     value: 0,
                     name: 'Moderate',
                 },
                 {
+                    type: 'severity',
                     value: 3,
                     name: 'Needs Help',
                 },
                 {
+                    type: 'severity',
                     value: 4,
                     name: 'Urgent',
                 },
                 {
+                    type: 'severity',
                     value: 6,
                     name: 'Very Urgent',
                 },
                 {
+                    type: 'severity',
                     value: 8,
                     name: 'Life Threatening',
                 }
             ],
             sortConfig: [
                 {
+                    type: 'sort',
                     value: 'DESC',
                     name: 'Newest First',
                 },
                 {
+                    type: 'sort',
                     value: 'ASC',
                     name: 'Oldest First',
                 }
@@ -65,40 +108,6 @@ class FilterComponent extends React.Component {
     render() {
         const { districtMap } = this.props;
         const { sortConfig, severityConfig, filterLabels } = this.state;
-        const sortList = [];
-        const districtList = [];
-        const severityList = [];
-
-        Object.keys(districtMap).forEach((key) => {
-            districtList.push(
-                <a  
-                    key={`district_${key}`}
-                    onClick={() => {this.handleFilterData('district', districtMap[key], districtMap[key])}}
-                    className="w3-bar-item w3-button"
-                >
-                    {districtMap[key]}
-                </a>)
-        });
-
-        sortConfig.map((item, key) => {
-            sortList.push(
-                <a
-                    key={`sort_${key}`}
-                    onClick={() => {this.handleFilterData('sort', item.value, item.name)}}
-                    className="w3-bar-item w3-button"
-                >{item.name}</a>
-            );
-        });
-        
-        severityConfig.map((item, key) => {
-            severityList.push(
-                <a
-                    key={`severity_${key}`}
-                    onClick={() => {this.handleFilterData('severity', item.value, item.name)}}
-                    className="w3-bar-item w3-button"
-                >{item.name}</a>
-            );
-        });
 
         return (
             <div className="w3-bar w3-teal w3-top kf-top-bar-filter">
@@ -107,7 +116,7 @@ class FilterComponent extends React.Component {
                         {filterLabels['sort']} <span className="kf-carot"></span>
                     </button>
                     <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        {sortList}
+                        <FilterListContent filterOptions={sortConfig} />
                     </div>
                 </div>
                 <div className="w3-dropdown-hover w3-teal">
@@ -115,7 +124,7 @@ class FilterComponent extends React.Component {
                         {filterLabels['severity']} <span className="kf-carot"></span>
                     </button>
                     <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        {severityList}
+                        <FilterListContent filterOptions={severityConfig} />
                     </div>
                 </div>
                 <div className="w3-dropdown-hover">
@@ -123,7 +132,7 @@ class FilterComponent extends React.Component {
                         {filterLabels['district']} <span className="kf-carot"></span>
                     </button>
                     <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        {districtList}
+                        <FilterListContent filterOptions={districtMap} />
                     </div>
                 </div>
             </div>
