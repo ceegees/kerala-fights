@@ -1,0 +1,29 @@
+{
+    "apps": [{
+        "name": "kerala-fights-app",
+        "ignore_watch": [
+            "node_modules", 
+            "public",
+            ".git", 
+            "kerala-fights-website.log",
+            "uploads", 
+            "src"
+        ],
+        "script": "bin/www",
+        "log_file": "./kerala-fights-website.log",
+        "merge_logs": true,
+        "log_date_format": "YYYY-MM-DD HH:mm Z",
+        "env": {
+            "NODE_ENV": "development",
+            "watch": true
+        },
+        "env_staging": {
+            "NODE_ENV": "staging",
+            "log_date_format": "YYYY-MM-DD HH:mm Z"
+        },
+        "env_production": {
+            "NODE_ENV": "production", 
+            "log_date_format": "YYYY-MM-DD HH:mm Z"
+        }
+    }]
+}

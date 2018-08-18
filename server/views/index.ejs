@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title> <%= title %> </title>
+        <link rel="icon" type="image/png" href="https://d1xp9ts0bx8s2q.cloudfront.net/website/cgs_sq_logo_sm.png">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400" rel="stylesheet">
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-30327290-15"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-30327290-15');
+        </script>
+
+        <link rel='stylesheet' href='/css/new.css?r=1' /> 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <meta property="og:image" content="https://d1xp9ts0bx8s2q.cloudfront.net/vow/kerala_fights.png">
+        <meta name="description" content="Lets work together to help everyone, Web application help you to co-ordinate on Help requests" />
+<meta name="keywords" content="Rescue, Kerala Floods, Cordinate, Manage Help Requests" />
+<meta property="og:url" content="https://keralafights.com">
+<meta property="og:description" content="Helps Volunteers Coordinate on Help Requests and track requests completion.">
+<meta property="og:site_name" content="www.keralafights.com" />
+        <meta name="viewport" 
+            content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <script type="application/javascript">
+            if (document.location.protocol == "http:" && <%= process.env.NODE_ENV == 'production' %> ) {
+                document.location.href = "https://keralafights.com"+document.location.pathname;
+            } 
+        </script> 
+    </head>
+    <body> 
+        <div id="app"><%- content %></div> 
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYa0Gwg2QGqXguL7LI7pe2nxi4v45pHVg&libraries=places"
+        type="text/javascript"></script>
+        <script type="application/javascript">
+            window.__STATE__ = <%- JSON.stringify(state) %>
+        </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <% if (process.env.NODE_ENV == 'production') { %>
+        <script src="/js/client.prod.js?r=18"></script>
+        <% } else { %> 
+        <script src="/js/client.js"></script>
+        <% } %>
+    </body>
+
+    <!-- 
+        This site id developed for helping the rescue operations 
+    All of the data collected are available through API's is any one want to use them
+    Will Enable CORS as well if there is any integration required
+    for any queries send a mail to keralafights@ceegees.in
+
+    -->
+</html>

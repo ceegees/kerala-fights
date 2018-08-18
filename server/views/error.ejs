@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>404</title>
+    <link rel="stylesheet" href="/css/w3.css">
+    <link rel='stylesheet' href='/css/style.css' /> 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" 
+            content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+         
+  </head>
+  <body class="problem-body ">
+    <div class=" problem-top w3-container">
+        <div class="w3-content w3-padding-16"> 
+            <a href="/"><img src="/images/logo-color.png" style="height:32px"/></a>
+        </div>
+    </div> 
+    <div class="w3-container w3-content ">
+    <h1><%= message %></h1>
+    <h4 class="w3-text-grey"><%= error.status %></h4>
+    <pre><%= error.stack %></pre>
+    </div>
+
+  <footer class="w3-container w3-bottom w3-padding w3-center site-footer-bg">
+        <p> &copy; 2017 CeeGees Software Solutions</p>
+    </footer> 
+       <!--
+        <script type="text/javascript" src="/js/jquery.js"></script>
+        <script type="text/javascript" src="/js/underscore.js"></script> 
+      -->
+  </body>
+</html>
