@@ -16,6 +16,27 @@
 .kf-top-bar{
    border-bottom:solid 6px #EDEDED
 }
+
+.kf-top-bar-filter {
+    margin-top: 35px
+}
+
+.kf-top-bar-filter .kf-carot {
+    width: 8px;
+    height: 8px;
+    border: 2px solid;
+    display: inline-block;
+    transform: rotate(45deg);
+    border-left: 0px;
+    border-top: 0px;
+    position: relative;
+    top: -3px;
+}
+
+.kf-top-bar-filter .w3-dropdown-content {
+    position: fixed;
+}
+
 .w3-modal{
     padding-top:60px;
 }
