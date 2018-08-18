@@ -1,5 +1,5 @@
 module.exports = {
-    "username": "giju",
+    "username": "kerala",
     "password": null,
     "database": "kerala",
     "host": "127.0.0.1",

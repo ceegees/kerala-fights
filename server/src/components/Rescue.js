@@ -37,7 +37,32 @@ class Rescue extends Component{
     }
     
     handleSubmit () {
-        var formData = this.state.form; 
+        var formData = this.state.form;
+
+        let errors = {};
+        if (!formData.name) {
+            errors['name'] = "Name is required"
+        }
+        if (!formData.phone_number) {
+            errors['phone_number'] = "Phone Number is required"
+        }
+        if (!formData.help_type) {
+            errors['help_type'] = "This field is required"
+        }
+        if (!formData.district) {
+            errors['district'] = "This field is required"
+        }
+        if (!formData.district) {
+            errors['district'] = "This field is required"
+        }
+
+        if (Object.keys(errors).length != 0) {
+            this.setState({
+                errors: errors
+            });
+            return false;
+        }
+
         axios.post('/api/v1/add-rescue',formData)
         .then(resp=> {
             resp = resp.data;
@@ -68,6 +93,7 @@ class Rescue extends Component{
                     <form className="w3-row-padding">
                         <div className="l4 s12 w3-col">
                             <FormTextField 
+                                isMandatory="true"
                                 label="താങ്കളുടെ പേര്"
                                 placeholder="Your Name"
                                 name="name"
@@ -79,7 +105,8 @@ class Rescue extends Component{
                         </div>
                         <div className="l4 s12 w3-col">
                             <FormTextField
-                             label="മൊബൈൽ നമ്പർ"
+                                isMandatory="true"
+                                label="മൊബൈൽ നമ്പർ"
                                 placeholder="Phone Number"
                                 name="phone_number"
                                 type="number"
@@ -122,15 +149,15 @@ class Rescue extends Component{
                         </div>
                         <div className="l4 s12 w3-col">   
                         <SelectField
-                                label="എന്ത് സഹായം ആണ് വേണ്ടത്"
-                                placeholder="What Help you want"
-                                name="help_type"
-                                selectClass="w3-select w3-border"
-                                isMandatory="true"
-                                value = {this.state.form.district}
-                                valueChange={this.changeFormValue.bind(this)}
-                                errors = {this.state.errors.district}
-                            >
+                            label="എന്ത് സഹായം ആണ് വേണ്ടത്"
+                            placeholder="What Help you want"
+                            name="help_type"
+                            selectClass="w3-select w3-border"
+                            isMandatory="true"
+                            value = {this.state.form.help_type}
+                            valueChange={this.changeFormValue.bind(this)}
+                            errors = {this.state.errors.help_type}>
+                            <option value=""> - select help type - </option>
                             <option value="food_and_water">ഭക്ഷണം വെള്ളം / Food &amp; Water</option>
                             <option value="medicine_blankets">മരുന്നുകൾ സാമഗ്രികൾ / Medicine &amp; Blankets</option>
                             <option value="rescue">രക്ഷപെടുത്തൂ / Rescue Me </option> 

@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 const productDataMap = {}; 
 import AppMessage from './AppMessage';
-import Rescue from './Rescue'; 
+import Rescue from './Rescue';
+import MarkSafe from './MarkSafe'; 
 import StatusWidget from './StatusWidget';
 import { FormTextField,FormTextarea,GooglePlacesAutoComplete ,SelectField,Reveal,HeaderSection
 } from './Helper.js';  
@@ -11,11 +12,14 @@ import { NavLink } from 'react-router-dom';
 
 class MarkSafeModal extends Component {
     render(){
-        return <Reveal onClose={this.props.hideModal}>
-             <FormTextField label="Enter Your Phone Number"/>
-        </Reveal>
+        return (
+            <Reveal onClose={this.props.hideModal}>
+                <FormTextField label="Enter Your Phone Number"/>
+            </Reveal>
+        )
     }
 }
+
 class MarkElseSafeModal extends Component {
     render(){
         return <Reveal onClose={this.props.hideModal}>
@@ -81,9 +85,9 @@ class Home extends Component {
     showModal(name){
         let content = null;
         if (name == 'mark_safe') {
-            content = <MarkSafeModal hideModal={this.hideModal.bind(this)} />
+            content = <MarkSafe type="SELF" hideModal={this.hideModal.bind(this)} />
         } else if (name == 'mark_other_safe'){
-            content = <MarkElseSafeModal  hideModal={this.hideModal.bind(this)}/>
+            content = <MarkSafe type="BEHALF" hideModal={this.hideModal.bind(this)}/>
         } else if (name == 'willing_to_help'){
             content = <MarkWillingToHelp  hideModal={this.hideModal.bind(this)}/>
 
@@ -107,8 +111,8 @@ class Home extends Component {
             <div className="w3-padding-64">
             <h1 className="w3-center">Application for handling Help Requests    </h1>
             <div className="w3-padding-64">
-            <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-hide  w3-margin-bottom w3-block w3-green">Mark Yourslevels Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
-            <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
+            <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
+            <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
             
             <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
 
