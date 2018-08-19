@@ -23,23 +23,34 @@ function getContent(url)  {
     });
 }
 
-async function loadData(content){
-    const json = JSON.parse(content);
-    json.sort((a,b) => a.id-b.id);
+async function loadData(offset=0){
+
+    const content  = await getContent(`https://www.keralarescue.in/data/?offset=${offset}`);
+    const parsed = JSON.parse(content); 
+    // console.log(parsed);
     const source = 'www.keralarescue.in';
-    for(var idx = 0;idx <json.length;idx++){
-        const data = json[idx];
-        const exists = await models.HelpRequest.findOne({
+    let maxId = 0;
+    if (parsed.data.length == 0){
+        console.log('Processin Complete');
+        return;
+    }
+    for(var idx = 0;idx < parsed.data.length;idx++){
+        const data = parsed.data[idx];
+
+        let row = await models.HelpRequest.findOne({
             where:{
-                remote_id:""+data.id,
+                remoteId:data.id,
                 source:source,
             }
         });
-
+        if (maxId < data.id){
+            maxId = data.id;
+        }
 
         const cords = data.latlng.split(",");
         let geoJson = null;
         let location = null;
+
         if (!isNaN(cords[0]) && !isNaN(cords[1])  && cords.length == 2 ){
             geoJson =  {
                 type:'Point',
@@ -51,32 +62,19 @@ async function loadData(content){
             };
         }
 
-        if (exists){
-            // exists.json.location = location;
-            // console.log('Resaving');
-            // await exists.save();
-            continue;
-        }
-        const parent = await models.HelpRequest.findOne({
-            where:{
-                phoneNumber:data.requestee_phone,
-            },
-            order:[
-                ["createdAt","ASC"]
-            ]
-        });
         const tags = [];
-       
-
         if (data.needwater){
             tags.push('Need Water');
         }
+
         if(data.needfood){
             tags.push("Need Foood");
         }
+
         if(data.needcloth){
             tags.push("Need Cloth");
         }
+
         if(data.needmed){
             tags.push("Need Medicine");
         }
@@ -90,6 +88,7 @@ async function loadData(content){
             geoJson = null;
             location = null;
         }
+
         if (data.needkit_util){
             tags.push("Need Kit");
         }
@@ -97,46 +96,40 @@ async function loadData(content){
         if(data.needrescue){
             tags.push("Needs Evacuation");
         }
-
-        const row =  await models.HelpRequest.create({
-            remoteId:""+data.id,
-            source:source,
-            type:'rescue_request',
-            district:distrctMap[data.district.substring(0,255)],
-            location:data.location.substring(0,255),
-            personName:data.requestee.substring(0,255),
-            phoneNumber :data.requestee_phone,
-            latLng:geoJson,
-            parentId:parent ? parent.id : null,
-            status:data.status.toUpperCase(),
-            information : data.needothers,
-            json:{
-                location:location,
-                info :{
-                    latLng:data.latlng,
-                    loationAccuracy:data.latlng_accuracy,
-                    detailFood:data.detailfood,
-                    detailCloth:data.detailcloth,
-                    detailMed:data.detailmed,
-    
-                    detailFood:data.detailfood,
-                    detailWater:data.detailwater, 
-                    detailWater:data.detailwater,
-
-                    detailWater:data.detailwater,
-                    detailRescue:data.detailrescue,
-                    needOthers:data.needOthers,
-                    supply_details:data.supply_details
-                },
-                tags :tags
-            },
-            createdAt:moment(data.dateadded)
+        let json = {}
+        if (!row){
+            row =  await models.HelpRequest.create({
+                remoteId: data.id,
+                source:source,
+                type:'rescue_request'
+            });
+        } else {
+            json = row.json;
+        }
+ 
+        row.remoteId=  data.id;
+        row.source  = source;
+        row.type = 'rescue_request';
+        row.district = distrctMap[data.district.substring(0,255)];
+        row.location = data.location.substring(0,255);
+        row.personName = data.requestee.substring(0,255);
+        row.phoneNumber = data.requestee_phone;
+        row.latLng = geoJson;
+        row.status = data.status.toUpperCase();
+        row.information =  data.location+'\n'+ data.needothers;
+        row.createdAt = moment(data.dateadded);
+        row.json =  Object.assign(json, {
+            location:location,
+            info :data,
+            tags :tags
         });
-        console.log("Adding new Row",row.id)
+        const updated =  await row.save();
+        console.log("Adding / updating   Row",updated.id)
     }
-    console.log('Done total',json.length);
-    process.exit();
-    return 1;
+    console.log('Done total',maxId);
+    setTimeout(function(){
+        loadData(maxId);
+    },1000)
 }
 
 async function handleContent(resp,page){ 
@@ -232,7 +225,7 @@ async function deDupe(){
         count(*) > 1
     ORDER BY
         total_requests DESC 
-    LIMIT 10000`,{  
+    LIMIT 100000`,{  
         plain: false,
         raw: false,
         type: Sequelize.QueryTypes.SELECT
@@ -242,7 +235,7 @@ async function deDupe(){
         const data = list[idx]; 
         const row = await models.HelpRequest.findOne({
             where : {
-                remote_id: data.min_remote
+                remoteId: data.min_remote
             }
         });
         console.log(data.phone_number,row.id);
@@ -254,12 +247,14 @@ async function deDupe(){
             raw: false,
         });
         row.parent_id = null;
+        row.json.duplicateCount = data.total_requests;
         console.log(res);
         const saved = await row.save();
      }
      console.log('Completed updateing duplicates');
      process.exit();
 }
+
 function loadFromHTML(page = 1){
     if (page < 1){
         process.exit();
@@ -274,12 +269,7 @@ function loadFromHTML(page = 1){
 if (process.argv.length > 2 ){
     option = process.argv[2];
     if (option == 'data'){
-
-        getContent(`https://www.keralarescue.in/data/`)
-        .then(resp=>{
-            loadData(resp);
-        });
-       
+       loadData(process.argv[2]);
     } else if (option == 'html'){
         loadFromHTML(process.argv[3]);
     } else if (option == 'dedup'){

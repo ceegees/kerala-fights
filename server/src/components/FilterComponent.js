@@ -200,7 +200,9 @@ class FilterComponent extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="w3-dropdown-hover w3-small w3-indigo">
+                <div className="w3-dropdown-hover w3-small
+                
+                 w3-indigo">
                     <button className="w3-button w3-margin-right">
                         {filterLabels['time']} <span className="kf-carot"></span>
                     </button>
