@@ -115,7 +115,7 @@ class DetailsModal extends Component {
                     <div className="w3-col l5 s12">
                         <RowItem name="CaseId" value={item.id+'-'+item.remoteId} />
                         <RowItem name="Name" value={item.personName} />
-                        <RowItem name="Phone" value={<a className="w3-buttom w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`} > {item.phoneNumber}</a>} />
+                        <RowItem name="Phone" value={<a className="w3-buttom w3-tag w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`} > {item.phoneNumber}</a>} />
                         <RowItem name="Source" value={link} />
                         <RowItem name="Location" value={item.location} />
                         <RowItem name="District" value={item.district} />
@@ -130,18 +130,19 @@ class DetailsModal extends Component {
                     </div> 
                     <div className="w3-col l7 s12">
                         <div id="google-map-detail" style={mapStyle}></div>
-                        <form >
-                            <div className="w3-row-padding">
-                                <div className="w3-col s12">  <FormTextarea 
-                                label="Comments"
-                                placeholder="Add your comments after action, eg: called them they are fine"
-                                name="comments"
-                                inputClass="w3-input w3-border"
-                                isMandatory="true"
-                                value = {this.state.form.comments}
-                                valueChange={this.changeFormValue.bind(this)}
-                                errors = {this.state.errors.comments} 
-                            /></div>
+                        <form className="w3-row-padding"> 
+                            <div className="w3-col s12">  
+                                    <FormTextarea 
+                                        label="Comments"
+                                        placeholder="Add your comments after action, eg: called them they are fine"
+                                        name="comments"
+                                        inputClass="w3-input w3-border"
+                                        isMandatory="true"
+                                        value = {this.state.form.comments}
+                                        valueChange={this.changeFormValue.bind(this)}
+                                        errors = {this.state.errors.comments} 
+                                    />
+                            </div>
                             <div className="w3-col  s12"><SelectField 
                                 label="How Severe is the issue"
                                 id="severity_select"
@@ -159,9 +160,10 @@ class DetailsModal extends Component {
                             <option value="4">Urgent</option>
                             <option value="6">Very Urgent</option>
                             <option value="8">Life Threatening</option>
-                            </SelectField></div>
-                                <div className="w3-col  s12">
-                                    <SelectField 
+                            </SelectField>
+                        </div>
+                            <div className="w3-col  s12">
+                                <SelectField 
                                     label="Change Status"
                                     name="status"
                                     selectClass="w3-select w3-border"
@@ -172,14 +174,12 @@ class DetailsModal extends Component {
                                     >
                                     <option value="--">---</option>
                                 {obj && obj.nextStates.map(item => <option value={item.value}>{item.text}</option>)}
-                            
                                 </SelectField>
-                                </div>
-                            </div> 
-                            <div className="w3-row">
-                                <button type="button"
-                                                              onClick={this.handleUpdate.bind(this)} className="w3-button w3-green w3-right w3-small">Update</button>
                             </div>
+                            <div className="w3-col s12 w3-margin-top">
+                                <button type="button"
+                                onClick={this.handleUpdate.bind(this)} className="w3-button w3-green w3-right w3-small">Update</button> 
+                            </div> 
                         </form>
                     </div>
                 </div>    
