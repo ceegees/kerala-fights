@@ -54,7 +54,10 @@ async function loadData(offset=0){
         if (!isNaN(cords[0]) && !isNaN(cords[1])  && cords.length == 2 ){
             geoJson =  {
                 type:'Point',
-                coordinates:cords
+                coordinates:[
+                    parseFloat(cords[0]),
+                    parseFloat(cords[1])
+                ]
             };
             location = {
                 lat:parseFloat(cords[0]),
@@ -101,10 +104,15 @@ async function loadData(offset=0){
             row =  await models.HelpRequest.create({
                 remoteId: data.id,
                 source:source,
+                status:data.status.toUpperCase(),
                 type:'rescue_request'
             });
         } else {
             json = row.json;
+        }
+
+        if (row.status == 'NEW'){
+            row.status = data.status;
         }
  
         row.remoteId=  data.id;
@@ -115,7 +123,6 @@ async function loadData(offset=0){
         row.personName = data.requestee.substring(0,255);
         row.phoneNumber = data.requestee_phone;
         row.latLng = geoJson;
-        row.status = data.status.toUpperCase();
         row.information =  data.location+'\n'+ data.needothers;
         row.createdAt = moment(data.dateadded);
         row.json =  Object.assign(json, {
@@ -123,8 +130,7 @@ async function loadData(offset=0){
             info :data,
             tags :tags
         });
-        const updated =  await row.save();
-        console.log("Adding / updating   Row",updated.id)
+        const updated =  await row.save(); 
     }
     console.log('Done total',maxId);
     setTimeout(function(){
@@ -266,10 +272,20 @@ function loadFromHTML(page = 1){
         handleContent(resp,page);
     });
 }
+console.log(process.argv);
 if (process.argv.length > 2 ){
     option = process.argv[2];
     if (option == 'data'){
-       loadData(process.argv[2]);
+        if (process.argv.length > 3){
+            loadData(process.argv[3]);
+        } else {
+            models.HelpRequest.max('remoteId', { 
+                where: { source: 'www.keralarescue.in' } 
+            }).then(max => {
+                console.log('loading from max id ',max);
+                loadData(max);
+            })
+        }
     } else if (option == 'html'){
         loadFromHTML(process.argv[3]);
     } else if (option == 'dedup'){
