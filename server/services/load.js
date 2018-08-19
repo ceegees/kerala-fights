@@ -121,9 +121,32 @@ async function loadData(offset=0){
         row.district = distrctMap[data.district.substring(0,255)];
         row.location = data.location.substring(0,255);
         row.personName = data.requestee.substring(0,255);
+        row.address = data.location;
         row.phoneNumber = data.requestee_phone;
         row.latLng = geoJson;
-        row.information =  data.location+'\n'+ data.needothers;
+        
+        const keys = [
+            "\nWater:" , 
+             "\nFood:" , 
+             "\nCloth:" , 
+             "\nMedicine:", 
+             "\nToiletry:", 
+             "\nKit:", 
+             "\nRescue:", 
+        ];
+
+        const list = [
+            data.detailwater,
+            data.detailfood,
+            data.detailcloth,
+            data.detailmed,
+            data.detailtoilet,
+            data.detailkit_util,
+            data.detailrescue
+       ];
+        const texts = list.map( (item,idx) => item != "" ?(keys[idx]+":"+item ):"" );
+
+        row.information = data.needothers +"\n" + texts.join('');
         row.createdAt = moment(data.dateadded);
         row.json =  Object.assign(json, {
             location:location,
@@ -136,6 +159,15 @@ async function loadData(offset=0){
     setTimeout(function(){
         loadData(maxId);
     },1000)
+}
+
+async function clearLocks(){
+    const qry = "UPDATE help_requests set operator_id=NULL,operator_lock_at=NULL where operator_lock_at < "+moment().format();
+  
+    const res = await sequelize.query(qry,{
+        plain: false,
+        raw: false,
+    });
 }
 
 async function handleContent(resp,page){ 

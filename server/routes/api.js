@@ -114,8 +114,10 @@ router.get('/sheet',function(req,res) {
 });
 router.get('/sync',function(req,res) {
 
-    const sheetId = "1MbCBl5AYs3PgdPcrIz6nFR98y3acUIa73Ba_Wh2EmEc";
-    const sheetName = `${req.query.mon}!A1:J1000`
+    const sheetId = 
+    //"1MbCBl5AYs3PgdPcrIz6nFR98y3acUIa73Ba_Wh2EmEc";
+    "1eXLEA4UW2Eq4KKcCv_9scHL_xDj0fadLd3VxyqCYu94";
+    const sheetName = `Ernakulam!A1:P5000`;
     const sheets = google.sheets('v4');
 
     service()
@@ -126,20 +128,20 @@ router.get('/sync',function(req,res) {
             range: sheetName
         });
     }).then(response => {
-        const header = response.data.values.shift();
-        const feed = response.data.values.reduce((acc,item,idx)=>{
-            const def = {
-                "MessageStatus": "Not Sent",
-                "ReviewStatus":"0",
-                Row:(idx+2)
-            };
-            acc.push(item.reduce((obj,col,idx)=>{
-                obj[header[idx]] = col;
-                return obj;
-            },def));
-            return acc;
-        },[]);
-        res.json(feed)
+        // const header = response.data.values.shift();
+        // const feed = response.data.values.reduce((acc,item,idx)=>{
+        //     const def = {
+        //         "MessageStatus": "Not Sent",
+        //         "ReviewStatus":"0",
+        //         Row:(idx+2)
+        //     };
+        //     acc.push(item.reduce((obj,col,idx)=>{
+        //         obj[header[idx]] = col;
+        //         return obj;
+        //     },def));
+        //     return acc;
+        // },[]);
+        res.json(response.data.values)
     })
     .catch(err => {
         console.log("Error",err);
