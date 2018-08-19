@@ -47,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'actorId', 
         as:'actor'
     });
+    models.HelpRequest.belongsTo(models.User,{
+        foreignKey:'operatorId',
+        as:'operator'
+    })
     // associations can be defined here
   };
   return User;

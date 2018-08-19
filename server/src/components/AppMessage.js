@@ -14,7 +14,7 @@ class AppMessage extends Component {
                 <h5>{appMessage.text}</h5>
             </div>
             if (appMessage.cls == 'w3-green'){
-                setTimeout(this.props.hideMessage,3000);
+                setTimeout(this.props.hideMessage,1500);
             }
         }
         return message;

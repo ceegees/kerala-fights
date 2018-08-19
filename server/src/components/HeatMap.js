@@ -19,8 +19,7 @@ class HeatMap extends Component {
 
     fetchData(){
 
-        if(this.markerCluster){
-            console.log('clearmarker');
+        if(this.markerCluster){ 
             this.markerCluster.removeMarkers(this.markers);
             this.markerCluster.repaint();
         }
@@ -69,7 +68,7 @@ class HeatMap extends Component {
 
     showDetailModal(item){
         this.setState({modal:<Reveal onClose={this.hideModal.bind(this)}>
-            <DetailsModal item={item} 
+            <DetailsModal item={item}   hideModal={this.hideModal.bind(this)} 
             />
             </Reveal>});
     }

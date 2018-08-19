@@ -9,7 +9,7 @@ import DetailsModal from './DetailsModal';
 import RequestLister from './RequestLister';
 import StatusWidget from './StatusWidget.js';
 import FilterComponent from './FilterComponent';
-
+import axios  from 'axios';
 const DaashboardInfo =() => {
     return (
         <div className="w3-container" style={{minHeight:"100vh", paddingBottom: "100px"}}>
@@ -40,6 +40,35 @@ const DaashboardInfo =() => {
     )
 }
  
+class OneAtATime extends Component {
+    constructor(arg){
+        super(arg);
+        this.state = {
+            data:null
+        }
+    }
+    fetchData(){
+        this.setState({data:null});
+        const {status='new'} = this.props;
+        axios.get(`/api/v1/rescue-list?status=${status}&per_page=1`).then(resp=>{
+            this.setState({
+                data:resp.data.data
+            });
+        });
+    }
+    
+    componentDidMount(){
+        this.fetchData(this.props);
+    }
+    render(){
+        return <div  style={{marginTop:"80px"}}>
+            {this.state.data ? this.state.data.list.map(item => 
+                <DetailsModal  
+                authUser={this.props.authUser}
+                hideModal={this.fetchData.bind(this)} item={item} />) : null }
+        </div>
+    }
+}
 class AdminDashboard extends Component{
 
     constructor(arg) {
@@ -55,20 +84,16 @@ class AdminDashboard extends Component{
         } 
     }
     hideModal(msg){
-        if (msg =='reload'){
-            this.fetchData(this.props);
-        }
         this.setState({modal:null})
     }
 
     showDetailModal(item){
         const {status ='new'} = this.props.match.params;
         this.setState({
-            modal:<Reveal onClose={this.hideModal.bind(this)} >
-                <DetailsModal
-                    item={item} 
-                    status={status}
-                    />
+            modal:<Reveal  onClose={this.hideModal.bind(this)} >
+                <DetailsModal  authUser={this.props.authUser} 
+                hideModal={this.hideModal.bind(this)} 
+                 item={item}  status={status}  />
             </Reveal>
         });
     }
@@ -89,11 +114,14 @@ class AdminDashboard extends Component{
         let { page=1, status='dashboard' } = this.props.match.params;
         const {search} = this.state;
         let content = null;
-
+        
         if (status == 'dashboard' ){
             content = <DaashboardInfo />
+        } else if (status == 'one_item'){
+            content = <OneAtATime status={page} authUser={this.props.authUser}/> 
         } else {
             content = <RequestLister 
+                    authUser={this.props.authUser}
                     page={page} 
                     status={status}  
                     showMessage={this.props.showMessage}

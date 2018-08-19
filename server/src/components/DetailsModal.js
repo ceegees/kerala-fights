@@ -18,6 +18,7 @@ class DetailsModal extends Component {
         super(args);
         this.state =   {
             workLog:null,
+            update:null,
             form: {},
             errors: {}, 
             successMessage: ''
@@ -57,8 +58,16 @@ class DetailsModal extends Component {
         }
         $("#severity_select").val(item.operatorSeverity);
         axios.get(`/api/v1/rescue-worklog?id=${item.id}`).then(resp=>{
-            this.setState({workLog:resp.data.data});
+            this.setState({
+                update:resp.data.data.request,
+                workLog:resp.data.data.log
+            });
         })
+    }
+    componentWillUnmount(){
+        axios.post('/api/v1/rescue-release-lock',{id:this.props.item.id}).then(res => {
+            console.log(res);
+        });
     }
     changeFormValue (name,value) {
         this.state.form[name] = value;
@@ -81,6 +90,7 @@ class DetailsModal extends Component {
 
     render(){
         const {item }  = this.props;
+        const {workLog,update} = this.state;
         const obj = this.props.statusList.find(i=> i.key.toLowerCase() == item.status.toLowerCase());
         const link = <a target="_blank" 
             href={`https://www.keralarescue.in/request_details/${item.remoteId}/`} 
@@ -90,8 +100,8 @@ class DetailsModal extends Component {
             mapStyle = {minHeight:"200px"}
         }
         let content = <Spinner />
-        if (this.state.workLog){
-            content = this.state.workLog.map(item => {
+        if (workLog){
+            content = workLog.map(item => {
                 return <div className="w3-panel " key={`item_${item.id}`}>
                     <div   style={{whiteSpace:'pre-wrap'}}> 
                         <a href={item.providerId}><img className="w3-round " src={item.actor.profileLink} style={{display:"inline-block",marginRight:"10px",width:"32px",height:"32px"}}/> 
@@ -109,6 +119,64 @@ class DetailsModal extends Component {
                     <hr/>
                 </div>
             })
+        }
+
+        let form = null;
+        if (update && (!update.operator || update.operator.id == this.props.authUser.id) ) {
+            form = <form className="w3-row-padding"> 
+                <div className="w3-col s12">  
+                        <FormTextarea 
+                            label="Comments"
+                            placeholder="Add your comments after action, eg: called them they are fine"
+                            name="comments"
+                            inputClass="w3-input w3-border"
+                            isMandatory="true"
+                            value = {this.state.form.comments}
+                            valueChange={this.changeFormValue.bind(this)}
+                            errors = {this.state.errors.comments} 
+                        />
+                </div>
+                <div className="w3-col  s12"><SelectField 
+                    label="How Severe is the issue"
+                    id="severity_select"
+                    name="severity"
+                    selectClass="w3-select w3-border"
+                    isMandatory="true"
+                    defaultValue={item.operatorSeverity}
+                    value = {this.state.form.severity}
+                    valueChange={this.changeFormValue.bind(this)}
+                    errors = {this.state.errors.severity}
+                    >
+                <option value="-">---</option>
+                <option value="0">Not Severe</option>
+                <option value="1">Moderate</option>
+                <option value="3">Needs Help</option>
+                <option value="4">Urgent</option>
+                <option value="6">Very Urgent</option>
+                <option value="8">Life Threatening</option>
+                </SelectField>
+            </div>
+                <div className="w3-col  s12">
+                    <SelectField 
+                        label="Change Status"
+                        name="status"
+                        selectClass="w3-select w3-border"
+                        isMandatory="true"
+                        value = {this.state.form.status}
+                        valueChange={this.changeFormValue.bind(this)}
+                        errors = {this.state.errors.status}
+                        >
+                        <option value="--">---</option>
+                    {obj && obj.nextStates.map(item => <option value={item.value}>{item.text}</option>)}
+                    </SelectField>
+                </div>
+                <div className="w3-col s12 w3-margin-top">
+                    <button type="button"
+                    onClick={this.handleUpdate.bind(this)} className="w3-button w3-green w3-right w3-small">Update</button> 
+                </div> 
+            </form>
+        } else if (update && update.operator) { 
+            form = <div>Working :{update.operator.name}</div>
         }
        return <div className="w3-container w3-padding ">   
                 <div className="w3-row-padding w3-margin-bottom">
@@ -129,58 +197,8 @@ class DetailsModal extends Component {
                         <RowItem name="Volunteer Acted At" value={item.operatorLastUpdated} />
                     </div> 
                     <div className="w3-col l7 s12">
-                        <div id="google-map-detail" style={mapStyle}></div>
-                        <form className="w3-row-padding"> 
-                            <div className="w3-col s12">  
-                                    <FormTextarea 
-                                        label="Comments"
-                                        placeholder="Add your comments after action, eg: called them they are fine"
-                                        name="comments"
-                                        inputClass="w3-input w3-border"
-                                        isMandatory="true"
-                                        value = {this.state.form.comments}
-                                        valueChange={this.changeFormValue.bind(this)}
-                                        errors = {this.state.errors.comments} 
-                                    />
-                            </div>
-                            <div className="w3-col  s12"><SelectField 
-                                label="How Severe is the issue"
-                                id="severity_select"
-                                name="severity"
-                                selectClass="w3-select w3-border"
-                                isMandatory="true"
-                                defaultValue={item.operatorSeverity}
-                                value = {this.state.form.severity}
-                                valueChange={this.changeFormValue.bind(this)}
-                                errors = {this.state.errors.severity}
-                                >
-                            <option value="-">---</option>
-                            <option value="0">Moderate</option>
-                            <option value="3">Needs Help</option>
-                            <option value="4">Urgent</option>
-                            <option value="6">Very Urgent</option>
-                            <option value="8">Life Threatening</option>
-                            </SelectField>
-                        </div>
-                            <div className="w3-col  s12">
-                                <SelectField 
-                                    label="Change Status"
-                                    name="status"
-                                    selectClass="w3-select w3-border"
-                                    isMandatory="true"
-                                    value = {this.state.form.status}
-                                    valueChange={this.changeFormValue.bind(this)}
-                                    errors = {this.state.errors.status}
-                                    >
-                                    <option value="--">---</option>
-                                {obj && obj.nextStates.map(item => <option value={item.value}>{item.text}</option>)}
-                                </SelectField>
-                            </div>
-                            <div className="w3-col s12 w3-margin-top">
-                                <button type="button"
-                                onClick={this.handleUpdate.bind(this)} className="w3-button w3-green w3-right w3-small">Update</button> 
-                            </div> 
-                        </form>
+                        <div id="google-map-detail" style={mapStyle}></div> 
+                       {form}
                     </div>
                 </div>    
                 <hr/>

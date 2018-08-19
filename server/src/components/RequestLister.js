@@ -88,6 +88,16 @@ export default class RequestLister extends Component {
                         View Dupliates</Link>
                     }
                 } 
+
+                let actionItem = null;
+                if (!item.operator || item.operator.id == this.props.authUser.id) {
+                    actionItem = <button className="w3-display-bottomright w3-small w3-button w3-green" 
+                    onClick={this.props.showDetailModal.bind(this,item)}>Help</button>
+                } else {
+                    actionItem = <div className="w3-tag w3-round w3-padding-small w3-display-bottomright w3-yellow">Working: {item.operator.name}</div>
+                }
+
+
                 return (<div key={`item_${item.id}`} className="w3-display-container w3-white w3-margin w3-padding">
                         CaseID : {`${item.id}-${item.remoteId}`}<br/><br/>
                         Name :{item.personName}<br/>
@@ -99,13 +109,16 @@ export default class RequestLister extends Component {
                         {(status == 'duplicates' || status == 'search') ?
                             [`Operator Status:${item.operatorStatus}`,<br/>, `Status : ${item.status}`]
                          :null}
+                        <br/>
+
                         <div>
+
                         {item.json && item.json.tags.map(name => 
                             <div key={name} className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
                         </div>
                         {inPageOption}
-                        <button className="w3-display-bottomright w3-small w3-button w3-green" 
-                            onClick={this.props.showDetailModal.bind(this,item)}>Help</button>
+                        {actionItem}
+                        
                     </div>);
             });
         }

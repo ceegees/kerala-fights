@@ -161,27 +161,59 @@ router.get('/rescue-status',function(req,res){
 });
  
 router.get('/rescue-worklog',function(req,res){
-    
-
-    
-
-    models.WorkLog.findAll({
-        where:{
-            requestId:req.query.id
-        },
-        order:[
-            ['createdAt','DESC']
-        ],
-        include :[
-            { model: models.User ,as:'actor' },
-        ]
+    let request = null;
+    models.HelpRequest.find({
+        where:{id:req.query.id},
+        include :[ { 
+            model: models.User ,as:'operator' 
+        }]
+    }).then(item => {
+        if (item.operatorLockAt != null) {
+            return item;
+        }
+        item.operatorId = req.user.id
+        item.operatorLockAt = new Date();
+        return item.save()
+    }).then(item => {
+        request = item;
+        return models.WorkLog.findAll({
+            where:{
+                requestId:item.id
+            },
+            order:[
+                ['createdAt','DESC']
+            ],
+            include :[ { 
+                model: models.User ,as:'actor' 
+            }]
+        });
     }).then(list =>{
-        res.json(jsonSuccess(list));
+        res.json(jsonSuccess({
+            request:request,
+            log:list
+        }));
     }).catch(ex => {
         console.log(ex);
         res.json(jsonError(ex.message));
     })
+});
+
+
+router.post('/rescue-release-lock',function(req,res){
+    models.HelpRequest.findById(req.body.id).then(item => {
+        if (req.user.id == item.operatorId){
+            item.operatorId = null;
+            item.operatorLockAt = null;
+            return item.save()
+        } else {
+            return item;
+        }
+    }).then(item => {
+        res.json(jsonSuccess(item));
+    });
 })
+
+
 router.post('/rescue-update',function(req,res){
     let rescue = null;
     const user = req.user;
@@ -235,6 +267,8 @@ router.post('/rescue-update',function(req,res){
         rescue.status = currentMove.target.toUpperCase();
         rescue.operatorStatus = status;
         rescue.operatorSeverity = severity;
+        rescue.operatorId = null;
+        rescue.operatorLockAt = null;
         rescue.operatorUpdatedAt = new Date();
         return rescue.save();
     }).then(item => {
@@ -245,11 +279,11 @@ router.post('/rescue-update',function(req,res){
     });
 });
 
+
 router.get('/rescue-list',function(req,res){
     const params = filterFromQuery(req.query,{status:'NEW'})
     params.status = params.status.toLowerCase();
     const state = statusList.find(i => i.key == params.status);
-
     let whereQuery = null;
     if (params.status == 'duplicates'){
         if (params.q){
@@ -287,8 +321,7 @@ router.get('/rescue-list',function(req,res){
         }
         whereQuery = {
            [Op.or] :ors
-        }
-        params.page = 1;
+        } 
     } else {
         if (!state){
             res.json(jsonError("Invalid status"));
@@ -313,11 +346,15 @@ router.get('/rescue-list',function(req,res){
 
     models.HelpRequest.findAll({
         where:whereQuery,
-        order:[
+        order:[ 
+            ['operatorLockAt','DESC NULLS FIRST'],
             ['createdAt','DESC']
         ],
         offset:(params.page -1)*params.per_page,
-        limit:params.per_page
+        limit:params.per_page,
+        include :[ { 
+            model: models.User ,as:'operator' 
+        }]
 
     }).then(list => {
         return models.HelpRequest.count({
@@ -336,9 +373,8 @@ router.get('/rescue-list',function(req,res){
             data
         ));
     });
-})
+});
 
- 
 router.post('/add-rescue',function(req,res){ 
     try {
         const data = req.body;        
