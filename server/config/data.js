@@ -50,7 +50,7 @@ module.exports = {
         },
         { 
             key:STATUS.CONFIRM,
-            title:'2.Confirmation Call',
+            title:'2.Call',
             cls:'w3-yellow',
             db:[STATUS.CONFIRM.toUpperCase()],
             nextStates:[ 
@@ -74,6 +74,11 @@ module.exports = {
                     value:'confirm_rejected',
                     target:STATUS.RESOLVED
                 },
+                {
+                    text:'Duplicate Request (6.Resolved)',
+                    value:'cleanup_duplicate',
+                    target:STATUS.RESOLVED
+                }
             ],
         },
         { 
@@ -108,6 +113,10 @@ module.exports = {
             {
                 text:'Was Spurios (6.Resolved)',
                 value:"retry_rejected",
+                target:STATUS.RESOLVED
+            },{
+                text:'Duplicate Request (6.Resolved)',
+                value:'cleanup_duplicate',
                 target:STATUS.RESOLVED
             }]
         },
@@ -178,13 +187,13 @@ module.exports = {
             db:[STATUS.RESOLVED.toUpperCase()],
             nextStates:[]
         },
-        {
-            key:STATUS.EXTERNAL,
-            title:'External',
-            cls:'w3-blue',
-            db:['PRO'],
-            nextStates:[]
-        }
+        // {
+        //     key:STATUS.EXTERNAL,
+        //     title:'External',
+        //     cls:'w3-blue',
+        //     db:['PRO'],
+        //     nextStates:[]
+        // }
     ],
     districtMap : {
         "alp":"Alappuzha",

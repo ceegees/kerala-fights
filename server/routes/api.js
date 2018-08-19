@@ -7,6 +7,7 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(require('../config/config'));
 const {statusList} = require('../config/data');
 const Op = Sequelize.Op;
+const moment = require('moment');
 function filterFromQuery(query,def={}){
     if (query.mode == 'refresh'){
         delete query.mode;
@@ -313,7 +314,7 @@ router.get('/rescue-list',function(req,res){
             district:{
                 [Op.like]:`${req.query.q}%`
             }
-       } 
+        } 
         if (!isNaN(parts[0]) && (""+parts[0]).length < 8){
             ors.id = parts[0];
             ors.parentId = parts[0];
@@ -331,6 +332,18 @@ router.get('/rescue-list',function(req,res){
                 [Op.in]:state.db
             }
         };
+
+        if (req.query.district){
+            whereQuery.district = req.query.district;
+        }
+        if (req.query.startAt && req.query.endAt){
+            whereQuery.createdAt = {
+                [Op.between] : [
+                    moment.unix(req.query.startAt/1000).toDate(),
+                    moment.unix(req.query.endAt/1000).toDate()
+                ]
+            }
+        }
     }
 
     if (req.query.location){

@@ -3,14 +3,17 @@ import  React,{ Component } from 'react';
 import { FormTextField,FormTextarea,Spinner,Paginator ,SelectField,Reveal} from './Helper.js';  
 import axios from 'axios';
 import moment from 'moment';
+import FilterComponent from './FilterComponent';
 import {NavLink,Link,withRouter,Switch,Route} from 'react-router-dom';
+import qs from 'query-string';
 
 export default class RequestLister extends Component {
     constructor(arg){
         super(arg);
         this.state = {
-            data:null
+            data:null,
         }
+        this.filter = {}
     }
     fetchData(props){
         let {page=1,status ='new',search=''} = props;
@@ -27,7 +30,22 @@ export default class RequestLister extends Component {
             }
             page = 1;
         }
-        axios.get(`/api/v1/rescue-list?status=${status}&page=${page}&q=${search}`).then(resp=>{
+        const obj = {
+            status:status,
+            page:page,
+            q:search,
+        }
+        if (this.filter.district){
+            obj.district = this.filter.district;
+        }
+        
+        if (this.filter.timeRange){
+            obj.startAt = this.filter.timeRange.start,
+            obj.endAt = this.filter.timeRange.end
+        }
+        const str = qs.stringify(obj);
+        console.log(str);
+        axios.get(`/api/v1/rescue-list?${str}`).then(resp=>{
             this.setState({
                 data:resp.data.data
             });
@@ -52,7 +70,6 @@ export default class RequestLister extends Component {
     componentDidMount () {   
         this.fetchData(this.props);
     }
-
     componentWillReceiveProps(nextProps){
         if (nextProps.page  != this.props.page){ 
             this.fetchData(nextProps);
@@ -62,20 +79,25 @@ export default class RequestLister extends Component {
             this.fetchData(nextProps);       
         }
     }
-
+    handleFilterData(filterData) {
+        this.filter = filterData;
+        this.fetchData(this.props);
+    }
     render(){
         const {data} = this.state;
         const {page=1 ,status='new'} = this.props;
 
         let pagination = null;
         let content = null;
+        let totalCount = '';
         if (!data){
             content = <Spinner />
         } else if (data.list.length == 0){
              content = <div className="w3-padding-64 w3-large w3-center">The List is empty</div>
         } else {
             pagination = <Paginator data={data} status={status} page={page} />
-        
+            totalCount = `Total: ${data.total}`;
+
             content = data.list.map(item => { 
                 let inPageOption = null;
                 if(item.parentId){
@@ -122,7 +144,12 @@ export default class RequestLister extends Component {
                     </div>);
             });
         }
-            return <div className="w3-padding" style={{minHeight:"100vh"}} >
+            return <div style={{minHeight:"100vh",marginTop:"64px"}} > 
+                        <FilterComponent  handleFilterData={this.handleFilterData.bind(this)} >
+                        <div className="w3-bar-item w3-right" >{totalCount}</div>
+
+                        </FilterComponent>  
+                    
                     {content}
                     <div className="w3-center ">
                     {pagination}

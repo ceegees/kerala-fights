@@ -44,7 +44,33 @@ class FilterListContent extends React.Component {
 class FilterComponent extends React.Component {
     constructor (props) {
         super(props);
+        
+        let end = moment().endOf('day').add(1,'minute'); 
+        let tm = new Date();
+        const timeList = [];
+        let endStr = 'Now';
+        let endRange = moment();
+        for(var idx = 0;idx < 12;idx++){
+            end = end.subtract(6,"Hours");
+            if (end < tm) {
+                timeList.push({
+                    key:end.format('T_MMDDHHmm'),
+                    name:end.format('Do hh a')+" - " + endStr,
+                    start:end.valueOf(),
+                    end:endRange.valueOf()
+                });
+                endRange = end.clone();
+                endStr = endRange.format('Do hh a');
+            } 
+        }
+        timeList.push({
+            key:'older',
+            name:'Older',
+            start:moment().subtract(30,'days').valueOf(),
+            end:end.valueOf()
+        });
 
+        console.log(timeList)
         this.state = {
             timeRange: {
                 start: '',
@@ -96,37 +122,7 @@ class FilterComponent extends React.Component {
                     name: 'Oldest First',
                 }
             ],
-            timeConfig: [
-                {
-                    value: '0_2',
-                    name: '0-2 Hours',
-                    start: moment(),
-                    end: moment().subtract(2,'hours')
-                } ,
-                {
-                    value: '2_8',
-                    name: '2-8 Hours',
-                    start: moment().subtract(2,'hours'),
-                    end: moment().subtract(8,'Hours')
-                }, {
-                    value: '8_24',
-                    name: '8-24 Hours',
-                    start:moment().subtract(8,'hours'),
-                    end: moment().subtract(24,'Hours')
-                }, {
-                    value: '24_48',
-                    name: '24-48 Hours',
-                    start: moment().subtract(24,'hours'),
-                    end: moment().subtract(48,'Hours')
-                },
-                {
-                    value: 'Older',
-                    name: 'Older',
-                    start: moment().subtract(48,'hours'),
-                    end: moment().subtract(240,'Hours')
-                }
-                
-            ],
+            timeConfig:timeList,
         }
 
         this.handleFilterData = this.handleFilterData.bind(this);
@@ -170,8 +166,8 @@ class FilterComponent extends React.Component {
         const { sortConfig, severityConfig, filterLabels, timeConfig } = this.state;
 
         return (
-            <div className="w3-bar  w3-hide w3-teal w3-top kf-top-bar-filter">
-                <div className="w3-dropdown-hover w3-teal">
+            <div className="w3-bar  w3-blue-grey w3-top kf-top-bar-filter">
+                <div className="w3-dropdown-hover w3-hide w3-indigo">
                     <button className="w3-button w3-margin-right">
                         {filterLabels['sort']} <span className="kf-carot"></span>
                     </button>
@@ -182,7 +178,7 @@ class FilterComponent extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="w3-dropdown-hover w3-teal">
+                <div className="w3-dropdown-hover w3-hide w3-indigo">
                     <button className="w3-button w3-margin-right">
                         {filterLabels['severity']} <span className="kf-carot"></span>
                     </button>
@@ -193,7 +189,7 @@ class FilterComponent extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="w3-dropdown-hover w3-teal">
+                <div className="w3-dropdown-hover w3-small w3-indigo">
                     <button className="w3-button w3-margin-right">
                         {filterLabels['district']} <span className="kf-carot"></span>
                     </button>
@@ -204,7 +200,7 @@ class FilterComponent extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="w3-dropdown-hover w3-teal">
+                <div className="w3-dropdown-hover w3-small w3-indigo">
                     <button className="w3-button w3-margin-right">
                         {filterLabels['time']} <span className="kf-carot"></span>
                     </button>
@@ -215,6 +211,7 @@ class FilterComponent extends React.Component {
                         />
                     </div>
                 </div>
+                {this.props.children}
             </div>
         );
     }
