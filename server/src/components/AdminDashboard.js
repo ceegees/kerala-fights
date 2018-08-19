@@ -1,10 +1,9 @@
 import  React,{ Component } from 'react'; 
-import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
-import { connect } from 'react-redux';
-import moment from 'moment';
+import {NavLink,withRouter} from 'react-router-dom';
+import { connect } from 'react-redux'; 
 import { showMessage, hideMessage } from './../redux/actions.js';   
 import AppMessage from './AppMessage.js';
- 
+import {Reveal} from './Helper';
 import Rescue from './Rescue';
 import DetailsModal from './DetailsModal';
 import RequestLister from './RequestLister';
@@ -65,10 +64,12 @@ class AdminDashboard extends Component{
     showDetailModal(item){
         const {status ='new'} = this.props.match.params;
         this.setState({
-            modal:<DetailsModal
-                item={item} 
-                status={status}
-                hideModal={this.hideModal.bind(this)}/>
+            modal:<Reveal onClose={this.hideModal.bind(this)} >
+                <DetailsModal
+                    item={item} 
+                    status={status}
+                    />
+            </Reveal>
         });
     }
     newRequest(){

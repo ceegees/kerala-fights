@@ -418,6 +418,7 @@ export class HeaderSection extends Component {
                         <NavLink className="w3-bar-item w3-button " to="/heatmap">HeatMap</NavLink>
                 </div>
             </nav> 
+            {this.props.children}
         </section> 
     }
 }

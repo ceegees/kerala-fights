@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
-import {HeaderSection} from './Helper';
+import {HeaderSection,Reveal} from './Helper';
 import axios from 'axios';   
 import AppMessage from './AppMessage.js';
 
@@ -68,9 +68,10 @@ class HeatMap extends Component {
     }
 
     showDetailModal(item){
-        this.setState({modal:<DetailsModal
-            item={item} 
-            hideModal={this.hideModal.bind(this)}/>});
+        this.setState({modal:<Reveal onClose={this.hideModal.bind(this)}>
+            <DetailsModal item={item} 
+            />
+            </Reveal>});
     }
 
     attachInfo(marker,item){
@@ -104,19 +105,20 @@ class HeatMap extends Component {
     render() {
         return <div>
             <AppMessage />
-            <HeaderSection authUser={this.props.authUser}/>
-            <div className="w3-bar w3-teal  kf-top-bar" style={{marginTop:"20px"}}>
+            <HeaderSection authUser={this.props.authUser}>
+            <div className="w3-bar w3-teal  kf-top-bar">
                 <div className="w3-right "> 
                     {this.props.statusList.map(item=>{
                             return <NavLink key={item.key}
                             activeClassName="active" 
-                            className={`w3-bar-item w3-button w3-hide-small w3-small ${item.cls}`}
+                            className={`w3-bar-item w3-button w3-small ${item.cls}`}
                             to={`/heatmap/${item.key}`}>
                                 {item.title}
                         </NavLink>
                     })} 
                 </div>
             </div>
+            </HeaderSection>
             {this.state.modal}
             <div id="google-map" style={{width:"100vw",height:"90vh"}}></div>
         </div>
