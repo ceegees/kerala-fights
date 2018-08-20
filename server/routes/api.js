@@ -159,16 +159,19 @@ router.get('/sync',async(req,res) => {
                 let resp  = await sheets.spreadsheets.values.get({
                     auth: client,
                     spreadsheetId: sheetId,
-                    range: `${_sheet.properties.title}!A1:Z2000`
+                    range: `${_sheet.properties.title}!A1:Z3000`
                 });
                 
                 //iterate over the rows and identify the header row
                 if(resp.data.values) {
                     let values = resp.data.values;
-                    let headerIdx = values[0][0].toLowerCase().replace('.', '') === 'slno' ? 0 : 1
+                    let headerIdx = values[0][0] && values[0][0].toLowerCase().replace('.', '') === 'slno' ? 0 : 1
                     let colsList = [];
                     values[headerIdx].forEach(col=>{
-                        if(col.trim() === '') { return; }
+                        if(col.trim() === '') { 
+                            //ALAPPUZHA DISTRICT dont have the Sl.no header column
+                            return; 
+                        }
                         //check if the column mapping is already defined
                         if(!colMaps[col]) {
                             console.log("Unmapped column found", col);
