@@ -112,41 +112,117 @@ router.get('/sheet',function(req,res) {
         res.json(err);
     }); 
 });
-router.get('/sync',function(req,res) {
+router.get('/sync',async(req,res) => {
 
-    const sheetId = 
-    //"1MbCBl5AYs3PgdPcrIz6nFR98y3acUIa73Ba_Wh2EmEc";
-    "1eXLEA4UW2Eq4KKcCv_9scHL_xDj0fadLd3VxyqCYu94";
-    const sheetName = `Ernakulam!A1:P5000`;
+    //const sheetId = "1eXLEA4UW2Eq4KKcCv_9scHL_xDj0fadLd3VxyqCYu94";
+    const sheetId = "1xyCnukvtSEeIFBzMhvxtnFVivFNEx7v06Q67MW8Zbnc";
+    const sheetName = `${req.query.mon}!A1:J1000`
     const sheets = google.sheets('v4');
 
-    service()
-    .then(client => {
-        return sheets.spreadsheets.values.get({
+    let colMaps = {
+        "Sl.no": "remoteId",
+        "Sl.no.": "remoteId",
+        "Time Stamp": "createdAt",
+        "Time Stamps": "createdAt",
+        "Name | പേര് ": "personName",
+        "Name | പേര്": "personName",
+        "Contact no. | നമ്പര്‍": "phoneNumber",
+        "Volunteer Name": "volunteer",
+        "volunteer Name": "volunteer",
+        "Volnteer Name": "volunteer",
+        "Volunteer name": "volunteer",
+        "Co-ordinates (if available)": "latLng",
+        "Location | സ്ഥലം": "location",
+        "Status | അവസ്ഥ": "status",
+        "No. of people | ആളെണ്ണം": "peopleCount",
+        "Degree of emergency | തീവ്രത": "operatorSeverity",
+        "Current Status ": "currentStatus",
+        "Current Status": "currentStatus",
+        "Help required": "requireHelp",
+        "Call Status": "callStatus",
+        "Rescue Required": "requireRescue",
+        "Rescue reqd.": "requireRescue"
+    };
+    
+    try {
+        let client = await service();
+        let response = await sheets.spreadsheets.get({
             auth: client,
-            spreadsheetId: sheetId,
-            range: sheetName
+            spreadsheetId: sheetId
         });
-    }).then(response => {
-        // const header = response.data.values.shift();
-        // const feed = response.data.values.reduce((acc,item,idx)=>{
-        //     const def = {
-        //         "MessageStatus": "Not Sent",
-        //         "ReviewStatus":"0",
-        //         Row:(idx+2)
-        //     };
-        //     acc.push(item.reduce((obj,col,idx)=>{
-        //         obj[header[idx]] = col;
-        //         return obj;
-        //     },def));
-        //     return acc;
-        // },[]);
-        res.json(response.data.values)
-    })
-    .catch(err => {
+
+        let data = [];
+        if(response.data.sheets) {
+            
+            for(var i = 0; i < response.data.sheets.length; i++) {
+                let _sheet = response.data.sheets[i];
+                let resp  = await sheets.spreadsheets.values.get({
+                    auth: client,
+                    spreadsheetId: sheetId,
+                    range: `${_sheet.properties.title}!A1:Z3000`
+                });
+                
+                //iterate over the rows and identify the header row
+                if(resp.data.values) {
+                    let values = resp.data.values;
+                    let headerIdx = values[0][0] && values[0][0].toLowerCase().replace('.', '') === 'slno' ? 0 : 1
+                    let colsList = [];
+                    values[headerIdx].forEach(col=>{
+                        if(col.trim() === '') { 
+                            //ALAPPUZHA DISTRICT dont have the Sl.no header column
+                            return; 
+                        }
+                        //check if the column mapping is already defined
+                        if(!colMaps[col]) {
+                            console.log("Unmapped column found", col);
+                        }
+                        if(colsList.indexOf(col) <= -1) {
+                            colsList.push(col);
+                        }
+                    });
+
+                    //assign row data
+                    let rows = [];
+                    for(var rIdx = headerIdx+1; rIdx < values.length; rIdx++) {
+                        let row  = {};
+                        values[rIdx].forEach((val, cIdx)=>{
+                            val = val.trim();
+                            let colName = colMaps[colsList[cIdx]] || colsList[cIdx];
+                            //if colName not found and value is valid, set a random colName
+                            if(!colName && val !== '') {
+                                colName = `unknown-${cIdx}`;
+                            }
+                            row[colName] = val;
+                        });
+
+                        rows.push(row);
+                    }
+
+                    //set the data specific to one particular sheet
+                    data.push({sheet: _sheet.properties.title, data: rows, range:  resp.data.range});
+                }
+            }
+        }
+  
+        /*const header = response.data.values.shift();
+        const feed = response.data.values.reduce((acc,item,idx)=>{
+            const def = {
+                "MessageStatus": "Not Sent",
+                "ReviewStatus":"0",
+                Row:(idx+2)
+            };
+            acc.push(item.reduce((obj,col,idx)=>{
+                obj[header[idx]] = col;
+                return obj;
+            },def));
+            return acc;
+        },[]);*/
+        res.json(data);
+    
+    } catch(err) {
         console.log("Error",err);
         res.json(err);
-    }); 
+    }
 });
 
 router.get('/rescue-status',function(req,res){
