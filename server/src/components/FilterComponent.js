@@ -69,8 +69,7 @@ class FilterComponent extends React.Component {
             start:moment().subtract(30,'days').valueOf(),
             end:end.valueOf()
         });
-
-        console.log(timeList)
+ 
         this.state = {
             timeRange: {
                 start: '',

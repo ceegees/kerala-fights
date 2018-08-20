@@ -42,7 +42,7 @@
 }
 
 .w3-modal{
-    padding-top:60px;
+    padding-top:20px;
 }
 .w3-button.active, .w3-button:hover{
     background:white !important;
@@ -70,7 +70,11 @@
         height: 10px;
     }
 }
-
+.rescue-table{
+    tr td {
+        vertical-align: top;
+    }
+}
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

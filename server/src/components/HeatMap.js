@@ -46,10 +46,10 @@ class HeatMap extends Component {
                     },
                     map: this.map
                 }); 
-
                 this.attachInfo(marker, item);
                 this.markers.push(marker); 
             });
+
             this.markerCluster = new MarkerClusterer(this.map, this.markers, {
                 imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
             });
@@ -97,7 +97,9 @@ class HeatMap extends Component {
                     stylers: [{ visibility: 'off' }]  // Turn off bus stations, train stations, etc.
                 }],
             }); 
-            this.fetchData();
+            setTimeout(()=>{
+                this.fetchData();
+            },2000)
         
         }  
     }

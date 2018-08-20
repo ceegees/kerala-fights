@@ -119,7 +119,7 @@ export  class FormTextField extends Component {
         }
     }
 
-    render() {
+    render() { 
         let {inputClass}   = this.state;
         if (this.state.value === null || this.state.value === undefined) {
             this.state.value = this.props.value;
@@ -144,7 +144,7 @@ export  class FormTextField extends Component {
                     id={this.props.id}
                     autoComplete={this.props.name}
                     name={this.props.name}
-                    defaultValue={this.props.defaultValue}
+                    defaultValue={this.props.defaultVal}
                     onBlur={this.props.onBlur}
                     value={this.state.value ? this.state.value : ""}
                     onChange = {this.onChange.bind(this)}
@@ -415,7 +415,7 @@ export class HeaderSection extends Component {
                        {this.props.authUser ? <a className="w3-bar-item w3-button " href="/manage">Manage</a> : <a className="w3-bar-item w3-button " href="/manage">Volunteer Login</a>}
                         <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button ">Rescue Centers</a> 
                         <a target="_blank" href="https://www.keralarescue.in/contactus/" className="w3-bar-item w3-button ">Contact Rescue</a> 
-                        <NavLink className="w3-bar-item w3-button " to="/heatmap">HeatMap</NavLink>
+                        <NavLink className="w3-bar-item w3-button " to="/heatmap/need_help">HeatMap</NavLink>
                 </div>
             </nav> 
             {this.props.children}

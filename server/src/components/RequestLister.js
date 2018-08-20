@@ -43,8 +43,7 @@ export default class RequestLister extends Component {
             obj.startAt = this.filter.timeRange.start,
             obj.endAt = this.filter.timeRange.end
         }
-        const str = qs.stringify(obj);
-        console.log(str);
+        const str = qs.stringify(obj); 
         axios.get(`/api/v1/rescue-list?${str}`).then(resp=>{
             this.setState({
                 data:resp.data.data

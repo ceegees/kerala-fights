@@ -30,10 +30,18 @@ const DaashboardInfo =() => {
                 <li>Mark the duplicates - and that way we will be able understand problem in hand.</li>
                 <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
             </ul>
-            <NavLink  to="/manage/duplicates" 
-                className="w3-button  w3-block w3-orange w3-margin-bottom">
+            <div className="w3-row-padding">
+                <div className="w3-col s12 l6"><NavLink  to="/manage/duplicates" 
+                className="w3-button  w3-block w3-blue w3-margin-bottom">
                 Check For duplicates
-            </NavLink> 
+            </NavLink> </div>
+                <div  className="w3-col s12 l6"><NavLink  to="/manage/one_item/new" 
+                className="w3-button  w3-block w3-green w3-margin-bottom">
+                Takeup a Help request and start working on it
+            </NavLink> </div>
+            </div>
+            
+            
             <StatusWidget/>
         </div>
     )
@@ -60,7 +68,7 @@ class OneAtATime extends Component {
         this.fetchData(this.props);
     }
     render(){
-        return <div  style={{marginTop:"80px"}}>
+        return <div  style={{marginTop:"20px"}}>
             {this.state.data ? this.state.data.list.map(item => 
                 <DetailsModal  
                 authUser={this.props.authUser}

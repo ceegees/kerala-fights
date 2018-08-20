@@ -32,6 +32,7 @@ async function loadData(offset=0){
     let maxId = 0;
     if (parsed.data.length == 0){
         console.log('Processin Complete');
+        process.exit();
         return;
     }
     for(var idx = 0;idx < parsed.data.length;idx++){
@@ -112,8 +113,8 @@ async function loadData(offset=0){
         }
 
         if (row.status == 'NEW'){
-            row.status = data.status;
-        }
+            row.status = data.status.toUpperCase();
+        }   
  
         row.remoteId=  data.id;
         row.source  = source;
@@ -162,12 +163,22 @@ async function loadData(offset=0){
 }
 
 async function clearLocks(){
-    const qry = "UPDATE help_requests set operator_id=NULL,operator_lock_at=NULL where operator_lock_at < "+moment().format();
-  
-    const res = await sequelize.query(qry,{
-        plain: false,
-        raw: false,
-    });
+    models.HelpRequest.update({
+        operatorId:null,
+        operatorLockAt:null
+    },{
+        where:{
+            operatorLockAt:{
+              [Sequelize.Op.lt] : moment().subtract(10,'minutes')
+            }
+        }
+    }).then(res => {
+        console.log(res);
+        process.exit();
+    }).catch(ex => {
+        console.log(ex);
+        process.exit();
+    })
 }
 
 async function handleContent(resp,page){ 
@@ -322,6 +333,8 @@ if (process.argv.length > 2 ){
         loadFromHTML(process.argv[3]);
     } else if (option == 'dedup'){
         deDupe();
+    } else if (option == 'clear_locks'){
+        clearLocks();
     }
 } else {
     console.log('Missing options [data  | html endpage | sheet]');

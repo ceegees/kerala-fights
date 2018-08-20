@@ -174,6 +174,9 @@ router.get('/rescue-worklog',function(req,res){
         if (item.operatorLockAt != null) {
             return item;
         }
+        if (!req.user){
+            return item;
+        }
         item.operatorId = req.user.id
         item.operatorLockAt = new Date();
         return item.save()
@@ -204,7 +207,7 @@ router.get('/rescue-worklog',function(req,res){
 
 router.post('/rescue-release-lock',function(req,res){
     models.HelpRequest.findById(req.body.id).then(item => {
-        if (req.user.id == item.operatorId){
+        if (req.user && req.user.id == item.operatorId){
             item.operatorId = null;
             item.operatorLockAt = null;
             return item.save()
@@ -213,7 +216,9 @@ router.post('/rescue-release-lock',function(req,res){
         }
     }).then(item => {
         res.json(jsonSuccess(item));
-    });
+    }).catch(ex => {
+        res.json(jsonError(ex.message));
+    })
 })
 
 
@@ -264,7 +269,7 @@ router.post('/rescue-update',function(req,res){
             statusIn:item.operatorStatus.toUpperCase(),
             statusOut:status,
             comments:""+comments + "\nSeverity: " +severity,
-        }) ;
+        });
     }).then(workLog=>{
         console.log(currentMove);
         rescue.status = currentMove.target.toUpperCase();
@@ -332,7 +337,8 @@ router.get('/rescue-list',function(req,res){
         whereQuery = {
             status: {
                 [Op.in]:state.db
-            }
+            },
+            parentId:null
         };
 
         if (req.query.district){
@@ -370,7 +376,6 @@ router.get('/rescue-list',function(req,res){
         include :[ { 
             model: models.User ,as:'operator' 
         }]
-
     }).then(list => {
         return models.HelpRequest.count({
             where:whereQuery,
@@ -389,6 +394,73 @@ router.get('/rescue-list',function(req,res){
         ));
     });
 });
+
+router.post('/resuce-edit',function(req,res){
+    
+        const data = req.body;       
+        let rescue = null
+        models.HelpRequest.findById(data.id)
+        .then(r => {
+            if (!r){
+                throw new Error("Invalid id");
+            }
+            rescue = r;
+            return models.WorkLog.create({
+                requestId:rescue.id,
+                actorId:req.user.id,
+                statusIn:rescue.status,
+                statusOut:rescue.status,
+                comments: 'DATA_EDIT:'+JSON.stringify(rescue)
+            })
+        }).then(log => {
+        
+            rescue.personName = data.personName;
+            rescue.phoneNumber = data.phoneNumber;
+            rescue.address = data.address;
+            rescue.memberCount = data.memberCount;
+            rescue.latLng= {
+                type:'Point',
+                coordinates:[
+                   parseFloat(""+ data.location_lat),
+                   parseFloat(""+ data.location_lon)
+                ]
+            };
+            var newInfo = {
+                detailrescue:data.detailrescue,
+                needrescue:data.detailrescue !="",
+                detailwater:data.detailwater,
+                needwater:data.detailwater != "",
+                detailtoilet:data.detailtoilet,
+                needtoilet:data.detailtoilet != "", 
+                detailfood:data.detailfood,
+                needfood:data.detailfood != "",
+                detailmed:data.detailmed,
+                needmed:data.detailmed!= "",
+                detailkit_util:data.detailkit_util,
+                needkit_util : data.detailkit_util != "",
+                detailcloth:data.detailcloth ,
+                needcloth:data.detailcloth !="" ,
+            }
+            rescue.json.info = Object.assign(rescue.json.info||{},newInfo);
+            rescue.json.location = {
+                lat:parseFloat(""+ data.location_lat),
+                lon:parseFloat(""+ data.location_lon)
+            }
+            rescue.json.input = Object.assign(rescue.json.input||{},{
+                location_lat:data.location_lat,
+                location_lon : data.location_lon, 
+                google_address:data.address_components
+            });
+            return rescue.save();
+        }).then(data => {
+            
+            res.json(jsonSuccess(data));
+        }).catch(ex =>{
+            console.log(ex);
+            res.json(jsonError(ex.message));
+        });
+          
+})
 
 router.post('/add-rescue',function(req,res){ 
     try {
