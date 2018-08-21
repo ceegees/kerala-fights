@@ -378,6 +378,7 @@ router.get('/rescue-list',function(req,res){
     params.status = params.status.toLowerCase();
     const state = statusList.find(i => i.key == params.status);
     let whereQuery = null;
+
     if (params.status == 'duplicates'){
         if (params.q){
             whereQuery = {
@@ -394,31 +395,15 @@ router.get('/rescue-list',function(req,res){
                 status:{
                     [Op.ne]:'RESOLVED'
                 } 
-            }
-            if (req.query.district){
-                whereQuery.district = req.query.district;
-            }
-
-            if (req.query.startAt && req.query.endAt){
-                whereQuery.createdAt = {
-                    [Op.between] : [
-                        moment.unix(req.query.startAt/1000).toDate(),
-                        moment.unix(req.query.endAt/1000).toDate()
-                    ]
-                }
-            }
+            }  
         }
-
     } else if (req.query.q){
         const parts = req.query.q.split('-');
         const ors = {
             phoneNumber:{
-                [Op.eq]: `${req.query.q}%`
+                [Op.like]: `${req.query.q}%`
             },
             personName:{
-                [Op.like]:`${req.query.q}%`
-            },
-            district:{
                 [Op.like]:`${req.query.q}%`
             }
         } 
@@ -435,23 +420,8 @@ router.get('/rescue-list',function(req,res){
             res.json(jsonError("Invalid status"));
         }
         whereQuery = {
-            status: {
-                [Op.in]:state.db
-            },
             parentId:null
         };
-
-        if (req.query.district){
-            whereQuery.district = req.query.district;
-        }
-        if (req.query.startAt && req.query.endAt){
-            whereQuery.createdAt = {
-                [Op.between] : [
-                    moment.unix(req.query.startAt/1000).toDate(),
-                    moment.unix(req.query.endAt/1000).toDate()
-                ]
-            }
-        }
     }
 
     if (req.query.location){
@@ -460,8 +430,29 @@ router.get('/rescue-list',function(req,res){
                 [Op.ne] :null
             }
         }
-        if (state){
-            whereQuery.status = state.db;
+    }
+
+    if (req.query.severity){
+        whereQuery.operatorSeverity = req.query.severity;
+    }
+    if (state){
+        whereQuery.status = state.db;
+    }
+
+    if (req.query.requestType){
+        whereQuery.type = req.query.requestType;
+    }
+
+    if (req.query.district){
+        whereQuery.district = req.query.district;
+    }
+
+    if (req.query.startAt && req.query.endAt){
+        whereQuery.createdAt = {
+            [Op.between] : [
+                moment.unix(req.query.startAt/1000).toDate(),
+                moment.unix(req.query.endAt/1000).toDate()
+            ]
         }
     }
 
@@ -518,6 +509,9 @@ router.post('/resuce-edit',function(req,res){
             rescue.phoneNumber = data.phoneNumber;
             rescue.address = data.address;
             rescue.memberCount = data.memberCount;
+            if (data.type){
+                rescue.type = data.type;
+            }
             rescue.latLng= {
                 type:'Point',
                 coordinates:[
@@ -553,7 +547,6 @@ router.post('/resuce-edit',function(req,res){
             });
             return rescue.save();
         }).then(data => {
-            
             res.json(jsonSuccess(data));
         }).catch(ex =>{
             console.log(ex);
@@ -571,7 +564,7 @@ router.post('/add-rescue',function(req,res){
             district: data.district,
             type : data.help_type,
             location:data.location,
-            memberCount:data.member_count,
+            peopleCount:data.member_count,
             address:data.address +"\n"+ data.alternate_numbers,
             powerBackup:data.power_backup,
             information:data.member_details,
@@ -602,11 +595,7 @@ router.post('/add-rescue',function(req,res){
             }
         };
         models.HelpRequest.create(passed).then(resp => {
-            res.json(jsonSuccess({
-                db:resp,
-                passed:passed,
-                send:data
-            } ));
+            res.json(jsonSuccess(resp,'A new case Id - '+ resp.id + ' is generated for you  Please use this for any future reference '));
         })
     }catch(ex){
         console.log(ex);

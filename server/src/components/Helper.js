@@ -403,10 +403,9 @@ export class GoogleMapWidget extends Component {
     }
 }
 
-
 export class HeaderSection extends Component {
     render(){
-        return <section className="top_section w3-top "> 
+        return <section className="top_section "> 
             <nav className="w3-bar w3-blue" >
                 <div className="w3-left">
                     <a className="w3-bar-item w3-button" href="/">Kerala Flood Relief - കേരളം പൊരുതുന്നു , ഒരുമിച്ച് </a>

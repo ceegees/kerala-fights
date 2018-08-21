@@ -6,44 +6,34 @@ import moment from 'moment';
 class FilterListContent extends React.Component {
 
     render() {
-        const filterLists = [];
-        const { filterOptions } = this.props;
-
+        const filterLists = [<option value="" key="nothin">All</option>];
+        const { filterOptions } = this.props; 
         if (Array.isArray(filterOptions)) {
-            filterOptions.map((item, key) => {
-                const filterType = item.start ? 'time' : item.type;
-                const filterValue = item.start ? item : item.value;
+            filterOptions.map((item, key) => { 
                 filterLists.push(
-                    <a
-                        key={`${item.type}_${key}`}
-                        onClick={() => {this.props.handleFilterData(filterType, filterValue, item.name)}}
-                        className="w3-bar-item w3-button"
-                    >{item.name}</a>
+                    <option key={item.value} value={item.value}>{item.name}</option> 
                 );
             });
         } else if (!Array.isArray(filterOptions) && typeof(filterOptions) === "object") {
             Object.keys(filterOptions).forEach((key) => {
                 filterLists.push(
-                    <a  
-                        key={`district_${key}`}
-                        onClick={() => {this.props.handleFilterData('district', filterOptions[key], filterOptions[key])}}
-                        className="w3-bar-item w3-button"
-                    >
-                        {filterOptions[key]}
-                    </a> 
+                    <option key={key} > {filterOptions[key]}</option>
                 );
             });
         }
 
-        return (
-            filterLists
-        );
+        return  <div style={{marginBottom:"6px"}}>
+            <label>{this.props.name}</label>
+        <select onChange={this.props.handleFilterData} className="w3-large" className="w3-input w3-select" style={{height:"32px"}}> 
+            {filterLists}
+        </select>
+        </div>
     }
 }
 
 class FilterComponent extends React.Component {
-    constructor (props) {
-        super(props);
+    constructor (args) {
+        super(args);
         
         let end = moment().endOf('day').add(1,'minute'); 
         let tm = new Date();
@@ -53,62 +43,30 @@ class FilterComponent extends React.Component {
         for(var idx = 0;idx < 12;idx++){
             end = end.subtract(6,"Hours");
             if (end < tm) {
-                timeList.push({
-                    key:end.format('T_MMDDHHmm'),
-                    name:end.format('Do hh a')+" - " + endStr,
-                    start:end.valueOf(),
-                    end:endRange.valueOf()
+                timeList.push({ 
+                    name:end.format('Do hh a')+" - " + endStr, 
+                    value: `${endRange.valueOf()}-${end.valueOf()}`
                 });
                 endRange = end.clone();
                 endStr = endRange.format('Do hh a');
             } 
         }
+
         timeList.push({
-            key:'older',
-            name:'Older',
-            start:moment().subtract(30,'days').valueOf(),
-            end:end.valueOf()
+            name:'older', 
+            value: `${moment().subtract(30,'days').valueOf()}-${end.valueOf()}`
         });
  
         this.state = {
-            timeRange: {
-                start: '',
-                end: '',
-            },
+            
             filterLabels: {
                 sort: 'Sort',
                 time: 'Time',
                 severity: 'Severity All',
                 district: 'District All',
-            },
-            filterData: {},
-            severityConfig: [
-                {
-                    type: 'severity',
-                    value: 0,
-                    name: 'Moderate',
-                },
-                {
-                    type: 'severity',
-                    value: 3,
-                    name: 'Needs Help',
-                },
-                {
-                    type: 'severity',
-                    value: 4,
-                    name: 'Urgent',
-                },
-                {
-                    type: 'severity',
-                    value: 6,
-                    name: 'Very Urgent',
-                },
-                {
-                    type: 'severity',
-                    value: 8,
-                    name: 'Life Threatening',
-                }
-            ],
+                type:'Request Type'
+            }, 
+            filterData: {}, 
             sortConfig: [
                 {
                     type: 'sort',
@@ -123,38 +81,31 @@ class FilterComponent extends React.Component {
             ],
             timeConfig:timeList,
         }
-
-        this.handleFilterData = this.handleFilterData.bind(this);
-        this.handleTimeRange = this.handleTimeRange.bind(this);
+        
     }
 
-    handleFilterData(filterType, filterValue, filterName) {
+    handleFilterData(type,e) {
+    
         const { handleFilterData } = this.props;
-        const { filterData, filterLabels } = this.state;
-        filterData[filterType] = filterValue;
-        filterLabels[filterType] = filterName;
-        this.setState({
-            filterData,
-            filterLabels,
-        })
+        let { filterData } = this.state;
+        filterData[type] = e.target.value;
+        
+        console.log(filterData);
         if (handleFilterData) {
             handleFilterData(filterData);
         }
     }
 
-    handleTimeRange(filterType, filterValue, filterName) {
+    handleTimeRange(name,e) { 
         const { handleFilterData } = this.props;
-        let { filterData, timeRange, filterLabels } = this.state;
-        timeRange['start'] = filterValue.start;
-        timeRange['end'] = filterValue.end;
-        filterData = Object.assign({}, filterData);
-        filterLabels[filterType] = filterName;
-        filterData.timeRange = timeRange;
-        this.setState({
-            filterData,
-            filterLabels,
-            timeRange,
-        })
+
+        let { filterData } = this.state;
+        const combined = e.target.value;
+        console.log('combined',combined);
+        const parts = combined.split('-');
+
+        filterData.startAt = parts[0];
+        filterData.endAt = parts[1];
         if (handleFilterData) {
             handleFilterData(filterData);
         }
@@ -162,57 +113,43 @@ class FilterComponent extends React.Component {
 
     render() {
         const { districtMap } = this.props;
-        const { sortConfig, severityConfig, filterLabels, timeConfig } = this.state;
-
+        const { sortConfig, timeConfig } = this.state;
+        const {requestTypeList,severityList} = this.props; 
         return (
-            <div className="w3-bar  w3-blue-grey w3-top kf-top-bar-filter">
-                <div className="w3-dropdown-hover w3-hide w3-indigo">
-                    <button className="w3-button w3-margin-right">
-                        {filterLabels['sort']} <span className="kf-carot"></span>
-                    </button>
-                    <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        <FilterListContent
-                            filterOptions={sortConfig}
-                            handleFilterData={this.handleFilterData}
-                        />
-                    </div>
-                </div>
-                <div className="w3-dropdown-hover w3-hide w3-indigo">
-                    <button className="w3-button w3-margin-right">
-                        {filterLabels['severity']} <span className="kf-carot"></span>
-                    </button>
-                    <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        <FilterListContent
-                            filterOptions={severityConfig}
-                            handleFilterData={this.handleFilterData}
-                        />
-                    </div>
-                </div>
-                <div className="w3-dropdown-hover w3-small w3-indigo">
-                    <button className="w3-button w3-margin-right">
-                        {filterLabels['district']} <span className="kf-carot"></span>
-                    </button>
-                    <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        <FilterListContent
-                            filterOptions={districtMap}
-                            handleFilterData={this.handleFilterData}
-                        />
-                    </div>
-                </div>
-                <div className="w3-dropdown-hover w3-small
-                
-                 w3-indigo">
-                    <button className="w3-button w3-margin-right">
-                        {filterLabels['time']} <span className="kf-carot"></span>
-                    </button>
-                    <div className="w3-dropdown-content w3-bar-block w3-card-4">
-                        <FilterListContent
-                            filterOptions={timeConfig}
-                            handleFilterData={this.handleTimeRange}
-                        />
-                    </div>
-                </div>
-                {this.props.children}
+            <div className="w3-padding"> 
+                <FilterListContent
+                    name="Request Types" 
+                    filterOptions={requestTypeList}
+                    handleFilterData={this.handleFilterData.bind(this,'requestType')} 
+                /> 
+                {/* <FilterListContent
+                    name="Status"
+                    filterOptions={districtMap}
+                    handleFilterData={this.handleFilterData}
+                />   */}
+
+                <FilterListContent
+                    name="Districts"
+                    filterOptions={districtMap}
+                    handleFilterData={this.handleFilterData.bind(this,'district')}
+                />  
+                <FilterListContent
+                    name="Time Range"
+                    filterOptions={timeConfig}
+                    handleFilterData={this.handleTimeRange.bind(this,'time')}
+                />  
+
+                <FilterListContent
+                    name="Severity"
+                    filterOptions={severityList}
+                    handleFilterData={this.handleFilterData.bind(this,'severity')}
+                /> 
+
+                {/* <FilterListContent
+                    name="Sort option"
+                    filterOptions={sortConfig}
+                    handleFilterData={this.handleFilterData}
+                /> */}
             </div>
         );
     }
@@ -222,6 +159,8 @@ const mapStateToProps = (state) => {
     return {
         districtMap: state.districtMap,
         statusList: state.statusList,
+        severityList:state.severityList,
+        requestTypeList:state.requestTypeList
     }
 }
 

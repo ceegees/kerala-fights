@@ -6,6 +6,10 @@ import axios from 'axios';
 import AppMessage from './AppMessage.js';
 
 import DetailsModal from './DetailsModal';
+import FilterComponent from './FilterComponent';
+
+import qs from 'query-string';
+
 class HeatMap extends Component {
     constructor(arg){
         super(arg);
@@ -15,6 +19,7 @@ class HeatMap extends Component {
         this.map = null;
         this.markerCluster = null;
         this.markers =[];
+        this.filter = {};
     }
 
     fetchData(){
@@ -29,7 +34,16 @@ class HeatMap extends Component {
         });
         this.markers = [];
         const {status = 'new'} = this.props.match.params;
-        axios.get(`/api/v1/rescue-list?location=1&per_page=3000&status=${status}`).then(resp => {
+
+
+        let obj = {
+            location:1,
+            status:status
+        }
+        
+        obj = Object.assign(obj,this.filter);
+        const str = qs.stringify(obj); 
+        axios.get(`/api/v1/rescue-list?${str}`).then(resp => {
             resp.data.data.list.map(item => {
                 let lat = null,lng = null;
                 if(item.latLng && item.latLng.coordinates && item.latLng.coordinates.length == 2) {
@@ -60,6 +74,11 @@ class HeatMap extends Component {
         this.setState({modal:null})
     }
 
+    handleFilterData(filterData) {
+        this.filter = filterData;
+        this.fetchData(this.props);
+    }
+
     componentDidUpdate(nextProps,nextState){
         if (nextProps.match.params.status != this.props.match.params.status){
             this.fetchData();
@@ -74,7 +93,6 @@ class HeatMap extends Component {
     }
 
     attachInfo(marker,item){
-
         marker.addListener('click', () => {
            this.showDetailModal(item);
         });
@@ -97,6 +115,7 @@ class HeatMap extends Component {
                     stylers: [{ visibility: 'off' }]  // Turn off bus stations, train stations, etc.
                 }],
             }); 
+
             setTimeout(()=>{
                 this.fetchData();
             },2000)
@@ -121,7 +140,13 @@ class HeatMap extends Component {
             </div>
             </HeaderSection>
             {this.state.modal}
-            <div id="google-map" style={{width:"100vw",height:"90vh"}}></div>
+            <div className="w3-row" >
+                <div className="w3-col l3">
+                    <FilterComponent handleFilterData={this.handleFilterData.bind(this)} />
+                </div>
+                <div className="w3-col l9 m9"></div>
+            <div id="google-map" style={{height:"90vh"}}></div>
+            </div>
         </div>
     }
 }

@@ -1,18 +1,14 @@
 import Home from './components/Home' 
 import AdminDashboard from './components/AdminDashboard'
 import HeatMap from './components/HeatMap'
+import Rescue from './components/Rescue'
 
-const routes =  [
+const routes =  [ 
   {
-    path: '/',
+    path: '/new',
     exact: true,
-    component: Home,
-  },
-  {
-    path: '/home',
-    exact: true,
-    component: Home,
-  },
+    component: Rescue,
+  }, 
   {
     path:'/heatmap/:status?',
     exact:true,
@@ -22,7 +18,16 @@ const routes =  [
     path: '/manage/:status?/:page?',
     exact: true,
     component: AdminDashboard,
-  }
+  },
+  {
+    path: '/',  
+    exact:true,
+    component: Home,
+  },
+  {
+    path: '/:label',  
+    component: Home,
+  },
 ];
  
 export default routes;

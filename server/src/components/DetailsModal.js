@@ -127,11 +127,13 @@ class DetailsModal extends Component {
         const {update} = this.state;
         this.state.updateForm = {
             id:update.id,
+            type:update.type,
             personName:update.personName,
             phoneNumber:update.phoneNumber,
             address:[update.location , update.address].join('') ,
             information:update.information,
             peopleCount:update.peopleCount,
+            
 
             detailrescue:update.json.detailrescue,
             detailwater:update.json.detailwater,
@@ -167,6 +169,20 @@ class DetailsModal extends Component {
                         
                     </div>
                 <div className="w3-col l6 s12">
+                     <SelectField inputClass="w3-input w3-small w3-border" 
+                        label="Request Type"
+                        name="type" 
+                        isMandatory="true"
+                        defaultVal={update.type}
+                        value = {this.state.updateForm.type}
+                        valueChange={this.changeUpdateValue.bind(this)}
+                        errors = {this.state.updateErrors.type} 
+                    >
+    {this.props.requestTypeList.map(item =><option 
+    key={item.value} 
+    value={item.value}>{item.name}</option>)}
+                    </SelectField>
+
                     <FormTextField inputClass="w3-input w3-small w3-border" 
                         label="Name"
                         name="personName" 
@@ -401,15 +417,13 @@ class DetailsModal extends Component {
             updateForm = <div>Working :{update.operator.name}</div>
         }
 
-
-
         if (this.state.mode == 'edit' && update) {
             return this.renderEdit();
         }
 
         let leftCont = <div className="w3-col l6 s12">
            
-            <RowItem name="CaseId" value={item.id+'-'+item.remoteId} />
+            <RowItem name="CaseId" value={[item.id,item.remoteId].join('-')} />
             <RowItem name="Name" value={item.personName} />
             <RowItem name="Phone" value={<a className="w3-buttom w3-tag w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`} > {item.phoneNumber}</a>} />
             <RowItem name="Source" value={link} />
@@ -422,7 +436,7 @@ class DetailsModal extends Component {
             <RowItem name="Status" value={item.status} />
             <RowItem name="CreatedAt" value={moment(item.createdAt).fromNow()} />
             <RowItem name="Volunteer Status" value={item.operatorStatus} />
-            <RowItem name="Volunteer Acted At" value={item.operatorLastUpdated} />
+            <RowItem name="Volunteer Acted" value={moment(item.operatorUpdatedAt).fromNow()} />
      
         </div> ;
 
@@ -443,6 +457,8 @@ class DetailsModal extends Component {
 
 export default connect((state)=>{
     return {
+        requestTypeList:state.requestTypeList,
+        severityList:state.severityList,
         statusList:state.statusList
     }
 }, { 

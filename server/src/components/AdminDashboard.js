@@ -17,13 +17,16 @@ const DaashboardInfo =() => {
                 <li><h4>The Workflow</h4>
                     <ul className="w3-ul">
                         <ol>1.Check - for data correctness / Duplicates</ol>
-                        <ol>2.Call and Confirm - The person might sill need help, Call and Confirm the same.  </ol>
-                        <ol>3.Retry - If you are not able to reach on previous step, update status so that you can retry</ol>
+                        <ol>2.Call and Confirm - The person might still need help, Call and Confirm the same.  </ol>
+                        <ol>3.Retry - If you are not able to reach on previous step, update status, so that you can retry</ol>
                         <ol>4.Need Help - The Verified requests that need help which you understood after the call.</ol>
                         <ol>5.Escalated - The items that need urgent attention, we will co-ordinate with rescue teams and field volunteers to help this list</ol>
                         <ol>6.Resolved - Shows the resolved issues</ol>
+
                     </ul>
                 </li>
+
+                
             
                 <li>There are lot duplicates, see if the requester have added duplicates. you can do this by copying the phone number and searching on the searchbox above. Look at the list of requests and see if they are same, keep the one with maximum information and mark the rest of them as duplicates, as phone number is available there.</li>
                 <li>If you see data is duplicated, mark it as duplicate and resolve the issue.</li>
@@ -31,6 +34,7 @@ const DaashboardInfo =() => {
                 <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
                 <li><b>If you are facing any issue while operating - 
                 reload the page</b> </li>
+                <li><a target="_blank" href="https://docs.google.com/document/d/1jM_hdHgP-kxkzOtxl0n8mUGY4EzP6di2NyHIEvFp8YI/edit" >How To Use</a> , <a target="_blank"  href="https://docs.google.com/document/d/1oMs4JwHMDS9agR3voVpeGL0SMhfE35fETYNbD5rZLN8/edit">ഉപയോഗക്രമം </a></li>
             </ul>
             <div className="w3-row-padding">
                 <div className="w3-col s12 l6"><NavLink  to="/manage/duplicates" 
@@ -70,7 +74,7 @@ class OneAtATime extends Component {
         this.fetchData(this.props);
     }
     render(){
-        return <div  style={{marginTop:"20px"}}>
+        return <div >
             {this.state.data ? this.state.data.list.map(item => 
                 <DetailsModal  
                 authUser={this.props.authUser}
@@ -125,7 +129,8 @@ class AdminDashboard extends Component{
         } else if (status == 'one_item'){
             content = <OneAtATime status={page} authUser={this.props.authUser}/> 
         } else {
-            content = <RequestLister 
+            content =
+            <RequestLister 
                     authUser={this.props.authUser}
                     page={page} 
                     status={status}  
@@ -133,40 +138,30 @@ class AdminDashboard extends Component{
                     showDetailModal={this.showDetailModal.bind(this)} /> 
         }
         return (
-            <div>
+            <div >
                 <AppMessage />
-                <div className="w3-bar w3-teal w3-top kf-top-bar">
-                    <div className="w3-left">
+                <div className="w3-bar w3-teal kf-top-bar">
+                    <div>
                         <NavLink to="/manage/dashboard" exact className="w3-bar-item w3-small w3-button">
                             Admin Dashoard
                         </NavLink>
                         <button className="w3-bar-item w3-button w3-small w3-green" onClick={this.newRequest.bind(this)}>New <span className="w3-hide-small">Request</span></button>
                         <NavLink to="/heatmap" exact className="w3-bar-item w3-purple w3-small w3-button">
                             HeatMap
-                        </NavLink>
-                        <input className="w3-input w3-small w3-bar-item" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
+                        </NavLink> 
+                        <input style={{width:"400px"}} className="w3-input w3-bar-item w3-small w3-rest" onChange={this.searchRequests.bind(this)} placeholder="Search by Name / Phone number /Case Id / KeralaRescueId" />  
                     </div>
                     <div className="w3-right ">
                         <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium"  onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                             {this.props.statusList.map(item=>{
                                 return <NavLink key={item.key}
                                 activeClassName="active" 
-                                className={`w3-bar-item w3-button w3-hide-small w3-small ${item.cls}`}
+                                className={`w3-bar-item w3-button w3-small ${item.cls}`}
                                 to={`/manage/${item.key}`}>
                                     {item.title}
                             </NavLink>
                         })} 
-                    </div>
-                    <div className={`w3-bar-block  w3-hide-large w3-hide-medium ${this.state.mobileMenu}`}>
-                        {this.props.statusList.map(item=>{
-                            return <NavLink key={item.key}
-                            activeClassName="active" 
-                            className={`w3-bar-item w3-button w3-small ${item.cls}`}
-                            to={`/manage/${item.key}`}>
-                                {item.title}
-                        </NavLink>
-                        })} 
-                    </div>
+                    </div> 
                 </div>
                 {this.state.modal}
                 {content}
@@ -179,6 +174,7 @@ class AdminDashboard extends Component{
 function mapStateToProps(state) {
     return {
         authUser: state.authUser,
+        lastUpdateTime:state.lastUpdateTime,
         statusList:state.statusList,
         districtMap:state.districtMap
     }

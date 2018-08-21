@@ -6,14 +6,86 @@ const STATUS = {
     RETRY:'retry',
     NEED_HELP:'need_help',
     ESCALATED:'escalated',
+    ASSIGNED:'assigned',
     RESOLVED:'resolved',
     EXTERNAL:'external'
 }
 module.exports = {
+    lastUpdateTime:0,
+    severityList:[
+        {
+            value: 0,
+            name: 'Moderate',
+        },
+        {
+            value: 3,
+            name: 'Needs Help',
+        },
+        {
+            value: 4,
+            name: 'Urgent',
+        },
+        {
+            value: 6,
+            name: 'Very Urgent',
+        },
+        {
+            value: 8,
+            name: 'Life Threatening',
+        }
+    ],
+    requestTypeList:[  
+        {
+            value:'food_and_water',
+            name:'ഭക്ഷണം വെള്ളം / Food & Water ready to server',
+        },
+        {
+            value:'food_rawmaterial',
+            name:'അരി - കറി സാമഗ്രികൾ  / Food Raw materials',
+        },
+        {
+            value:'medicine_blankets',
+            name:'മരുന്നുകൾ സാമഗ്രികൾ / Medicine & Blankets'
+        },
+        {
+            value:'home_items',
+            name:'വീട്ടുപകരണങ്ങൾ / Home Items'
+        },
+        {
+            value:'clothing',
+            name:'വസ്ത്രങ്ങൾ / Clothing'
+        },
+        {
+            value:'home_lost',
+            name:'വീട് നഷ്ടപ്പെട്ടവർ / Lost Home'
+        },
+        {
+            value:'kitchen_utencils',
+            name:'പാത്രങ്ങൾ - ഗ്യാസ് / Kitchen Utencils - Gas'
+        },
+        {
+            value:'find_missing',
+            name:'പ്രിയപ്പെട്ടവരുടെ വിവരം അറിയുക /Find Missing people',
+        },
+        {
+            value:'rescue',
+            name:'രക്ഷപെടുത്തൂ / Rescue Me'
+        },
+        {
+            value:'rescue_someone',
+            name:'മറ്റൊരാളെ രക്ഷപെടുത്തൂ /Rescue Someone'
+        },
+        {
+            value:'other',
+            name:'Other / മറ്റുള്ളവ '
+        }
+    ],
     statusList : [
         {  
             key:STATUS.PHONE_DUPLICATE,
+            type:STATUS.PHONE_DUPLICATE,
             title:'0.Duplicate',
+            name:'Duplicates',
             db:[STATUS.PHONE_DUPLICATE.toUpperCase()],
             cls:'w3-hide',
             nextStates:[
@@ -44,6 +116,7 @@ module.exports = {
             title:'1.Check',
             db:[STATUS.NEW.toUpperCase()],
             cls:'w3-blue',
+            name:'Check',
             nextStates:[
                     {
                         text:'Call and Confirm (2.Confirm)',
@@ -82,6 +155,7 @@ module.exports = {
             title:'2.Call',
             cls:'w3-yellow',
             db:[STATUS.CONFIRM.toUpperCase()],
+            name:'Duplicates',
             nextStates:[ 
                 {
                     text:'Needs Help (4.Needs Help)',
@@ -99,6 +173,11 @@ module.exports = {
                     target:STATUS.RETRY
                 }, 
                 {
+                    text:'5.Assigned - (Enter Phone number in comment)',
+                    value:'confirm_assigned',
+                    target:STATUS.ASSIGNED
+                },
+                {
                     text:'Incorrect Informatoin (6.Resolved)',
                     value:'confirm_rejected',
                     target:STATUS.RESOLVED
@@ -115,11 +194,12 @@ module.exports = {
             title:'3.Retry',
             cls:'w3-amber',
             db:[STATUS.RETRY.toUpperCase()],
-            nextStates:[  {
-                text:'URGENT Needs Help (5.Escalate)',
-                value:"retry_escalated",
-                target:STATUS.ESCALATED
-            },
+            nextStates:[ 
+            //      {
+            //     text:'URGENT Needs Help (5.Escalate)',
+            //     value:"retry_escalated",
+            //     target:STATUS.ESCALATED
+            // },
             {
                 text:'Need Help(4.Need Help)',
                 value:"retry_action",
@@ -129,7 +209,13 @@ module.exports = {
                 text:'Unable to Connect (3.Retry)',
                 value:'retry_retry',
                 target:STATUS.RETRY
-            },{
+            },
+            {
+                text:'5.Assigned - (Enter Phone number in comment)',
+                value:'retry_assigned',
+                target:STATUS.ASSIGNED
+            },
+            {
                 text:' No More Facing issue (6.Resolved)',
                 value:'retry_resolved',
                 target:STATUS.RESOLVED
@@ -155,11 +241,11 @@ module.exports = {
             cls:'w3-orange',
             db:[STATUS.NEED_HELP.toUpperCase()],
             nextStates:[
-                {
-                    text:'URGENT Need Help(5.Escalate)',
-                    value:"action_escalated",
-                    target:STATUS.ESCALATED
-                },
+                // {
+                //     text:'URGENT Need Help(5.Escalate)',
+                //     value:"action_escalated",
+                //     target:STATUS.ESCALATED
+                // },
                 {
                     text:'Needs More Help (4.Need Help)',
                     value:"action_more_help",
@@ -168,6 +254,11 @@ module.exports = {
                     text:'Unable to Connect (3.Retry)',
                     value:'action_retry',
                     target:STATUS.RETRY
+                },
+                {
+                    text:'5.Assigned - (Enter Phone number in comment)',
+                    value:'need_help_assigned',
+                    target:STATUS.ASSIGNED
                 },
                 {
                     text:'No Change (3.Need Help)',
@@ -182,15 +273,14 @@ module.exports = {
                     text:'Help Received (6.Resolved)',
                     value:'action_help_recieved',
                     target:STATUS.RESOLVED
-                },
-                
+                }, 
 
             ],
         },
         { 
             key:STATUS.ESCALATED,
             title:'5.Escalated',
-            cls:'w3-red',
+            cls:'w3-hide',
             db:[STATUS.ESCALATED.toUpperCase()],
             nextStates:[
                 {
@@ -203,12 +293,44 @@ module.exports = {
                     target:STATUS.RESOLVED
                 },
                 {
+                    text:'5.Assigned - (Enter Phone number in comment)',
+                    value:'escalated_assigned',
+                    target:STATUS.ASSIGNED
+                },        
+                {
                     text:'Help Given (6.Resolved)',
                     value:'escalated_help',
                     target:STATUS.RESOLVED
                 }
             ],
         },
+
+        { 
+            key:STATUS.ASSIGNED,
+            title:'5.Assigned',
+            cls:'w3-light-green',
+            db:[STATUS.ASSIGNED.toUpperCase()],
+            nextStates:[
+                {
+                    text:'Re Assign to Someone',
+                    value:'assigned_reassign',
+                    target:STATUS.HELP_NEEDED
+                },
+                {
+                    text:'Help Given (6.Resolved)',
+                    value:'assigned_resolved',
+                    target:STATUS.RESOLVED
+
+                },
+                {
+                    text:'Failed to Provide Help (6.Resolved)',
+                    value:'assigned_couldnot_help',
+                    target:STATUS.RESOLVED
+
+                }
+            ]
+        },
+        
         { 
             key:STATUS.RESOLVED,
             title:'6.Resolved',

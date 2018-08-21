@@ -8,11 +8,12 @@ export const respMessage = (resp)=>{
     return appMessage(resp.message,resp.success);
 }
 
-export const showMessage = (type, text) => {
+export const showMessage = (type, text,stay=0) => {
     return {
         type: "MESSAGE_STATUS",
         key: 'appMessage',
         value: {
+            stay:stay,
             cls : type == 'success'?'w3-green':'w3-red',
             text,
         },
