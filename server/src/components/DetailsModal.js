@@ -161,11 +161,11 @@ class DetailsModal extends Component {
                     <div  className="w3-col l12"> Case ID {update.id}-{update.remoteId}</div>
                     <div className="w3-col l12 w3-margin-bottom">
                     <GooglePlacesAutoComplete  
-                            onPlaceChange={place => this.handlePlaceChange(place)}
-                            placeholder = "Search Location to drop pin" /> 
+                        onPlaceChange={place => this.handlePlaceChange(place)}
+                        placeholder = "Search Location to drop pin" /> 
                     <GoogleMapWidget mapStyle={{height: '300px'}} 
-                               place={this.state.place}
-                               locationSelect={this.locationSelect.bind(this)}/>
+                        place={this.state.place}
+                        locationSelect={this.locationSelect.bind(this)}/>
                         
                     </div>
                 <div className="w3-col l6 s12">

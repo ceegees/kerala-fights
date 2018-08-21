@@ -213,7 +213,6 @@ class Rescue extends Component{
                         </div> 
                         <div className="l6 s12 w3-col">
                             <FormTextarea 
-    
                                 name="member_details"
                                 label="കൂടുതൽ വിവരങ്ങൾ "
                                 placeholder="Add information that will help us resolve this faster, Contact information to get back to you if you are raising request on behalf of others" 

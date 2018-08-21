@@ -25,9 +25,6 @@ const DaashboardInfo =() => {
 
                     </ul>
                 </li>
-
-                
-            
                 <li>There are lot duplicates, see if the requester have added duplicates. you can do this by copying the phone number and searching on the searchbox above. Look at the list of requests and see if they are same, keep the one with maximum information and mark the rest of them as duplicates, as phone number is available there.</li>
                 <li>If you see data is duplicated, mark it as duplicate and resolve the issue.</li>
                 <li>Mark the duplicates - and that way we will be able understand problem in hand.</li>

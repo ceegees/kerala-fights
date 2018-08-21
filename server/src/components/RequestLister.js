@@ -21,7 +21,7 @@ class  RequestItem extends Component {
         } else if (page != item.parentId) {
             inPageOption = <Link to={`/manage/duplicates/${item.parentId}`}   
             className="w3-display-topright w3-small w3-button w3-amber" >
-            View Dupliates</Link>
+            View Duplicates</Link>
         }
     } 
 

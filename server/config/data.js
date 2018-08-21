@@ -37,7 +37,7 @@ module.exports = {
     requestTypeList:[  
         {
             value:'food_and_water',
-            name:'ഭക്ഷണം വെള്ളം / Food & Water ready to server',
+            name:'ഭക്ഷണം വെള്ളം / Food & Water ready to serve',
         },
         {
             value:'food_rawmaterial',
@@ -291,6 +291,11 @@ module.exports = {
                     text:'No More Facing issue(6.Resolved)',
                     value:'escalated_resolved',
                     target:STATUS.RESOLVED
+                },
+                ,{
+                    text:'Need Help (4.Need_Help)',
+                    value:'escalated_need_help',
+                    target:STATUS.NEED_HELP
                 },
                 {
                     text:'5.Assigned - (Enter Phone number in comment)',

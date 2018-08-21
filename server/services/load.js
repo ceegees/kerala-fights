@@ -72,7 +72,7 @@ async function loadData(offset=0){
         }
 
         if(data.needfood){
-            tags.push("Need Foood");
+            tags.push("Need Food");
         }
 
         if(data.needcloth){
@@ -84,7 +84,7 @@ async function loadData(offset=0){
         }
 
         if (data.needtoilet){
-            tags.push("Need Tolilery");
+            tags.push("Need Toiletry");
         }
 
         if (data.is_request_for_others){
