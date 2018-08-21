@@ -74,7 +74,7 @@ export class Reveal extends Component {
             <div className={ this.props.modalClass+" w3-modal w3-show "  } >     
                 <div className={"w3-modal-content  "}  >
                     { this.props.onClose ?
-                        <button className="w3-button w3-right w3-medium close-button" 
+                        <button className="w3-button w3-right w3-large close-button w3-display-topright" 
                             onClick={this.props.onClose}  type="button">
                             <span aria-hidden="true">&times;</span>
                         </button> : null

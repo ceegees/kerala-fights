@@ -761,7 +761,40 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
 
 
 
+router.post('/add-service-provider',function(req,res) {
+    try {
+        const data = req.body;        
+        const passed = {
+            contactName: data.contactName,
+            phoneNumber: data.phoneNumber,
+            type: data.type,
+            address: data.address,
+            peopleCount: data.peopleCount,
+            kidsCount: data.kidsCount,
+            maleCount: data.maleCount,
+            femaleCount: data.femaleCount,
+            information: data.information,
+            latLng: {
+                type: 'Point',
+                coordinates: [data.location_lat,data.location_lon]
+            },
+            latitude: data.location_lat,
+            longitude: data.location_lon
+        };
+
+        models.MarkedLocation.create(passed).then(resp => {
+            res.json(jsonSuccess({
+                db: resp,
+                passed: passed,
+                send: data
+            }));
+        });
+    } catch(ex){
+        console.log(ex);
+        res.json(jsonError('Missing parameters' , {...req.body}) );
+    }   
+});
+
+
+
 module.exports = router;
-
-
-
