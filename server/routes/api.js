@@ -52,6 +52,16 @@ router.get('/message', function (req, res, next) {
     res.json({ title: 'Ceegees' });
 });
 
+router.get('/rescue-substatus',function(req,res){
+    sequelize.query("select status,operator_status ,count(*) from help_requests group by status,operator_status order BY status,operator_status",{
+        plain: false,
+        raw: false,
+        type: Sequelize.QueryTypes.SELECT
+    }).then(list => {
+        res.json(list);
+    })
+})
+
 router.get('/rescue-duplicates',function(req,res){
     sequelize.query(`SELECT 
         phone_number,
@@ -403,7 +413,7 @@ router.get('/rescue-list',function(req,res){
         const parts = req.query.q.split('-');
         const ors = {
             phoneNumber:{
-                [Op.eq]: req.query.q
+                [Op.eq]: `${req.query.q}%`
             },
             personName:{
                 [Op.like]:`${req.query.q}%`

@@ -94,8 +94,8 @@ class Rescue extends Component{
                         <div className="l4 s12 w3-col">
                             <FormTextField 
                                 isMandatory="true"
-                                label="താങ്കളുടെ പേര്"
-                                placeholder="Your Name"
+                                label="പേര്"
+                                placeholder="Name"
                                 name="name"
                                 inputClass="w3-input w3-border"
                                 value = {this.state.form.name}
@@ -147,7 +147,7 @@ class Rescue extends Component{
                                 placeholder = "Location"
                             />
                         </div>
-                        <div className="l4 s12 w3-col">   
+                        <div className="l6 s12 w3-col">   
                         <SelectField
                             label="എന്ത് സഹായം ആണ് വേണ്ടത്"
                             placeholder="What Help you want"
@@ -162,27 +162,13 @@ class Rescue extends Component{
                             <option value="medicine_blankets">മരുന്നുകൾ സാമഗ്രികൾ / Medicine &amp; Blankets</option>
                             <option value="rescue">രക്ഷപെടുത്തൂ / Rescue Me </option> 
                             <option value="reach_relatives">പ്രിയപ്പെട്ടവരുടെ വിവരം അറിയുക /Reach my Dear ones</option> 
+                            <option value="missing_person">പ്രിയപ്പെട്ടവരുടെ വിവരം അറിയുക / Find Missing Person</option> 
                             <option value="rescue_someone"> മറ്റൊരാളെ രക്ഷപെടുത്തൂ /Rescue Someone</option> 
                             <option value="other">Other</option> 
                         </SelectField> 
                         </div>
-                        <div className="l4 s12 w3-col">  
-                        <SelectField
-                            label="നിങ്ങളുടെ മൊബൈൽ ചാർജ്"
-                            placeholder="Your Power backup"
-                            name="power_backup"
-                            selectClass="w3-select w3-border"
-                            isMandatory="true"
-                            value = {this.state.form.power_backup}
-                            valueChange={this.changeFormValue.bind(this)}
-                            errors = {this.state.errors.power_backup}
-                            >
-                            <option value="0_1">&lt; 1 hr / ഒരു മണിക്കൂറിൽ താഴെ </option>
-                            <option value="1_4">1-4 hrs / മണിക്കൂർ  </option>
-                            <option value="4_24">4-24 hours / മണിക്കൂർ </option> 
-                        </SelectField> 
-                        </div>
-                        <div className="l4 s12 w3-col">  
+                        
+                        <div className="l6 s12 w3-col">  
                         <SelectField
                             label="ജില്ല"
                             place="district"
