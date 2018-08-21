@@ -418,7 +418,7 @@ class DetailsModal extends Component {
             <RowItem name="Type" value={item.type} />
             <RowItem name="Address" value={item.address} />
             <RowItem name="Serverity" value={item.operatorSeverity == -1 ? 'Not Updated':item.operatorSeverity}  />
-            <RowItem name="Information" value={item.infomration} />
+            <RowItem name="Information" value={item.information} />
             <RowItem name="Status" value={item.status} />
             <RowItem name="CreatedAt" value={moment(item.createdAt).fromNow()} />
             <RowItem name="Volunteer Status" value={item.operatorStatus} />

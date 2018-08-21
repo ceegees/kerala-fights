@@ -29,18 +29,20 @@ const DaashboardInfo =() => {
                 <li>If you see data is duplicated, mark it as duplicate and resolve the issue.</li>
                 <li>Mark the duplicates - and that way we will be able understand problem in hand.</li>
                 <li>In the search box help you search with / Name / Phone Number / District - First Letter Caps/ </li>
+                <li><b></b>If you are facing any issue while operating - 
+                reload the page couple of times</b> </li>
             </ul>
             <div className="w3-row-padding">
                 <div className="w3-col s12 l6"><NavLink  to="/manage/duplicates" 
                 className="w3-button  w3-block w3-blue w3-margin-bottom">
-                Check For duplicates
+                Check If duplicates are Marked correctly
             </NavLink> </div>
                 <div  className="w3-col s12 l6"><NavLink  to="/manage/one_item/new" 
                 className="w3-button  w3-block w3-green w3-margin-bottom">
                 Takeup a Help request and start working on it
             </NavLink> </div>
             </div>
-            
+    
             
             <StatusWidget/>
         </div>

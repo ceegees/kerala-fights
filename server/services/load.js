@@ -288,19 +288,40 @@ async function deDupe(){
             }
         });
         console.log(data.phone_number,row.id);
-        const qry = `UPDATE help_requests 
-        SET parent_id=${row.id} WHERE phone_number = '${data.phone_number}';`;
+        let qry = `UPDATE help_requests 
+        SET parent_id=${row.id} WHERE parent_id=null  AND id != ${row.id} AND phone_number = :phone_number;`;
         console.log(qry);
-        const res = await sequelize.query(qry,{
+        let res = await sequelize.query(qry,{
+            replacements:{
+                phone_number:data.phone_number
+            },
+            plain: false,
+            raw: false,
+        });
+
+        qry = `UPDATE help_requests 
+        SET status='PHONE_DUPLICATE' WHERE 
+        status='NEW' AND phone_number = :phone_number AND id != ${row.id};`;
+        console.log(qry);
+        res = await sequelize.query(qry,{
+            replacements:{
+                phone_number:data.phone_number
+
+            },
             plain: false,
             raw: false,
         });
         row.parent_id = null;
-        row.json.duplicateCount = data.total_requests;
-        console.log(res);
+        row.json.duplicateCount = data.total_requests; 
         const saved = await row.save();
      }
      console.log('Completed updateing duplicates');
+    qry = `UPDATE help_requests  SET parent_id=NULL WHERE id=parent_id`;
+    console.log(qry);
+    res = await sequelize.query(qry,{
+        plain: false,
+        raw: false,
+    });
      process.exit();
 }
 

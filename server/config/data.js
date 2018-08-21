@@ -1,5 +1,6 @@
 
 const STATUS = {
+    PHONE_DUPLICATE:'phone_duplicate',
     NEW:'new',
     CONFIRM:'confirm',
     RETRY:'retry',
@@ -10,6 +11,34 @@ const STATUS = {
 }
 module.exports = {
     statusList : [
+        {  
+            key:STATUS.PHONE_DUPLICATE,
+            title:'0.Duplicate',
+            db:[STATUS.PHONE_DUPLICATE.toUpperCase()],
+            cls:'w3-hide',
+            nextStates:[
+                {
+                    text:'Mark As duplicate(6.Resolved)',
+                    value:'duplicate_resolved',
+                    target:STATUS.RESOLVED
+                },
+                {
+                    text:'Mark Duplicate (6.Resolved)',
+                    value:'cleanup_duplicate',
+                    target:STATUS.RESOLVED
+                },
+                {
+                    text:'Call and Config (3.Confirm)',
+                    value:'duplcate_call',
+                    target:STATUS.CONFIRM
+                },
+                {
+                    text:'Incorrect Information (6.Resolved)',
+                    value:'duplcate_invalid_resolved',
+                    target:STATUS.RESOLVED
+                },
+            ]
+        },
         {
             key:STATUS.NEW,
             title:'1.Check',

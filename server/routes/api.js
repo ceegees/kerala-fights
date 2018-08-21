@@ -346,8 +346,7 @@ router.post('/rescue-update',function(req,res){
             statusOut:status,
             comments:""+comments + "\nSeverity: " +severity,
         });
-    }).then(workLog=>{
-        console.log(currentMove);
+    }).then(workLog=>{ 
         rescue.status = currentMove.target.toUpperCase();
         rescue.operatorStatus = status;
         rescue.operatorSeverity = severity;
@@ -375,16 +374,31 @@ router.get('/rescue-list',function(req,res){
                 [Op.or] : {
                     parentId:params.q,
                     id:params.q
-                }
+                },    
             }
         } else {
-            whereQuery = {
+            whereQuery = { 
                 parentId:{
                     [Op.ne] :null
+                },
+                status:{
+                    [Op.ne]:'RESOLVED'
+                } 
+            }
+            if (req.query.district){
+                whereQuery.district = req.query.district;
+            }
+
+            if (req.query.startAt && req.query.endAt){
+                whereQuery.createdAt = {
+                    [Op.between] : [
+                        moment.unix(req.query.startAt/1000).toDate(),
+                        moment.unix(req.query.endAt/1000).toDate()
+                    ]
                 }
             }
         }
-        
+
     } else if (req.query.q){
         const parts = req.query.q.split('-');
         const ors = {
