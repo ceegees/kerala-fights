@@ -195,6 +195,7 @@ class AddHelpCentre extends Component{
                                 <option value="camp">Camp</option>
                                 <option value="medicine">Medicine</option>
                                 <option value="food">Food</option> 
+                                <option value="other">Other</option> 
                             </SelectField> 
                         </div>
 
@@ -276,7 +277,7 @@ class AddHelpCentre extends Component{
                             <FormTextarea 
                                 name="information"
                                 label="കൂടുതൽ വിവരങ്ങൾ"
-                                placeholder="More Information" 
+                                placeholder="More Information - About quantity / Time of availability" 
                                 inputClass="w3-input w3-border" 
                                 valueChange={this.changeFormValue.bind(this)}
                                 value = {this.state.form.information}

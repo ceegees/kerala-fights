@@ -796,5 +796,49 @@ router.post('/add-service-provider',function(req,res) {
 });
 
 
+router.get('/service-provider-list',function(req,res){
+    const params = filterFromQuery(req.query);
+    let whereQuery = null;
+    
+    if (req.query.q) {
+        const ors = {
+            phoneNumber: {
+                [Op.like]: `${req.query.q}%`
+            },
+            contactName: {
+                [Op.like]:`${req.query.q}%`
+            }
+        }
+        whereQuery = {
+           [Op.or]: ors
+        } 
+    }
+
+    params.per_page = 20;
+    models.MarkedLocation.findAll({
+        where: whereQuery,
+        order: [
+            ['createdAt','DESC']
+        ],
+        offset: (params.page -1)*params.per_page,
+        limit: params.per_page
+    }).then(list => {
+        return models.MarkedLocation.count({
+            where: whereQuery,
+        }).then(count => {
+            return {
+                total: count,
+                page: params.page,
+                page_max: Math.floor(count /params.per_page),
+                per_page: params.per_page,
+                list: list
+            }
+        })
+    }).then(data =>{
+        res.json(jsonSuccess(
+            data
+        ));
+    });
+});
 
 module.exports = router;

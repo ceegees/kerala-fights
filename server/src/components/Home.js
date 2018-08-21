@@ -112,6 +112,7 @@ class Home extends Component {
         <div className="w3-content ">
             {this.state.modalContent}
             <div className="w3-padding-64">
+                <NavLink to="/service-providers/"><button className="w3-button w3-green w3-right">Service Providers</button></NavLink>
                 <h1 className="w3-center">Application for handling Help Requests    </h1>
                 <div className="w3-padding-64">
                     <button className="w3-button w3-margin-bottom w3-block w3-cyan" 

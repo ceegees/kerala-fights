@@ -57,6 +57,9 @@ class Rescue extends Component{
     
     handleSubmit () {
         var formData = this.state.form;
+        console.log(formData);
+
+        return;
 
         let errors = {};
         if (!formData.name) {

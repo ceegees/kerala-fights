@@ -77,6 +77,7 @@ function googleAuth(req,res,next){
 const ssr = require('./../views/ssr.js'); 
 router.get([ 
     '/heatmap/:status?', 
+    '/service-providers/:page?',
     '/',
     ], (req, res) => {
     let context = {};
