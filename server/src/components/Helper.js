@@ -293,6 +293,7 @@ export class SelectField extends Component {
 export class GooglePlacesAutoComplete extends Component {
     constructor(args){
         super(args);
+        this.locationInput = React.createRef();
     }
 
     componentDidMount(){
@@ -305,6 +306,10 @@ export class GooglePlacesAutoComplete extends Component {
             }
         });
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        this.locationInput.current.value = this.props.albumLocation;
+    }
     
     render() {
         return (
@@ -315,6 +320,7 @@ export class GooglePlacesAutoComplete extends Component {
                     defaultValue = {this.props.albumLocation}
                     placeholder= {this.props.placeholder} 
                     autoComplete="on"
+                    ref={this.locationInput}
                 />
             </div>
         )
@@ -328,9 +334,12 @@ export class GoogleMapWidget extends Component {
         super(arg);
         this.map = null;
         this.marker = null;
+
+        this.setMarker = this.setMarker.bind(this);
+        this.onChangePosition = this.onChangePosition.bind(this);
     }
     componentDidMount () {
-        this.initialiseGMap(10.10,76.65);
+        this.initialiseGMap(10.00868475528931,76.3246034382812);
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.setLocation && nextProps.setLocation != this.props.setLocation) {
@@ -360,7 +369,8 @@ export class GoogleMapWidget extends Component {
         if (this.marker == null) {
             this.marker = new google.maps.Marker({
                 position: {lat: lat, lng: lon},
-                map: this.map
+                map: this.map,
+                draggable: true
             });
         } else {                    
             this.marker.setPosition({
@@ -371,17 +381,51 @@ export class GoogleMapWidget extends Component {
         this.map.setCenter({lat:lat,lng:lon});
         this.marker.setVisible(true);
         if (this.props.locationSelect){
-            this.props.locationSelect(lat,lon);  
+            //this.props.locationSelect(lat,lon);  
         }
+
+        google.maps.event.addListener(this.marker, 'dragend', (event) => {
+            /*let latLng = this.marker.getPosition();
+            if (this.props.locationSelect){
+                this.props.locationSelect(latLng.lat(),latLng.lng());  
+            }*/
+            this.onChangePosition(this.marker.getPosition())
+        });
+    }
+
+    onChangePosition(latLng) {
+        let geocoder = new google.maps.Geocoder();
+        geocoder.geocode({
+            latLng: latLng
+        }, (responses) => {
+            
+            if (responses && responses.length > 0) {
+                if (this.props.locationSelect){
+                    this.props.locationSelect(latLng.lat(),latLng.lng(), responses[0]);  
+                }
+                
+            } else {
+                console.log('fetch failed for geocode', 'warn')
+                if (this.props.locationSelect){
+                    this.props.locationSelect(latLng.lat(),latLng.lng());  
+                }
+            }
+            
+        });
     }
 
     initialiseGMap (latitude,longitude) {
         if (!this.map){
             this.map = new google.maps.Map(document.getElementById('google-map'), {
                 center: {lat: latitude, lng: longitude},
-                zoom: 15,
+                zoom: 16,
                 zoomControl: true,
                 scaleControl:true,
+                
+                mapTypeControl: false,
+                streetViewControl: false,
+                rotateControl: false,
+                fullscreenControl: true,
                 styles: [{
                     featureType: 'poi',
                     stylers: [{ visibility: 'off' }]  // Turn off points of interest.
