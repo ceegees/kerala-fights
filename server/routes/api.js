@@ -758,6 +758,7 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
     let latitude = req.body.latitude;
     let longitude = req.body.longitude;
     let status = req.body.status;
+    let info = req.body.info;
 
     const phoneRegExp = /^[0-9]{10}$/; 
 
@@ -789,7 +790,8 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
         return resVol.update({
             'latitude': latitude,
             'longitude': longitude,
-            'status': (status)?'ACTIVE':'INACTIVE'
+            'status': (status)?'ACTIVE':'INACTIVE',
+            'info': info
         });
     }).then(result => {
         res.json({
