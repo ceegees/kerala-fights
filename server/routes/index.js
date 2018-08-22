@@ -8,7 +8,7 @@ var ejs = require('ejs');
 var Sequelize = require('sequelize');
 
 var models = require('../models');
-const VERSION = 1.6;
+const VERSION = 1.8;
 
 const initialState = require('../config/data');
 const Op = Sequelize.Op;
@@ -92,7 +92,7 @@ function googleAuth(req,res,next){
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "/auth/facebook/callback",
+    callbackURL: "https://keralafights.com/auth/facebook/callback",
     profileFields: ['id', 'emails', 'displayName', 'name', 'gender', 'picture.type(small)'] //This
 },
 

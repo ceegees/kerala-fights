@@ -91,7 +91,7 @@ class Home extends Component {
                             <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-round w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
                             
                             <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
-                            <a className="w3-hide" href="https://dfb7zgpusuvzh.cloudfront.net/kerala_fights.apk" className="w3-block w3-green w3-padding w3-round">
+                            <a  href="https://dfb7zgpusuvzh.cloudfront.net/kerala_fights.apk" className="w3-block w3-green w3-hide w3-padding w3-round">
                                 <img  style={{width:"80px",height:"80px",marginRight:"20px"}} src="https://image.flaticon.com/icons/png/512/61/61120.png" />
                                 Download Field Volunteer Android App
                             </a>
@@ -101,14 +101,14 @@ class Home extends Component {
                             <div className="w3-col m6 s12">
                                 <b>How You can Help</b>
                                 <ul>
-                                    <li>Check the tickets and see if the location is marked correctly</li>
-                                    <li>Check if the tickets are having the Needs Marked correctly</li>
+                                    <li>Check the tickets and see if location is marked correctly on map</li>
+                                    <li>Check if the tickets are having the needs Marked correctly</li>
                                     <li>Talk to affected people and see if their needs are met.</li>
                                     <li>Coordinate with on field Volunteer to make sure help is reaching the needy.</li>
                                     <li><a target="_blank" href="https://docs.google.com/document/d/1jM_hdHgP-kxkzOtxl0n8mUGY4EzP6di2NyHIEvFp8YI/edit" >How To Use</a> , <a target="_blank"  href="https://docs.google.com/document/d/1oMs4JwHMDS9agR3voVpeGL0SMhfE35fETYNbD5rZLN8/edit">ഉപയോഗക്രമം </a></li>
                                 </ul>
                                 <div className="w3-padding">
-                                    <a href="/auth/facebook" className="w3-indigo w3-hide w3-block w3-margin-bottom w3-round w3-padding ">What are you waiting for ? Login with your Facebook Id and be part of the Cause</a>
+                                    <a href="/auth/facebook" className="w3-indigo w3-block w3-margin-bottom w3-round w3-padding ">What are you waiting for ? Login with your Facebook Id and be part of the Cause</a>
                                 <StatusWidget />
                                 </div>
                             </div>
