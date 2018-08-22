@@ -450,8 +450,9 @@ export class HeaderSection extends Component {
                 <div className="w3-left">
                     <a className="w3-bar-item w3-button" href="/">Kerala Flood Relief - കേരളം പൊരുതുന്നു , ഒരുമിച്ച് </a>
                 </div>
-                <div className="w3-right"> 
-                       {this.props.authUser ? <a className="w3-bar-item   w3-button " href="/manage">Manage</a> : <a className="w3-bar-item  w3-yellow w3-button " href="/manage">Volunteer Login</a>}
+                <div className="w3-right">  
+                       {this.props.authUser ? <a className="w3-bar-item   w3-button " href="/manage">Manage</a> : <a className="w3-bar-item  w3-yellow w3-button " href="/manage">Volunteer Login</a>} 
+                        {!this.props.authUser ? <a className="w3-bar-item w3-hide w3-button " href="/auth/facebook">Fb Login</a> : null} 
                         <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button ">Rescue Centers</a> 
                         <a target="_blank" href="https://www.keralarescue.in/contactus/" className="w3-bar-item w3-button ">Contact Rescue</a> 
                         <NavLink className="w3-bar-item w3-button " to="/heatmap/need_help">HeatMap</NavLink>

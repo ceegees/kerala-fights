@@ -91,7 +91,7 @@ class Home extends Component {
                             <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-round w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
                             
                             <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
-                            <a href="" className="w3-block w3-green w3-padding w3-round">
+                            <a className="w3-hide" href="https://dfb7zgpusuvzh.cloudfront.net/kerala_fights.apk" className="w3-block w3-green w3-padding w3-round">
                                 <img  style={{width:"80px",height:"80px",marginRight:"20px"}} src="https://image.flaticon.com/icons/png/512/61/61120.png" />
                                 Download Field Volunteer Android App
                             </a>
