@@ -88,7 +88,7 @@ class Home extends Component {
                     {this.state.modalContent}
                     <div className=" ">
                         <div className="w3-padding-32" style={{padding:"10px"}}>
-                            <NavLink to="/service-providers/list/"><button className="w3-button w3-green w3-right w3-hide">Service Providers</button></NavLink>
+                            <NavLink to="/service-providers/list/"><button className="w3-button w3-green w3-right w3-margin-bottom">List Service Providers</button></NavLink>
                             <button className="w3-button w3-round w3-large w3-padding-32    w3-margin-bottom w3-block w3-blue-grey" 
                             onClick={this.showModal.bind(this,'request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
                             <button className="w3-button w3-margin-bottom w3-block w3-cyan" 

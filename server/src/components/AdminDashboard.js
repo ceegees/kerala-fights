@@ -161,7 +161,7 @@ class AdminDashboard extends Component{
                         <input style={{width:"400px"}} className="w3-input w3-bar-item w3-small w3-rest" onChange={this.searchRequests.bind(this)} placeholder="Search by Name / Phone number /Case Id / KeralaRescueId" />  
                     </div>
                     <div>
-                        <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
+                        <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright w3-hide" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                             {this.props.statusList.map(item=>{
                                 return <NavLink key={item.key}
                                 activeClassName="active" 

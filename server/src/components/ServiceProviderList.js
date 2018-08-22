@@ -225,7 +225,7 @@ class ServiceProviderList extends Component {
         }
 
         return (
-            <div style={{minHeight: "100vh", paddingTop: "64px"}}>
+            <div style={{minHeight: "100vh"}}>
                 <HeaderSection authUser={this.props.authUser} />
                 <div>
                     <div className="w3-padding">

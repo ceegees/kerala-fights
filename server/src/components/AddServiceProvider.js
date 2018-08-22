@@ -223,6 +223,7 @@ class AddHelpCentre extends Component{
                                     lon={this.state.form.location_lon}
                                     setLocation={this.state.setLocation}
                                     place={this.state.place}
+                                    mapId='google-map-safe'
                                     locationSelect={this.locationSelect.bind(this)}/>
                             </div>
                         </div>
