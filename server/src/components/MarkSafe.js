@@ -211,7 +211,7 @@ class MarkSafe extends Component{
                             <FormTextarea 
                                 name="contactInfo"
                                 label="കൂടുതൽ വിവരങ്ങൾ "
-                                placeholder="Contact Information" 
+                                placeholder="More Information" 
                                 inputClass="w3-input w3-border" 
                                 valueChange={this.changeFormValue.bind(this)}
                                 value = {this.state.form.contactInfo}

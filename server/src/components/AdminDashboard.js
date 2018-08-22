@@ -9,11 +9,11 @@ import DetailsModal from './DetailsModal';
 import RequestLister from './RequestLister';
 import StatusWidget from './StatusWidget.js';
 import axios  from 'axios';
+
 class DaashboardInfo extends  Component {
-    
-    
+
     render() {
-        return <div className="w3-container" style={{minHeight:"100vh", paddingBottom: "100px"}}>
+        return <div className="w3-container kf-manage-container">
             <div>
                 <div className="w3-row ">
                 <div className="w3-col l7 s12">
@@ -27,7 +27,6 @@ class DaashboardInfo extends  Component {
                                 <ol>4.Need Help - The Verified requests that need help which you understood after the call.</ol>
                                 <ol>5.Assinged - The items that are currently being worked on</ol>
                                 <ol>6.Resolved - Shows the resolved issues</ol>
-
                             </ul>
                         </li>
                         <li>There are lot duplicates, see if the requester have added duplicates. you can do this by copying the phone number and searching on the searchbox above. Look at the list of requests and see if they are same, keep the one with maximum information and mark the rest of them as duplicates, as phone number is available there.</li>
@@ -163,8 +162,8 @@ class AdminDashboard extends Component{
                         <button className="w3-bar-item w3-button w3-small " onClick={this.newRequest.bind(this)}>New <span className="w3-hide-small">Request</span></button>
                         <input style={{width:"400px"}} className="w3-input w3-bar-item w3-small w3-rest" onChange={this.searchRequests.bind(this)} placeholder="Search by Name / Phone number /Case Id / KeralaRescueId" />  
                     </div>
-                    <div className="w3-right ">
-                        <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium"  onClick={this.togggleMobile.bind(this)}>&#9776;</button>
+                    <div>
+                        <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright w3-hide" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                             {this.props.statusList.map(item=>{
                                 return <NavLink key={item.key}
                                 activeClassName="active" 
