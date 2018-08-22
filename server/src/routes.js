@@ -1,5 +1,6 @@
 import Home from './components/Home' 
 import AdminDashboard from './components/AdminDashboard'
+import ServiceProviderList from './components/ServiceProviderList'
 import HeatMap from './components/HeatMap'
 import Rescue from './components/Rescue'
 
@@ -18,6 +19,11 @@ const routes =  [
     path: '/manage/:status?/:page?',
     exact: true,
     component: AdminDashboard,
+  },
+  {
+    path: '/service-providers/:status?/:page?',
+    exact: true,
+    component: ServiceProviderList,
   },
   {
     path: '/',  

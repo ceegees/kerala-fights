@@ -166,6 +166,7 @@ router.get([
     '/heatmap/:status?', 
     '/new',
     '/:action?',
+    '/service-providers/:status?/:page?',
     '/',
     ], (req, res) => {
     let context = {};

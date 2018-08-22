@@ -711,6 +711,8 @@ router.post('/rescue/volunteer/register', function(req,res) {
     let longitude = req.body.longitude;
     let info = req.body.info;
 
+    const phoneRegExp = /^[0-9]{10}$/; 
+
     if (!name) {
         return res.json({
             success: false,
@@ -720,6 +722,11 @@ router.post('/rescue/volunteer/register', function(req,res) {
         return res.json({
             success: false,
             message: "Phone Number is required"
+        });
+    } else if (!phoneNumber.match(phoneRegExp)) {
+        return res.json({
+            success: false,
+            message: "Invalid Phone Number"
         });
     } else if (!type) {
         return res.json({
@@ -774,11 +781,19 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
     let latitude = req.body.latitude;
     let longitude = req.body.longitude;
     let status = req.body.status;
+    let info = req.body.info;
+
+    const phoneRegExp = /^[0-9]{10}$/; 
 
     if (!phoneNumber) {
         return res.json({
             success: false,
             message: "Phone Number is required"
+        });
+    } else if (!phoneNumber.match(phoneRegExp)) {
+        return res.json({
+            success: false,
+            message: "Invalid Phone Number"
         });
     } else if (!latitude || !longitude) {
         return res.json({
@@ -798,7 +813,8 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
         return resVol.update({
             'latitude': latitude,
             'longitude': longitude,
-            'status': (status)?'ACTIVE':'INACTIVE'
+            'status': (status)?'ACTIVE':'INACTIVE',
+            'info': info
         });
     }).then(result => {
         res.json({
@@ -815,7 +831,84 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
 
 
 
+router.post('/add-service-provider',function(req,res) {
+    try {
+        const data = req.body;        
+        const passed = {
+            contactName: data.contactName,
+            phoneNumber: data.phoneNumber,
+            type: data.type,
+            address: data.address,
+            peopleCount: data.peopleCount,
+            kidsCount: data.kidsCount,
+            maleCount: data.maleCount,
+            femaleCount: data.femaleCount,
+            information: data.information,
+            latLng: {
+                type: 'Point',
+                coordinates: [data.location_lat,data.location_lon]
+            },
+            latitude: data.location_lat,
+            longitude: data.location_lon,
+            serviceEndDate: data.serviceEndDate
+        };
+
+        models.MarkedLocation.create(passed).then(resp => {
+            res.json(jsonSuccess({
+                db: resp,
+                passed: passed,
+                send: data
+            }));
+        });
+    } catch(ex){
+        console.log(ex);
+        res.json(jsonError('Missing parameters' , {...req.body}) );
+    }   
+});
+
+
+router.get('/service-provider-list',function(req,res){
+    const params = filterFromQuery(req.query);
+    let whereQuery = null;
+    
+    if (req.query.q) {
+        const ors = {
+            phoneNumber: {
+                [Op.like]: `${req.query.q}%`
+            },
+            contactName: {
+                [Op.like]:`${req.query.q}%`
+            }
+        }
+        whereQuery = {
+           [Op.or]: ors
+        } 
+    }
+
+    models.MarkedLocation.findAll({
+        where: whereQuery,
+        order: [
+            ['createdAt','DESC']
+        ],
+        offset: (params.page -1)*params.per_page,
+        limit: params.per_page
+    }).then(list => {
+        return models.MarkedLocation.count({
+            where: whereQuery,
+        }).then(count => {
+            return {
+                total: count,
+                page: params.page,
+                page_max: Math.floor(count /params.per_page),
+                per_page: params.per_page,
+                list: list
+            }
+        })
+    }).then(data =>{
+        res.json(jsonSuccess(
+            data
+        ));
+    });
+});
+
 module.exports = router;
-
-
-
