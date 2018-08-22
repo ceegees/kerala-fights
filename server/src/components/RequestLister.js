@@ -52,7 +52,7 @@ class  RequestItem extends Component {
                 }
             <br/>
             <div>
-            {item.json && item.json.tags.map(name => 
+            {item.json && item.json.tags && item.json.tags.map(name => 
                 <div key={name} 
                     className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
             </div>
@@ -147,7 +147,7 @@ export default class RequestLister extends Component {
         } else {
             pagination = <Paginator data={data} status={status} page={page} />
             totalCount = `Total: ${data.total}`;
-            content = data.list.map(item => <RequestItem 
+            content = data.list.map(item => <RequestItem  key={item.id}
                 markDuplicate={this.markDuplicate.bind(this)} 
                 item={item}  
                 {...this.props} 

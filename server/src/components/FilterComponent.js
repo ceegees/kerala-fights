@@ -89,8 +89,7 @@ class FilterComponent extends React.Component {
         const { handleFilterData } = this.props;
         let { filterData } = this.state;
         filterData[type] = e.target.value;
-        
-        console.log(filterData);
+         
         if (handleFilterData) {
             handleFilterData(filterData);
         }
@@ -100,8 +99,7 @@ class FilterComponent extends React.Component {
         const { handleFilterData } = this.props;
 
         let { filterData } = this.state;
-        const combined = e.target.value;
-        console.log('combined',combined);
+        const combined = e.target.value; 
         const parts = combined.split('-');
 
         filterData.startAt = parts[0];

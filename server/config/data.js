@@ -229,7 +229,8 @@ module.exports = {
                 text:'Was Spurios (6.Resolved)',
                 value:"retry_rejected",
                 target:STATUS.RESOLVED
-            },{
+            },
+            {
                 text:'Duplicate Request (6.Resolved)',
                 value:'cleanup_duplicate',
                 target:STATUS.RESOLVED
@@ -273,8 +274,7 @@ module.exports = {
                     text:'Help Received (6.Resolved)',
                     value:'action_help_recieved',
                     target:STATUS.RESOLVED
-                }, 
-
+                }
             ],
         },
         { 
@@ -291,8 +291,7 @@ module.exports = {
                     text:'No More Facing issue(6.Resolved)',
                     value:'escalated_resolved',
                     target:STATUS.RESOLVED
-                },
-                ,{
+                },{
                     text:'Need Help (4.Need_Help)',
                     value:'escalated_need_help',
                     target:STATUS.NEED_HELP

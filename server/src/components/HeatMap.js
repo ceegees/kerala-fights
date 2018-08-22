@@ -4,7 +4,7 @@ import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
 import {HeaderSection,Reveal} from './Helper';
 import axios from 'axios';   
 import AppMessage from './AppMessage.js';
-
+import {getLatLng} from '../redux/actions';
 import DetailsModal from './DetailsModal';
 import FilterComponent from './FilterComponent';
 
@@ -38,31 +38,22 @@ class HeatMap extends Component {
 
         let obj = {
             location:1,
-            status:status
+            status:status,
+            per_page:3000
         }
         
         obj = Object.assign(obj,this.filter);
         const str = qs.stringify(obj); 
         axios.get(`/api/v1/rescue-list?${str}`).then(resp => {
             resp.data.data.list.map(item => {
-                let lat = null,lng = null;
-                if(item.latLng && item.latLng.coordinates && item.latLng.coordinates.length == 2) {
-                    lat = item.latLng.coordinates[0], 
-                    lng = item.latLng.coordinates[1]
-                } else if (item.json.location){
-                    lat = parseFloat(""+item.json.location.lat);
-                    lng = parseFloat(""+item.json.location.lon);
-                }
                 var marker = new google.maps.Marker({
-                    position: {
-                        lat:lat,
-                        lng:lng
-                    },
+                    position: getLatLng(item),
                     map: this.map
                 }); 
                 this.attachInfo(marker, item);
                 this.markers.push(marker); 
             });
+            // console.log('Total markers',this.markers);
 
             this.markerCluster = new MarkerClusterer(this.map, this.markers, {
                 imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
@@ -153,6 +144,7 @@ class HeatMap extends Component {
 
 function mapStateToProps(state) {  
     return {
+
         statusList:state.statusList,
        authUser:state.authUser
     }

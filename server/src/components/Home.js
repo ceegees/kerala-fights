@@ -6,7 +6,7 @@ import AppMessage from './AppMessage';
 import Rescue from './Rescue';
 import MarkSafe from './MarkSafe'; 
 import StatusWidget from './StatusWidget';
-import { FormTextField,FormTextarea,GooglePlacesAutoComplete ,SelectField,Reveal,HeaderSection
+import { FormTextField,FormTextarea,GooglePlacesAutoComplete ,SelectField,Reveal,HeaderSection, Leaderboard
 } from './Helper.js';  
 import { NavLink } from 'react-router-dom';
 
@@ -49,7 +49,6 @@ class Home extends Component {
 
     componentDidMount(){ 
         if(this.props.match.params.label){
-            console.log('Ready made',this.props.match.params);
             this.showModal(this.props.match.params.label);
         }
     }  
@@ -84,28 +83,33 @@ class Home extends Component {
                 <HeaderSection authUser={this.props.authUser} />
                 <div className="w3-content ">
                     {this.state.modalContent}
-                    <div className="w3-padding-64">
-                        <h1 className="w3-center">Application for handling Help Requests    </h1>
-                        <div className="w3-padding-32">
-                            <button className="w3-button w3-large  w3-margin-bottom w3-block w3-orange" 
+                    <div className=" ">
+                        <div className="w3-padding-32" style={{padding:"10px"}}>
+                            <button className="w3-button w3-round w3-large w3-padding-32    w3-margin-bottom w3-block w3-blue-grey" 
                             onClick={this.showModal.bind(this,'request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
-                            <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
-                            <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
+                            <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-round w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
+                            <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-round w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
                             
                             <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
                         </div>
                         <div className="w3-row">
+                        <h2 className="w3-center w3-padding-33"> Solving the largest crisis Kerala have seen in a 100 Years    </h2>
                             <div className="w3-col m6 s12">
+                                <b>How You can Help</b>
                                 <ul>
-                                    <li>Volunteers can coordinate on requests received</li>
-                                    <li>Make calls and update status </li>
-                                    <li>Mark complete Help requests to completion</li>
-                                    <li>Currently added "Help requests" from keralarescue.in </li>
+                                    <li>Check the tickets and see if the location is marked correctly</li>
+                                    <li>Check if the tickets are having the Needs Marked correctly</li>
+                                    <li>Talk to affected people and see if their needs are met.</li>
+                                    <li>Coordinate with on field Volunteer to make sure help is reaching the needy.</li>
                                     <li><a target="_blank" href="https://docs.google.com/document/d/1jM_hdHgP-kxkzOtxl0n8mUGY4EzP6di2NyHIEvFp8YI/edit" >How To Use</a> , <a target="_blank"  href="https://docs.google.com/document/d/1oMs4JwHMDS9agR3voVpeGL0SMhfE35fETYNbD5rZLN8/edit">ഉപയോഗക്രമം </a></li>
                                 </ul>
+                                <div className="w3-padding">
+                                    <a href="/auth/facebook" className="w3-indigo w3-hide w3-block w3-margin-bottom w3-round w3-padding ">What are you waiting for ? Login with your Facebook Id and be part of the Cause</a>
+                                <StatusWidget />
+                                </div>
                             </div>
                             <div className="w3-col m6 s12">
-                                <StatusWidget />
+                                <Leaderboard />
                             </div> 
                         </div>
                         <iframe className="w3-margin-top" src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"500px"}}></iframe>

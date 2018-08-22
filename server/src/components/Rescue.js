@@ -17,11 +17,30 @@ class Rescue extends Component{
             successMessage: ''
         }
         this.handlePlaceChange = this.handlePlaceChange.bind(this);
-    }
-
-    locationSelect(lat,lon){
+    } 
+    
+    locationSelect(lat,lon, geoLocation){ 
         this.state.form.location_lat = lat;
         this.state.form.location_lon = lon;
+        let newLocation = {
+            lat: lat,
+            lon: lon
+        };
+        let form = this.state.form;
+        if(geoLocation) {
+            let location = geoLocation.address_components.filter(item=>item.types.indexOf('sublocality') > -1)
+                                                         .map(item=>item.long_name)
+                                                         .join(',');
+            newLocation.place_id = geoLocation.place_id;
+            newLocation.formatted_address = geoLocation.formatted_address;
+            newLocation.location = location;
+
+            form.address = newLocation.formatted_address;
+        }
+        this.setState({
+            setLocation: newLocation,
+            form
+        });
     }
 
     handlePlaceChange(place){ 
@@ -97,9 +116,9 @@ class Rescue extends Component{
             </Reveal>
             
         }
-        var googlePlace = '';
-        
-        return (
+
+        var googlePlace = this.state.setLocation && this.state.setLocation.location ? this.state.setLocation.location : '';
+    return (
             <Reveal  onClose={this.props.hideModal} >
                <div className="w3-container ">   
                     <h4 className=" w3-center w3-margin">
@@ -233,6 +252,7 @@ class Rescue extends Component{
                         <div className="m12 s12 w3-col " >
                                <GoogleMapWidget mapStyle={{height: '250px'}} 
                                place={this.state.place}
+                               mapId='google-map-rescue'
                                locationSelect={this.locationSelect.bind(this)}/>    
                         </div>
                       

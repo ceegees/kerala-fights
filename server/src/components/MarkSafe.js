@@ -42,7 +42,20 @@ class MarkSafe extends Component{
         });
     }
 
-    locationSelect(lat,lon){
+    locationSelect(lat,lon, geoLocation){
+
+        let newLocation = {
+            lat: lat,
+            lon: lon
+        };
+
+        if(geoLocation) {
+            newLocation.place_id = geoLocation.place_id;
+            newLocation.formatted_address = geoLocation.formatted_address;
+        }
+        this.setState({
+            setLocation: newLocation
+        });
         this.state.form.location_lat = lat;
         this.state.form.location_lon = lon;
     }
@@ -113,7 +126,7 @@ class MarkSafe extends Component{
         if (this.state.successMessage != '') {
             clsSuccess = '';
         }
-        var googlePlace = '';
+        var googlePlace = this.state.setLocation && this.state.setLocation.formatted_address ? this.state.setLocation.formatted_address : '';
 
         return (
             <Reveal onClose={this.props.hideModal} >
@@ -175,20 +188,21 @@ class MarkSafe extends Component{
                         </div>
 
                         <div className="w3-col l6 s12 " id="location">
-                            <label className="w3-text-black">സ്ഥലം </label> 
+                            <label className="w3-margin-bottom">
+                                മാപ്പിൽ ലൊക്കേഷൻ കൃത്യതയോടെ അടയാളപ്പെടുത്തുക / Mark the location</label>
+
                             <GooglePlacesAutoComplete
                                 albumLocation={googlePlace}
                                 onPlaceChange={place => this.handlePlaceChange(place)}
-                                placeholder = "Location" />
+                                placeholder = "Location"  />
 
-                            <label className="w3-margin-bottom">
-                                മാപ്പിൽ ലൊക്കേഷൻ കൃത്യതയോടെ അടയാളപ്പെടുത്തുക / Mark the location</label>
                             <div className="w3-row">
                                 <GoogleMapWidget mapStyle={{height: '250px'}} 
                                     lat={this.state.form.location_lat}
                                     lon={this.state.form.location_lon}
                                     setLocation={this.state.setLocation}
                                     place={this.state.place}
+                                    mapId='google-map-safe'
                                     locationSelect={this.locationSelect.bind(this)}/>
                             </div>
                         </div>
