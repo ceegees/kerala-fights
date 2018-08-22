@@ -814,7 +814,6 @@ router.get('/service-provider-list',function(req,res){
         } 
     }
 
-    params.per_page = 20;
     models.MarkedLocation.findAll({
         where: whereQuery,
         order: [

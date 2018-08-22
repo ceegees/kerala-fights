@@ -11,8 +11,8 @@ import StatusWidget from './StatusWidget.js';
 import axios  from 'axios';
 const DaashboardInfo =() => {
     return (
-        <div className="w3-container" style={{minHeight:"100vh", paddingBottom: "100px"}}>
-            <h3>What to do </h3>
+        <div className="w3-container" className="kf-manage-container">
+            <h3 className="w3-center">What to do </h3>
             <ul className="w3-ul">
                 <li><h4>The Workflow</h4>
                     <ul className="w3-ul">
@@ -146,8 +146,8 @@ class AdminDashboard extends Component{
                         </NavLink>
                         <input className="w3-input w3-small w3-bar-item" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
                     </div>
-                    <div className="w3-right ">
-                        <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium"  onClick={this.togggleMobile.bind(this)}>&#9776;</button>
+                    <div>
+                        <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                             {this.props.statusList.map(item=>{
                                 return <NavLink key={item.key}
                                 activeClassName="active" 

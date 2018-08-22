@@ -25,7 +25,7 @@ const routes =  [
     component: AdminDashboard,
   },
   {
-    path: '/service-providers/:page?',
+    path: '/service-providers/:status?/:page?',
     exact: true,
     component: ServiceProviderList,
   }

@@ -10,7 +10,6 @@ class ServiceProvider extends Component {
 
     render() {
         const {item} = this.props;
-        console.log(item);
 
         return (
             <div key={`item_${item.id}`} className="w3-col l4 m6 w3-medium" style={{height: '100%'}}>
@@ -43,12 +42,12 @@ export const Paginator = ({page,status,data}) => {
     }
 
     return <div className="w3-bar">
-        <NavLink to={`/service-providers/1`} className="w3-button">&laquo;</NavLink> 
+        <NavLink to={`/service-providers/list/1`} className="w3-button">&laquo;</NavLink> 
         {
-            pages.map( page=> <NavLink key={`page_${page}`} to={`/service-providers/${page}`} 
+            pages.map( page=> <NavLink key={`page_${page}`} to={`/service-providers/list/${page}`} 
                 className="w3-button">{page}</NavLink> )
         }
-        <NavLink to={`/service-providers/${lastPage}`} className="w3-button">&raquo;</NavLink>
+        <NavLink to={`/service-providers/list/${lastPage}`} className="w3-button">&raquo;</NavLink>
     </div>
 }
 
@@ -62,10 +61,16 @@ class ServiceProviderList extends Component {
     }
 
     fetchData(props){
-        let {page=1, search=''} = this.props.match.params;
-        this.setState({data:null});
+        let {page=1, status='list', search=''} = props.match.params;
+        this.setState({data: null});
+
+        if (status == 'search'){ 
+            search = page;
+            page = 1;
+        }
 
         const obj = {
+            status: status,
             page: page,
             q: search,
         }
@@ -82,11 +87,16 @@ class ServiceProviderList extends Component {
     }
 
     searchRequests(e){
-        this.props.history.replace('/service-providers/search/'+e.target.value)
+        console.log('val',e.target.value)
+        if (e.target.value != '') {
+            this.props.history.replace('/service-providers/search/'+e.target.value)
+        } else {
+            this.props.history.replace('/service-providers/list/')
+        }
     }
 
     componentWillReceiveProps(nextProps){
-        if (nextProps.match.params  != this.props.match.params){ 
+        if (nextProps.match.params != this.props.match.params){ 
             this.fetchData(nextProps);
         }
     }
@@ -121,7 +131,7 @@ class ServiceProviderList extends Component {
                 <HeaderSection authUser={this.props.authUser} />
                 <div className="w3-padding">
                     <div className="w3-padding">
-                        <input className="w3-input w3-small w3-bar-item" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
+                        <input className="w3-padding-small w3-border" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
                         <div className="w3-bar-item w3-right-align">{totalCount}</div>
                     </div>
                     <div className="w3-row" style={{display: 'flex', flexFlow: 'wrap'}}> 
