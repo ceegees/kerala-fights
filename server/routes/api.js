@@ -372,6 +372,22 @@ router.post('/rescue-update',function(req,res){
     });
 });
 
+router.get('/my-activity',function(req,res){
+    models.WorkLog.findAll({
+        where:{
+            actorId:item.id
+        },
+        order:[
+            ['createdAt','DESC']
+        ],
+        include :[ { 
+            model: models.User ,as:'actor' 
+        }]
+    }).then(list => {
+        res.json(list);
+    })
+});
+
 
 router.get('/rescue-list',function(req,res){
     const params = filterFromQuery(req.query,{status:''})
