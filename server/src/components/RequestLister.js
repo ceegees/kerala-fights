@@ -16,18 +16,18 @@ class  RequestItem extends Component {
     if(item.parentId){
         if (status == 'duplicates'  && item.status != 'RESOLVED' 
         && item.parentId == page){
-            inPageOption = <button onClick={e => this.props.markDuplicate(item) } className="w3-display-topright w3-small w3-button w3-amber">Mark Duplicate
+            inPageOption = <button onClick={e => this.props.markDuplicate(item) } className="w3-display-topright w3-small w3-round w3-button w3-amber">Mark Duplicate
                 of {item.parentId}-XXXX)</button> 
         } else if (page != item.parentId) {
             inPageOption = <Link to={`/manage/duplicates/${item.parentId}`}   
-            className="w3-display-topright w3-small w3-button w3-amber" >
+            className="w3-display-topright w3-small w3-button w3-round w3-amber" >
             View Duplicates</Link>
         }
     } 
 
     let actionItem = null;
     if (!item.operator || item.operator.id ==  authUser.id) {
-        actionItem = <button className="w3-display-bottomright w3-small w3-button w3-green" 
+        actionItem = <button className="w3-display-bottomright w3-small w3-round w3-button w3-green" 
         onClick={e => this.props.showDetailModal(item)}>Help</button>
     } else {
         actionItem = <div className="w3-tag w3-round w3-padding-small w3-display-bottomright w3-yellow">Working: {item.operator.name}</div>

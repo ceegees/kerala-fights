@@ -53,8 +53,6 @@ class HeatMap extends Component {
                 this.attachInfo(marker, item);
                 this.markers.push(marker); 
             });
-            // console.log('Total markers',this.markers);
-
             this.markerCluster = new MarkerClusterer(this.map, this.markers, {
                 imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
             });
@@ -132,11 +130,12 @@ class HeatMap extends Component {
             </HeaderSection>
             {this.state.modal}
             <div className="w3-row" >
-                <div className="w3-col l3">
+                <div className="w3-col s12 m9 l3">
                     <FilterComponent handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
-                <div className="w3-col l9 m9"></div>
-            <div id="google-map" style={{height:"90vh"}}></div>
+                <div className="w3-col s12 l9 m9">
+                    <div id="google-map" style={{height:"90vh"}}></div>
+                </div>
             </div>
         </div>
     }

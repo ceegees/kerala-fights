@@ -67,14 +67,32 @@ router.get('/auth/google-callback', passport.authenticate('google',{
 router.get('/auth/google', passport.authenticate('google'));
 
 function googleAuth(req,res,next){
-    if (req.session.passport && req.user )  {
+    // console.log('Checiing for user : ', req.user);
+    if (req.user )  {
         next();
+        return;
     }
     res.redirect('/auth/google'); 
 } 
 
 //SSR function import
 const ssr = require('./../views/ssr.js'); 
+
+router.get([  
+    '/manage/:status?/:page?'
+    ], googleAuth,(req, res) => {
+    let context = {};
+
+    initialState.authUser = req.user;
+    const { preloadedState, content}  = ssr(req,context,initialState); 
+    res.setHeader('Cache-Control', 'assets, max-age=60') 
+    res.render('index',{
+        title:'Kerala Fights',
+        state:preloadedState,
+        content:''
+    })
+});   
+
 router.get([ 
     '/heatmap/:status?', 
     '/new',
@@ -84,21 +102,7 @@ router.get([
     let context = {};
     initialState.authUser = req.user;
     const { preloadedState, content}  = ssr(req,context,initialState); 
-    res.setHeader('Cache-Control', 'assets, max-age=604800') 
-    res.render('index',{
-        title:'Kerala Fights',
-        state:preloadedState,
-        content:''
-    })
-});   
-router.get([  
-    '/manage/:status?/:page?'
-    ], googleAuth,(req, res) => {
-    let context = {};
-
-    initialState.authUser = req.user;
-    const { preloadedState, content}  = ssr(req,context,initialState); 
-    res.setHeader('Cache-Control', 'assets, max-age=604800') 
+    res.setHeader('Cache-Control', 'assets, max-age=60') 
     res.render('index',{
         title:'Kerala Fights',
         state:preloadedState,

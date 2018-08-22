@@ -14,9 +14,9 @@ class DaashboardInfo extends  Component {
     
     render() {
         return <div className="w3-container" style={{minHeight:"100vh", paddingBottom: "100px"}}>
-            <h3>What to do </h3>
             <div className="w3-row ">
             <div className="w3-col l7 s12">
+            <h3>What to do </h3>
                 <ul className="w3-ul">
                     <li><h4>The Workflow</h4>
                         <ul className="w3-ul">
@@ -148,13 +148,16 @@ class AdminDashboard extends Component{
                 <AppMessage />
                 <div className="w3-bar w3-teal kf-top-bar">
                     <div>
+                        <NavLink to="/" exact className="w3-bar-item w3-l w3-small w3- w3-button">
+                            Home
+                        </NavLink>
                         <NavLink to="/manage/dashboard" exact className="w3-bar-item w3-small w3-button">
                             Dashoard
                         </NavLink>
-                         <NavLink to="/heatmap" exact className="w3-bar-item w3-purple w3-small w3-button">
+                         <NavLink to="/heatmap" exact className="w3-bar-item w3-small w3-button">
                             HeatMap
                         </NavLink> 
-                        <button className="w3-bar-item w3-button w3-small w3-green" onClick={this.newRequest.bind(this)}>New <span className="w3-hide-small">Request</span></button>
+                        <button className="w3-bar-item w3-button w3-small " onClick={this.newRequest.bind(this)}>New <span className="w3-hide-small">Request</span></button>
                         <input style={{width:"400px"}} className="w3-input w3-bar-item w3-small w3-rest" onChange={this.searchRequests.bind(this)} placeholder="Search by Name / Phone number /Case Id / KeralaRescueId" />  
                     </div>
                     <div className="w3-right ">

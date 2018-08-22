@@ -411,6 +411,9 @@ router.get('/rescue-list',function(req,res){
             ors.information = {
                 [Op.iLike]: `%${info}%`
             }
+            ors.information = {
+                [Op.iLike]: `%${address}%`
+            }
         } else {
             ors.phoneNumber = {
                 [Op.iLike]: `${query}%`
@@ -432,13 +435,6 @@ router.get('/rescue-list',function(req,res){
         whereQuery = {
            [Op.or] :ors
         } 
-    } else {
-        if (!state){
-            res.json(jsonError("Invalid status"));
-        }
-        whereQuery = {
-            parentId:null
-        };
     }
 
     if (req.query.location){ 
@@ -476,6 +472,7 @@ router.get('/rescue-list',function(req,res){
         where:whereQuery,
         order:[ 
             ['operatorLockAt','DESC NULLS FIRST'],
+            ['operatorUpdatedAt','DESC NULLS FIRST'],
             ['createdAt','DESC']
         ],
         offset:(params.page -1)*params.per_page,
