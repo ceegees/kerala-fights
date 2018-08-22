@@ -109,7 +109,6 @@ class DetailsModal extends Component {
             information:update.information,
             peopleCount:update.peopleCount,
             
-
             detailrescue:update.json.detailrescue,
             detailwater:update.json.detailwater,
             detailtoilet:update.json.detailtoilet,
@@ -314,7 +313,7 @@ class DetailsModal extends Component {
                         <a href={item.providerId}>
                             <img className="w3-round " src={item.actor.profileLink} style={{display:"inline-block",marginRight:"10px",width:"32px",height:"32px"}}/> 
                         </a>
-                        {item.comments}</div>
+                        {item.comments.indexOf('DATA_EDIT') == 0 ? 'Fields Updated': item.comments}</div>
                     <div>
                         <div className="w3-row">
                             <div className="w3-left">
@@ -397,12 +396,14 @@ class DetailsModal extends Component {
         let leftCont = <div className="w3-col l6 s12">
            
             <RowItem name="CaseId" value={[item.id,item.remoteId].join('-')} />
+
+            <RowItem name="Type" value={item.type} />
+            <RowItem name="People Count" value={item.peopleCount} />
             <RowItem name="Name" value={item.personName} />
             <RowItem name="Phone" value={<a className="w3-buttom w3-tag w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`} > {item.phoneNumber}</a>} />
             <RowItem name="Source" value={link} />
             <RowItem name="Location" value={item.location} />
             <RowItem name="District" value={item.district} />
-            <RowItem name="Type" value={item.type} />
             <RowItem name="Address" value={item.address} />
             <RowItem name="Serverity" value={item.operatorSeverity == -1 ? 'Not Updated':item.operatorSeverity}  />
             <RowItem name="Information" value={item.information} />

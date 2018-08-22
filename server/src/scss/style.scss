@@ -41,6 +41,20 @@
 //         //  margin:0px 2px;
 //     }
 // }
+
+.google-maps-supply {
+    position: relative;
+    padding-bottom: 75%; // This is the aspect ratio
+    height: 0;
+    overflow: hidden;
+}
+.google-maps-supply iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
 .kf-top-bar-filter .w3-dropdown-content {
     position: fixed;
 }

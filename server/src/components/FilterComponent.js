@@ -21,6 +21,10 @@ class FilterListContent extends React.Component {
                 );
             });
         }
+        if (this.props.name == 'Request Types'){
+            filterLists.push(
+                <option key="rescue_request"  value="rescue_request">Un Categorized from Kerala rescue</option>);
+        }
 
         return  <div style={{marginBottom:"6px"}}>
             <label>{this.props.name}</label>
@@ -110,11 +114,17 @@ class FilterComponent extends React.Component {
     }
 
     render() {
-        const { districtMap } = this.props;
+        const { districtMap,data } = this.props;
         const { sortConfig, timeConfig } = this.state;
         const {requestTypeList,severityList} = this.props; 
         return (
             <div className=""> 
+            {data && <div className="w3-center w3-padding w3-blue w3-margin-bottom">
+                <h4 >Total Requests  {data.total}</h4>
+            </div>}
+              {data && <div className="w3-center w3-padding w3-orange">
+              <h4 >Total Demand {data.demand}</h4>
+          </div>}
                 <FilterListContent
                     name="Request Types" 
                     filterOptions={requestTypeList}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
-import {HeaderSection,Reveal} from './Helper';
+import {HeaderSection,Reveal,DemanSupplyTab} from './Helper';
 import axios from 'axios';   
 import AppMessage from './AppMessage.js';
 import {getLatLng} from '../redux/actions';
@@ -14,7 +14,9 @@ class HeatMap extends Component {
     constructor(arg){
         super(arg);
         this.state = {
-            modal:null
+            modal:null,
+            data:null,
+            tabName:'demand'
         }
         this.map = null;
         this.markerCluster = null;
@@ -32,6 +34,7 @@ class HeatMap extends Component {
         this.markers.map(item =>{
             item.setMap(null);
         });
+
         this.markers = [];
         const {status = 'new'} = this.props.match.params;
 
@@ -55,8 +58,11 @@ class HeatMap extends Component {
             });
             this.markerCluster = new MarkerClusterer(this.map, this.markers, {
                 imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-            });
+            }); 
             
+            this.setState({
+                data:resp.data.data
+            });
         });
     }
     hideModal(msg){
@@ -76,9 +82,8 @@ class HeatMap extends Component {
 
     showDetailModal(item){
         this.setState({modal:<Reveal onClose={this.hideModal.bind(this)}>
-            <DetailsModal item={item}   hideModal={this.hideModal.bind(this)} 
-            />
-            </Reveal>});
+            <DetailsModal item={item}   hideModal={this.hideModal.bind(this)}   />
+        </Reveal>});
     }
 
     attachInfo(marker,item){
@@ -111,6 +116,9 @@ class HeatMap extends Component {
         
         }  
     }
+    tabChange(name){
+        this.setState({tabName:name});
+    }
     render() {
         return <div>
             <AppMessage />
@@ -131,22 +139,13 @@ class HeatMap extends Component {
             {this.state.modal}
             <div className="w3-row-padding" >
                 <div className="w3-col s12 m9 l3">
-                    <FilterComponent handleFilterData={this.handleFilterData.bind(this)} />
+                    <FilterComponent data={this.state.data} handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
                 <div className="w3-col s12 l9 m9">
-                    <div>
-                        <button>Demand</button>
-                        <button>Supply</button>
-                    </div>
-                    <div>
-                    <div id="google-map" style={{height:"90vh"}}></div>
-                    </div>
-                    <div>
-                    <div>
-                        
-                    </div>
-
-                    </div>
+                    <DemanSupplyTab >
+                        <div id="google-map" style={{height:"90vh"}}></div>
+                        <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"900px"}}/>
+                    </DemanSupplyTab>
                 </div>
             </div>
         </div>

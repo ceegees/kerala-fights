@@ -16,7 +16,7 @@
         gtag('config', 'UA-30327290-15');
         </script>
 
-        <link rel='stylesheet' href='/css/new.css?r=1' /> 
+        <link rel='stylesheet' href='/css/new.css?r=<%=version%>' /> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
         <meta property="og:image" content="https://d1xp9ts0bx8s2q.cloudfront.net/vow/kerala_fights.png">
@@ -46,7 +46,7 @@
         </script>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <% if (process.env.NODE_ENV == 'production') { %>
-        <script src="/js/client.prod.js?r=38"></script>
+        <script src="/js/client.prod.js?r=<%=version%>"></script>
         <% } else { %> 
         <script src="/js/client.js"></script>
         <% } %>

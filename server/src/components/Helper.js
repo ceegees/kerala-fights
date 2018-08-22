@@ -459,22 +459,22 @@ export class HeaderSection extends Component {
     render(){
         return (
             <section className="top_section"> 
-                <nav className="w3-bar w3-blue" >
+                <nav className="w3-bar w3-blue header-top-bar">
                     <div className="w3-left">
                         <a className="w3-bar-item w3-button" href="/">Kerala Flood Relief - കേരളം പൊരുതുന്നു , ഒരുമിച്ച് </a>
                     </div>
                     <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
-                    <div className="w3-right w3-hide-small">
-                        {!this.props.authUser ? <a className="w3-bar-item w3-button " href="/auth/facebook">Fb Login</a> : null}
-                        {this.props.authUser ? <a className="w3-bar-item w3-button " href="/manage">Manage</a> : <a className="w3-bar-item w3-button " href="/manage">Volunteer Login</a>}
+                    <div className="w3-right w3-hide-small">  
+                        {this.props.authUser ? <a className="w3-bar-item   w3-button " href="/manage">Manage</a> : <a className="w3-bar-item  w3-yellow w3-button " href="/manage">Volunteer Login</a>} 
+                        {!this.props.authUser ? <a className="w3-bar-item w3-hide w3-button " href="/auth/facebook">Fb Login</a> : null} 
                         <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button ">Rescue Centers</a> 
                         <a target="_blank" href="https://www.keralarescue.in/contactus/" className="w3-bar-item w3-button ">Contact Rescue</a> 
                         <NavLink className="w3-bar-item w3-button " to="/heatmap/need_help">HeatMap</NavLink>
                     </div>
                 </nav> 
                 <div className={`w3-bar-block w3-border-top w3-hide-large w3-hide-medium ${this.state.mobileMenu}`}>
-                    {!this.props.authUser ? <a className="w3-bar-item w3-button w3-blue" href="/auth/facebook">Fb Login</a> : null}
-                    {this.props.authUser ? <a className="w3-bar-item w3-button w3-blue" href="/manage">Manage</a> : <a className="w3-bar-item w3-button w3-blue" href="/manage">Volunteer Login</a>}
+                    {this.props.authUser ? <a className="w3-bar-item   w3-button " href="/manage">Manage</a> : <a className="w3-bar-item  w3-yellow w3-button " href="/manage">Volunteer Login</a>} 
+                    {!this.props.authUser ? <a className="w3-bar-item w3-hide w3-button " href="/auth/facebook">Fb Login</a> : null} 
                     <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button w3-blue">Rescue Centers</a> 
                     <a target="_blank" href="https://www.keralarescue.in/contactus/" className="w3-bar-item w3-button w3-blue">Contact Rescue</a> 
                     <NavLink className="w3-bar-item w3-button w3-blue" to="/heatmap/need_help">HeatMap</NavLink>
@@ -485,6 +485,49 @@ export class HeaderSection extends Component {
     }
 }
 
+
+export class DemanSupplyTab extends Component {
+    constructor(arg){
+        super(arg);
+        this.state = {
+            tabName : 'demand'
+        }
+    }
+    tabChange(name){
+        this.setState({tabName:name});
+    }
+    render(){
+        const {tabName} = this.state;
+        const demandBtnCls = tabName == 'demand' ? 'w3-green':'w3-light-grey';
+        const supplyBtnCls = tabName != 'demand' ? 'w3-green':'w3-light-grey';
+
+        const demandTabCls = this.state.tabName == 'demand' ? 'w3-show':'w3-hide';
+        const supplyTabCls = this.state.tabName != 'demand' ? 'w3-show':'w3-hide';
+        let message = '';
+        if (this.state.tabName != 'demand') {
+            message = 'Drag and Zoom the map to Kerala / മാപ്പ് കേരളത്തിലേക്ക് സൂം (Zoom ) ചെയ്യുക'
+        }
+
+        
+        
+        return <div>
+            <div className="w3-bar">
+                <button className={"w3-button w3-bar-item w3-orange "+demandBtnCls}  
+                    onClick={this.tabChange.bind(this,'demand')}> Demand / ആവശ്യക്കാർ </button>
+                <button className={"w3-button w3-bar-item w3-green "+supplyBtnCls} 
+                    onClick={this.tabChange.bind(this,'supply')}>Supply / സഹായം കൊടുക്കുന്നവർ </button>
+                <div className="w3-bar-item" >
+                    <span className="w3-small w3-text-red">{message}</span></div>
+            </div>
+            <div className={demandTabCls}>
+                {this.props.children[0]}
+            </div>
+            <div className={supplyTabCls}>
+                {this.props.children[1]}
+            </div>
+        </div> 
+    }
+}
 export class Leaderboard extends Component {
 
     constructor(arg){
@@ -493,6 +536,7 @@ export class Leaderboard extends Component {
             data:null
         }
     }
+
     componentDidMount(){
         axios.get('/api/v1/angels').then(resp=>{ 
             this.setState({
@@ -523,8 +567,7 @@ export class Leaderboard extends Component {
                 </tbody>
             </table>
         }
-         
-
+        
         return <div className=" w3-small w3-margin"> 
             <h5 className="w3-center">The Fighters</h5>        
             {content}
