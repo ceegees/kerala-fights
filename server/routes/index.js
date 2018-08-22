@@ -5,10 +5,12 @@ var marked = require('marked');
 var yaml = require('js-yaml');
 var path = require('path');
 var ejs = require('ejs');
+var Sequelize = require('sequelize');
 
 var models = require('../models');
 
 const initialState = require('../config/data');
+const Op = Sequelize.Op;
   
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -17,8 +19,12 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 GOOGLE_APP_ID = '634343394363-lgpiebfiddkac72v25ao1ld1b3tnre8i.apps.googleusercontent.com';
 GOOGLE_APP_SECRET = 'Z0KAE4ZU2rnX5kt0qSVsbm4T'
 
-FACEBOOK_APP_ID = '756308454761013';
-FACEBOOK_APP_SECRET = '27525342c32b054d7056fcdeb6f072f3';
+// FACEBOOK_APP_ID = '756308454761013'; // test idsss
+// FACEBOOK_APP_SECRET = '27525342c32b054d7056fcdeb6f072f3';
+
+
+FACEBOOK_APP_ID = '286493875499029'; // live ids
+FACEBOOK_APP_SECRET = '39147871f13aaefa2f2ae07f9f37a33f';
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_APP_ID,
@@ -32,9 +38,13 @@ passport.use(new GoogleStrategy({
     callbackURL: "/auth/google-callback"
   },function(accessToken, refreshToken, profile, cb) { 
     const refId = `https://plus.google.com/${profile.id}`;
+    const email = profile.emails[0].value;
     models.User.findOne({
-        where:{
-            providerId:refId
+        where: {
+            [Op.or]: {
+                providerId: refId,
+                email: email
+            } 
         }
     }).then(res => {
         if (res){
@@ -46,11 +56,11 @@ passport.use(new GoogleStrategy({
         }
         return models.User.create({
             name: profile.displayName,
-            providerId:refId,
-            type:'User',
-            email:profile.emails[0].value,//if email is not there fail
-            profileLink :  photoLink,
-            status:'ACTIVE'
+            providerId: refId,
+            type: 'User',
+            email: email, //if email is not there fail
+            profileLink : photoLink,
+            status: 'ACTIVE'
         });
     }).then(user => {
         cb(null,user);
@@ -81,16 +91,18 @@ passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: "/auth/facebook/callback",
-    profileFields: ['id', 'emails', 'displayName','name','gender', 'picture.type(small)'] //This
+    profileFields: ['id', 'emails', 'displayName', 'name', 'gender', 'picture.type(small)'] //This
 },
 
 function(accessToken, refreshToken, profile, done) {
         const refId = `https://facebook.com/${profile.id}`;
-        
-        console.log('fb user ',profile);
+        const email = profile.emails[0].value;
         models.User.findOne({
             where: {
-                provider_id: refId
+                [Op.or]: {
+                    providerId: refId,
+                    email: email
+                } 
             }
         }).then(resp => { 
             if (resp) {
@@ -106,12 +118,11 @@ function(accessToken, refreshToken, profile, done) {
                 name: profile.displayName,
                 providerId: refId,
                 type: 'User',
-                email: profile.emails[0].value,
+                email: email,
                 profileLink: photoLink,
                 status:'ACTIVE'
             });
         }).then(user => {
-            console.log('at second then', user);
             done(null, user);
         }).catch(ex => {
             done(null, false);
