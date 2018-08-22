@@ -43,21 +43,24 @@ class MarkSafe extends Component{
     }
 
     locationSelect(lat,lon, geoLocation){
+        this.state.form.location_lat = lat;
+        this.state.form.location_lon = lon;
 
         let newLocation = {
             lat: lat,
             lon: lon
         };
-
         if(geoLocation) {
+            let location = geoLocation.address_components.filter(item=>item.types.indexOf('sublocality') > -1)
+                                                         .map(item=>item.long_name)
+                                                         .join(',');
             newLocation.place_id = geoLocation.place_id;
             newLocation.formatted_address = geoLocation.formatted_address;
+            newLocation.location = location;
         }
         this.setState({
             setLocation: newLocation
         });
-        this.state.form.location_lat = lat;
-        this.state.form.location_lon = lon;
     }
 
     handlePlaceChange(place){ 
@@ -126,8 +129,7 @@ class MarkSafe extends Component{
         if (this.state.successMessage != '') {
             clsSuccess = '';
         }
-        var googlePlace = this.state.setLocation && this.state.setLocation.formatted_address ? this.state.setLocation.formatted_address : '';
-
+        var googlePlace = this.state.setLocation && this.state.setLocation.location ? this.state.setLocation.location : '';
         return (
             <Reveal onClose={this.props.hideModal} >
                <div className="w3-container ">   

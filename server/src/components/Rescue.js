@@ -26,7 +26,6 @@ class Rescue extends Component{
             lat: lat,
             lon: lon
         };
-        let form = this.state.form;
         if(geoLocation) {
             let location = geoLocation.address_components.filter(item=>item.types.indexOf('sublocality') > -1)
                                                          .map(item=>item.long_name)
@@ -34,12 +33,9 @@ class Rescue extends Component{
             newLocation.place_id = geoLocation.place_id;
             newLocation.formatted_address = geoLocation.formatted_address;
             newLocation.location = location;
-
-            form.address = newLocation.formatted_address;
         }
         this.setState({
             setLocation: newLocation,
-            form
         });
     }
 
@@ -60,10 +56,6 @@ class Rescue extends Component{
     
     handleSubmit () {
         var formData = this.state.form;
-        console.log(formData);
-
-        return;
-
         let errors = {};
         if (!formData.name) {
             errors['name'] = "Name is required"
@@ -121,7 +113,7 @@ class Rescue extends Component{
         }
 
         var googlePlace = this.state.setLocation && this.state.setLocation.location ? this.state.setLocation.location : '';
-    return (
+        return (
             <Reveal  onClose={this.props.hideModal} >
                <div className="w3-container ">   
                     <h4 className=" w3-center w3-margin">
@@ -240,7 +232,7 @@ class Rescue extends Component{
                                 placeholder="Add information that will help us resolve this faster, Contact information to get back to you if you are raising request on behalf of others" 
                                 inputClass="w3-input w3-border" 
                                 valueChange={this.changeFormValue.bind(this)}
-                                value = {this.state.form.information}
+                                value = {this.state.form.member_details}
                                 type="text" />
                         </div> 
 
