@@ -688,6 +688,8 @@ router.post('/rescue/volunteer/register', function(req,res) {
     let longitude = req.body.longitude;
     let info = req.body.info;
 
+    const phoneRegExp = /^[0-9]{10}$/; 
+
     if (!name) {
         return res.json({
             success: false,
@@ -697,6 +699,11 @@ router.post('/rescue/volunteer/register', function(req,res) {
         return res.json({
             success: false,
             message: "Phone Number is required"
+        });
+    } else if (!phoneNumber.match(phoneRegExp)) {
+        return res.json({
+            success: false,
+            message: "Invalid Phone Number"
         });
     } else if (!type) {
         return res.json({
@@ -752,10 +759,17 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
     let longitude = req.body.longitude;
     let status = req.body.status;
 
+    const phoneRegExp = /^[0-9]{10}$/; 
+
     if (!phoneNumber) {
         return res.json({
             success: false,
             message: "Phone Number is required"
+        });
+    } else if (!phoneNumber.match(phoneRegExp)) {
+        return res.json({
+            success: false,
+            message: "Invalid Phone Number"
         });
     } else if (!latitude || !longitude) {
         return res.json({

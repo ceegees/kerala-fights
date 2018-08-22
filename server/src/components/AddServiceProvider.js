@@ -209,14 +209,13 @@ class AddHelpCentre extends Component{
                         </div>
 
                         <div className="w3-col l6 s12 " id="location">
-                            <label className="w3-text-black">സ്ഥലം </label> 
+                            <label className="w3-margin-bottom">
+                                മാപ്പിൽ ലൊക്കേഷൻ കൃത്യതയോടെ അടയാളപ്പെടുത്തുക / Mark the location</label>
                             <GooglePlacesAutoComplete
                                 albumLocation={googlePlace}
                                 onPlaceChange={place => this.handlePlaceChange(place)}
                                 placeholder = "Location" />
 
-                            <label className="w3-margin-bottom">
-                                മാപ്പിൽ ലൊക്കേഷൻ കൃത്യതയോടെ അടയാളപ്പെടുത്തുക / Mark the location</label>
                             <div className="w3-row">
                                 <GoogleMapWidget mapStyle={{height: '250px'}} 
                                     lat={this.state.form.location_lat}
