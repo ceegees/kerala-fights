@@ -169,7 +169,7 @@ async function clearLocks(){
     },{
         where:{
             operatorLockAt:{
-              [Sequelize.Op.lt] : moment().subtract(10,'minutes')
+              [Sequelize.Op.lt] : moment().subtract(15,'minutes')
             }
         }
     }).then(res => {

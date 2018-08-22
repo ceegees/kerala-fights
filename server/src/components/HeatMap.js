@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
-import {HeaderSection,Reveal} from './Helper';
+import {HeaderSection,Reveal,DemanSupplyTab} from './Helper';
 import axios from 'axios';   
 import AppMessage from './AppMessage.js';
 import {getLatLng} from '../redux/actions';
@@ -14,7 +14,8 @@ class HeatMap extends Component {
     constructor(arg){
         super(arg);
         this.state = {
-            modal:null
+            modal:null,
+            tabName:'demand'
         }
         this.map = null;
         this.markerCluster = null;
@@ -111,6 +112,9 @@ class HeatMap extends Component {
         
         }  
     }
+    tabChange(name){
+        this.setState({tabName:name});
+    }
     render() {
         return <div>
             <AppMessage />
@@ -134,19 +138,10 @@ class HeatMap extends Component {
                     <FilterComponent handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
                 <div className="w3-col s12 l9 m9">
-                    <div>
-                        <button>Demand</button>
-                        <button>Supply</button>
-                    </div>
-                    <div>
-                    <div id="google-map" style={{height:"90vh"}}></div>
-                    </div>
-                    <div>
-                    <div>
-                        
-                    </div>
-
-                    </div>
+                    <DemanSupplyTab >
+                        <div id="google-map" style={{height:"90vh"}}></div>
+                        <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"900px"}}/>
+                    </DemanSupplyTab>
                 </div>
             </div>
         </div>

@@ -1,12 +1,12 @@
 
 import  React,{ Component } from 'react';   
-import { FormTextField,FormTextarea,Spinner,Paginator ,SelectField,Reveal} from './Helper.js';  
+import { FormTextField,FormTextarea,DemanSupplyTab,Spinner,Paginator ,SelectField,Reveal} from './Helper.js';  
 import axios from 'axios';
 import moment from 'moment';
 import FilterComponent from './FilterComponent';
 import {NavLink,Link,withRouter,Switch,Route} from 'react-router-dom';
 import qs from 'query-string';
-
+ 
 class  RequestItem extends Component {
     render() {
 
@@ -162,7 +162,11 @@ export default class RequestLister extends Component {
                 </div>
                 <div className="w3-col l9">
                     <div className="w3-small w3-right-align w3-padding">Results {totalCount}</div>
+                    <DemanSupplyTab>
                     {content}
+                    <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"900px"}}/>
+                    </DemanSupplyTab>
+
                 </div>
                 </div>
                 <div className="w3-center ">
