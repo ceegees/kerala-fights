@@ -13,13 +13,17 @@ class ServiceProvider extends Component {
 
         return (
             <div key={`item_${item.id}`} className="w3-col l4 m6 w3-medium" style={{height: '100%'}}>
-                <div className="w3-margin w3-white w3-padding">
+                <div className="w3-margin w3-white w3-padding w3-small w3-border" style={{position: 'relative'}}>
                     <strong className="w3-text-gray">Contact Name:</strong> {item.contactName}<br/>
                     <strong className="w3-text-gray">Phone:</strong> {item.phoneNumber}<br/>
                     <strong className="w3-text-gray">Type:</strong> {item.type.toUpperCase()}<br/>
                     <strong className="w3-text-gray">Number of People:</strong> {item.peopleCount}<br/>
                     <strong className="w3-text-gray">Number of Kids:</strong> {item.kidsCount}<br/>
                     <strong className="w3-text-gray">Created:</strong> {moment(item.createdAt).fromNow()}<br/>
+                    <div>
+                        <button className="w3-display-bottomright w3-small w3-button w3-blue w3-padding-small" 
+                            onClick={e => this.props.showDetailModal(item)}>View Details</button>
+                    </div>
                 </div>
             </div>
         );
@@ -51,11 +55,88 @@ export const Paginator = ({page,status,data}) => {
     </div>
 }
 
+
+class DetailsModal extends Component {
+
+    componentDidMount() {
+        const {item} = this.props;
+        if (item.latLng && item.latLng.coordinates && item.latLng.coordinates.length == 2){
+            this.initialiseGMap(item.latLng.coordinates[0],item.latLng.coordinates[1]);
+        }
+    }
+
+    initialiseGMap (latitude,longitude) {
+        if (!this.map){
+            this.map = new google.maps.Map(document.getElementById('google-map-detail'), {
+                center: {lat: latitude, lng: longitude},
+                zoom: 14,
+                zoomControl: true,
+                scaleControl:true,
+                styles: [{
+                    featureType: 'poi',
+                    stylers: [{ visibility: 'off' }]  // Turn off points of interest.
+                }, {
+                    featureType: 'transit.station',
+                    stylers: [{ visibility: 'off' }]  // Turn off bus stations, train stations, etc.
+                }],
+            });
+        } 
+        this.marker = new google.maps.Marker({
+            position: {lat: latitude, lng: longitude},
+            map: this.map
+        });
+        this.map.setCenter({lat:latitude,lng:longitude});
+        this.marker.setVisible(true);
+    }
+
+    render() {
+        const {item} = this.props;
+
+        let leftCont = (
+            <div className="w3-col l6 s12">
+                <div className="w3-padding-small"><strong className="w3-text-gray">Contact Name:</strong> {item.contactName}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Phone Number:</strong> <span>
+                    <a className="w3-buttom w3-tag w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`}>{item.phoneNumber}</a>
+                    </span>
+                </div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Type of help:</strong> {item.type.toUpperCase()}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Address:</strong> 
+                    <div className="w3-border w3-padding-small w3-light-gray">{item.address}</div>
+                </div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Number of people:</strong> {item.peopleCount}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Number of kids:</strong> {item.kidsCount}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Number of Females:</strong> {item.femaleCount}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Number of Males:</strong> {item.maleCount}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">More Information:</strong> 
+                    {(item.information)?
+                        <div className="w3-border w3-padding-small w3-light-gray">{item.information}</div>
+                        : null
+                    }
+                </div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">CreatedAt:</strong> {moment(item.createdAt).fromNow()}</div>
+            </div>
+        );
+
+       return (
+            <div className="w3-container w3-padding">   
+                <h4 className="w3-center w3-margin-bottom">Service Provider Details</h4>
+                <div className="w3-row w3-margin-bottom">
+                    {leftCont}
+                    <div className="w3-col l6"> 
+                        <div id="google-map-detail" style={{minHeight:"250px"}}></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
 class ServiceProviderList extends Component {
     constructor(arg){
         super(arg);
         this.state = {
-            data:null,
+            data: null,
+            modal: null
         }
         this.filter = {}
     }
@@ -106,6 +187,21 @@ class ServiceProviderList extends Component {
         this.fetchData(this.props);
     }
 
+    hideModal(){
+        this.setState({modal:null})
+    }
+
+    showDetailModal(item){
+        this.setState({
+            modal: (
+                <Reveal onClose={this.hideModal.bind(this)}>
+                    <DetailsModal hideModal={this.hideModal.bind(this)} 
+                        item={item} />
+                </Reveal>
+            )
+        });
+    }
+
     render() {
         const {data} = this.state;
         const {page=1} = this.props;
@@ -120,16 +216,16 @@ class ServiceProviderList extends Component {
         } else {
             pagination = <Paginator data={data} page={page} />
             totalCount = `Total: ${data.total}`;
-            content = data.list.map(item => 
-                <ServiceProvider item={item}  
-                    {...this.props} />
+            content = data.list.map((item, idx) => 
+                <ServiceProvider key={idx} item={item}  
+                    showDetailModal={this.showDetailModal.bind(this)} />
             );
         }
 
         return (
             <div style={{minHeight: "100vh", paddingTop: "64px"}}>
                 <HeaderSection authUser={this.props.authUser} />
-                <div className="w3-padding">
+                <div>
                     <div className="w3-padding">
                         <input className="w3-padding-small w3-border" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
                         <div className="w3-bar-item w3-right-align">{totalCount}</div>
@@ -140,6 +236,8 @@ class ServiceProviderList extends Component {
                     <div className="w3-center ">
                         {pagination}
                     </div>
+
+                    {this.state.modal}
                 </div>
             </div>
         ) 
