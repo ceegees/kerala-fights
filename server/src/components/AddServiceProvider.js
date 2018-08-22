@@ -44,12 +44,12 @@ class AddHelpCentre extends Component{
     }
 
     locationSelect(lat,lon, geoLocation) {
+        this.state.form.location_lat = lat;
+        this.state.form.location_lon = lon;
         let newLocation = {
             lat: lat,
             lon: lon
         };
-        
-        let form = this.state.form;
         if(geoLocation) {
             let location = geoLocation.address_components.filter(item=>item.types.indexOf('sublocality') > -1)
                 .map(item=>item.long_name)
@@ -57,16 +57,10 @@ class AddHelpCentre extends Component{
             newLocation.place_id = geoLocation.place_id;
             newLocation.formatted_address = geoLocation.formatted_address;
             newLocation.location = location;
-
-            form.address = newLocation.formatted_address;
         }
         this.setState({
             setLocation: newLocation,
-            form
         });
-
-        this.state.form.location_lat = lat;
-        this.state.form.location_lon = lon;
     }
 
     handlePlaceChange(place){ 

@@ -630,7 +630,7 @@ router.post('/add-rescue',function(req,res){
             type : data.help_type,
             location:data.location,
             peopleCount:data.member_count,
-            address:data.address +"\n"+ data.alternate_numbers,
+            address:data.address +"\n"+ ((data.alternate_numbers)?data.alternate_numbers:''),
             powerBackup:data.power_backup,
             information:data.member_details,
             source:'keralafights',
