@@ -204,7 +204,6 @@ router.get('/sync',async(req,res) => {
                             }
                             row[colName] = val;
                         });
-
                         rows.push(row);
                     }
 
@@ -388,7 +387,6 @@ router.get('/my-activity',function(req,res){
     })
 });
 
-
 router.get('/rescue-list',function(req,res){
     const params = filterFromQuery(req.query,{status:''})
     params.status = params.status.toLowerCase();
@@ -427,8 +425,8 @@ router.get('/rescue-list',function(req,res){
             ors.information = {
                 [Op.iLike]: `%${info}%`
             }
-            ors.information = {
-                [Op.iLike]: `%${address}%`
+            ors.address = {
+                [Op.iLike]: `%${info}%`
             }
         } else if(query.indexOf('src:') > -1 ) {
             ors.source = {
@@ -488,6 +486,13 @@ router.get('/rescue-list',function(req,res){
         }
     }
 
+    const result = {
+        total:0,
+        demand:0,
+        page:params.page,
+        per_page:params.per_page,
+    }
+
     models.HelpRequest.findAll({
         where:whereQuery,
         order:[ 
@@ -501,22 +506,24 @@ router.get('/rescue-list',function(req,res){
             model: models.User ,as:'operator' 
         }]
     }).then(list => {
+        result.list = list;
         return models.HelpRequest.count({
             where:whereQuery,
-        }).then(count => {
-            return {
-                total:count,
-                page:params.page,
-                page_max:Math.floor( count /params.per_page),
-                per_page:params.per_page,
-                list:list
-            }
-        })
-    }).then(data =>{
+        });
+    }).then(count => {
+        result.total = count;
+        result.page_max = Math.floor( count /params.per_page);
+        return models.HelpRequest.sum('people_count',{
+            where:whereQuery,
+        });
+    }).then(total => {
+        result.demand = total; 
         res.json(jsonSuccess(
-            data
+            result
         ));
-    });
+    }).catch(ex => {
+        res.json(jsonError(ex.message))
+    })
 });
 
 router.post('/resuce-edit',function(req,res){

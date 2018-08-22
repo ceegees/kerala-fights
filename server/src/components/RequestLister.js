@@ -139,14 +139,14 @@ export default class RequestLister extends Component {
 
         let pagination = null;
         let content = null;
-        let totalCount = '';
+        let totalDemand= null;
+        let totalRequests = null;
         if (!data){
             content = <Spinner />
         } else if (data.list.length == 0){
              content = <div className="w3-padding-64 w3-large w3-center">The List is empty</div>
         } else {
             pagination = <Paginator data={data} status={status} page={page} />
-            totalCount = `Total : ${data.total}`;
             content = data.list.map(item => <RequestItem  key={item.id}
                 markDuplicate={this.markDuplicate.bind(this)} 
                 item={item}  
@@ -155,16 +155,19 @@ export default class RequestLister extends Component {
         }
             return <div  style={{minHeight:"100vh"}} > 
                 <div className="w3-row-padding">
-                <div className="w3-col l3"> 
-                    <FilterComponent  handleFilterData={this.handleFilterData.bind(this)} >
-                    <div className="w3-bar-item w3-right" >{totalCount}</div>
-                    </FilterComponent>  
+                <div className="w3-col l3">
+                    <FilterComponent data={data}  
+                    handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
                 <div className="w3-col l9">
-                    <div className="w3-small w3-right-align w3-padding">Results {totalCount}</div>
                     <DemanSupplyTab>
                     {content}
-                    <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"900px"}}/>
+                    <div className="google-maps-supply">
+                        <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{
+                                height:"900px",
+                                border:"0"
+                            }}/>
+                    </div>
                     </DemanSupplyTab>
 
                 </div>

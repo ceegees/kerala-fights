@@ -15,6 +15,7 @@ class HeatMap extends Component {
         super(arg);
         this.state = {
             modal:null,
+            data:null,
             tabName:'demand'
         }
         this.map = null;
@@ -33,6 +34,7 @@ class HeatMap extends Component {
         this.markers.map(item =>{
             item.setMap(null);
         });
+
         this.markers = [];
         const {status = 'new'} = this.props.match.params;
 
@@ -56,8 +58,11 @@ class HeatMap extends Component {
             });
             this.markerCluster = new MarkerClusterer(this.map, this.markers, {
                 imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-            });
+            }); 
             
+            this.setState({
+                data:resp.data.data
+            });
         });
     }
     hideModal(msg){
@@ -77,9 +82,8 @@ class HeatMap extends Component {
 
     showDetailModal(item){
         this.setState({modal:<Reveal onClose={this.hideModal.bind(this)}>
-            <DetailsModal item={item}   hideModal={this.hideModal.bind(this)} 
-            />
-            </Reveal>});
+            <DetailsModal item={item}   hideModal={this.hideModal.bind(this)}   />
+        </Reveal>});
     }
 
     attachInfo(marker,item){
@@ -135,7 +139,7 @@ class HeatMap extends Component {
             {this.state.modal}
             <div className="w3-row-padding" >
                 <div className="w3-col s12 m9 l3">
-                    <FilterComponent handleFilterData={this.handleFilterData.bind(this)} />
+                    <FilterComponent data={this.state.data} handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
                 <div className="w3-col s12 l9 m9">
                     <DemanSupplyTab >

@@ -484,6 +484,8 @@ export class DemanSupplyTab extends Component {
         if (this.state.tabName != 'demand') {
             message = 'Drag and Zoom the map to Kerala / മാപ്പ് കേരളത്തിലേക്ക് സൂം (Zoom ) ചെയ്യുക'
         }
+
+        
         
         return <div>
             <div className="w3-bar">

@@ -7,6 +7,7 @@ var path = require('path');
 var ejs = require('ejs');
 
 var models = require('../models');
+const VERSION = 1.4;
 
 const initialState = require('../config/data');
   
@@ -82,11 +83,12 @@ router.get([
     '/manage/:status?/:page?'
     ], googleAuth,(req, res) => {
     let context = {};
-
     initialState.authUser = req.user;
     const { preloadedState, content}  = ssr(req,context,initialState); 
     res.setHeader('Cache-Control', 'assets, max-age=60') 
     res.render('index',{
+
+        version:VERSION,
         title:'Kerala Fights',
         state:preloadedState,
         content:''
@@ -108,6 +110,7 @@ router.get([
     res.setHeader('Cache-Control', 'assets, max-age=60') 
     res.render('index',{
         title:'Kerala Fights',
+        version:VERSION,
         state:preloadedState,
         content:''
     })
