@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     latitude: { type: DataTypes.DECIMAL(10,7), field: 'latitude' },
     longitude: { type: DataTypes.DECIMAL(10,7), field: 'longitude' },
     information: { type: DataTypes.TEXT, field: 'information' },
+    serviceEndDate: { type: DataTypes.DATE, field: 'service_end_date' },
     createdAt: { type: DataTypes.DATE, field: 'created_at' },
     updatedAt: { type: DataTypes.DATE, field: 'updated_at' },
 }, {

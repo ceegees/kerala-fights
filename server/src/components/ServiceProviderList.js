@@ -16,10 +16,11 @@ class ServiceProvider extends Component {
                 <div className="w3-margin w3-white w3-padding w3-small w3-border" style={{position: 'relative'}}>
                     <strong className="w3-text-gray">Contact Name:</strong> {item.contactName}<br/>
                     <strong className="w3-text-gray">Phone:</strong> {item.phoneNumber}<br/>
-                    <strong className="w3-text-gray">Type:</strong> {item.type.toUpperCase()}<br/>
+                    <strong className="w3-text-gray">Type:</strong> <span className="w3-tag w3-round w3-amber" style={{textTransform: 'capitalize'}}>{item.type.replace(/_/g, ' ')}</span><br/>
                     <strong className="w3-text-gray">Number of People:</strong> {item.peopleCount}<br/>
                     <strong className="w3-text-gray">Number of Kids:</strong> {item.kidsCount}<br/>
                     <strong className="w3-text-gray">Created:</strong> {moment(item.createdAt).fromNow()}<br/>
+                    <strong className="w3-text-gray">Service End Date:</strong> {moment(item.serviceEndDate).fromNow()}<br/>
                     <div>
                         <button className="w3-display-bottomright w3-small w3-button w3-blue w3-padding-small" 
                             onClick={e => this.props.showDetailModal(item)}>View Details</button>
@@ -99,7 +100,7 @@ class DetailsModal extends Component {
                     <a className="w3-buttom w3-tag w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`}>{item.phoneNumber}</a>
                     </span>
                 </div>
-                <div className="w3-padding-small"><strong className="w3-text-gray">Type of help:</strong> {item.type.toUpperCase()}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Type of help:</strong> <span className="w3-tag w3-round w3-amber" style={{textTransform: 'capitalize'}}>{item.type.replace(/_/g, ' ')}</span></div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">Address:</strong> 
                     <div className="w3-border w3-padding-small w3-light-gray">{item.address}</div>
                 </div>
@@ -114,6 +115,7 @@ class DetailsModal extends Component {
                     }
                 </div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">CreatedAt:</strong> {moment(item.createdAt).fromNow()}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Service End Date:</strong> {moment(item.serviceEndDate).format('DD-MMM-YYYY')}</div>
             </div>
         );
 

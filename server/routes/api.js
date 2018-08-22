@@ -779,7 +779,8 @@ router.post('/add-service-provider',function(req,res) {
                 coordinates: [data.location_lat,data.location_lon]
             },
             latitude: data.location_lat,
-            longitude: data.location_lon
+            longitude: data.location_lon,
+            serviceEndDate: data.serviceEndDate
         };
 
         models.MarkedLocation.create(passed).then(resp => {

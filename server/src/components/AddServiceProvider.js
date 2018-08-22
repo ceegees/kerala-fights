@@ -91,6 +91,7 @@ class AddHelpCentre extends Component{
         }
 
         let formData = Object.assign({},this.state.form);
+        console.log(formData);
 
         let errors = {};
         if (!formData.contactName) {
@@ -106,6 +107,10 @@ class AddHelpCentre extends Component{
 
         if (!formData.address) {
             errors['address'] = "Address is required"
+        }
+
+        if (!formData.serviceEndDate) {
+            errors['serviceEndDate'] = "Service End Date is required"
         }
 
         if (!formData.peopleCount) {
@@ -192,9 +197,13 @@ class AddHelpCentre extends Component{
                                 valueChange={this.changeFormValue.bind(this)}
                                 errors = {this.state.errors.type}>
                                 <option value=""> - Select Service Type - </option>
-                                <option value="camp">Camp</option>
-                                <option value="medicine">Medicine</option>
-                                <option value="food">Food</option> 
+                                <option value="shelter_camp">ഷെൽട്ടർ ക്യാംപുകൾ / Shelter camps</option>
+                                <option value="food_and_water">ഭക്ഷണം & വെള്ളം / Food & Water</option>
+                                <option value="medicines">മരുന്നുകൾ വിതരണം / Medicines Supply</option> 
+                                <option value="utensils">പാത്രങ്ങൾ വിതരണം / Utensils Supply</option> 
+                                <option value="cleaning_services">വൃത്തിയാക്കൽ സേവനങ്ങൾ / Cleaning Services</option> 
+                                <option value="sanitary_items_supply">സാനിറ്ററി വസ്തുക്കൾ വിതരണം / Sanitary Items Supply</option> 
+                                <option value="clothing_supply">വസ്ത്രങ്ങൾ വിതരണം / Clothing Supply</option> 
                                 <option value="other">Other</option> 
                             </SelectField> 
                         </div>
@@ -229,6 +238,16 @@ class AddHelpCentre extends Component{
                                 value = {this.state.form.address}
                                 errors = {this.state.errors.address}
                                 type="text" />
+
+                            <FormTextField
+                                label="സേവനം അവസാനിക്കുന്ന തീയതി / Service End Date"
+                                name="serviceEndDate"
+                                isMandatory="true"
+                                type="date"
+                                value = {this.state.form.serviceEndDate}
+                                inputClass="w3-input w3-border"
+                                valueChange={this.changeFormValue.bind(this)}
+                                errors = {this.state.errors.serviceEndDate} />
 
                             <FormTextField
                                 label="സേവിക്കാവുന്ന ആളുകളുടെ എണ്ണം(ഏകദേശം)"
