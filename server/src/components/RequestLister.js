@@ -35,7 +35,7 @@ class  RequestItem extends Component {
 
 
     return (<div   key={`item_${item.id}`} 
-        className="w3-display-container w3-white kf-request-item w3-margin w3-padding">
+        className="w3-display-container w3-margin-bottom w3-white kf-request-item  w3-padding">
             CaseID : {[ item.id,item.remoteId].join('-')}<br/><br/>
             Name :{item.personName}<br/>
             Phone : {item.phoneNumber}<br/>
@@ -146,7 +146,7 @@ export default class RequestLister extends Component {
              content = <div className="w3-padding-64 w3-large w3-center">The List is empty</div>
         } else {
             pagination = <Paginator data={data} status={status} page={page} />
-            totalCount = `Total: ${data.total}`;
+            totalCount = `Total : ${data.total}`;
             content = data.list.map(item => <RequestItem  key={item.id}
                 markDuplicate={this.markDuplicate.bind(this)} 
                 item={item}  
@@ -154,13 +154,14 @@ export default class RequestLister extends Component {
             />);
         }
             return <div  style={{minHeight:"100vh"}} > 
-                <div className="w3-row">
+                <div className="w3-row-padding">
                 <div className="w3-col l3"> 
                     <FilterComponent  handleFilterData={this.handleFilterData.bind(this)} >
                     <div className="w3-bar-item w3-right" >{totalCount}</div>
                     </FilterComponent>  
                 </div>
                 <div className="w3-col l9">
+                    <div className="w3-small w3-right-align w3-padding">Results {totalCount}</div>
                     {content}
                 </div>
                 </div>

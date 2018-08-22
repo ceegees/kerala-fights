@@ -414,6 +414,10 @@ router.get('/rescue-list',function(req,res){
             ors.information = {
                 [Op.iLike]: `%${address}%`
             }
+        } else if(query.indexOf('src:') > -1 ) {
+            ors.source = {
+                [Op.iLike]: `%${query.replace('src:','')}%`
+            }
         } else {
             ors.phoneNumber = {
                 [Op.iLike]: `${query}%`

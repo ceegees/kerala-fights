@@ -78,5 +78,20 @@ module.exports = (sequelize, DataTypes) => {
   });
   HelpRequest.associate = function(models) { 
   };
+  HelpRequest.prototype.chanegStatus = function(message,newStatus,user){
+
+
+
+    // models.WorkLog.create({
+    //   messages:messages,
+    //   statusIn:
+    //   statusOut:
+    //   actorId:
+    //   requestId:this.id
+    // }).then(log => {
+
+    // }).then()
+
+  }
   return HelpRequest;
 };

@@ -129,12 +129,24 @@ class HeatMap extends Component {
             </div>
             </HeaderSection>
             {this.state.modal}
-            <div className="w3-row" >
+            <div className="w3-row-padding" >
                 <div className="w3-col s12 m9 l3">
                     <FilterComponent handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
                 <div className="w3-col s12 l9 m9">
+                    <div>
+                        <button>Demand</button>
+                        <button>Supply</button>
+                    </div>
+                    <div>
                     <div id="google-map" style={{height:"90vh"}}></div>
+                    </div>
+                    <div>
+                    <div>
+                        
+                    </div>
+
+                    </div>
                 </div>
             </div>
         </div>

@@ -168,7 +168,7 @@ module.exports = [
     },
     { 
         key:STATUS.NEED_HELP,
-        title:'4.Help Needed',
+        title:'4.Confirmed',
         cls:'w3-orange',
         db:[STATUS.NEED_HELP.toUpperCase()],
         nextStates:[

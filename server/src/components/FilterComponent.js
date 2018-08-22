@@ -114,7 +114,7 @@ class FilterComponent extends React.Component {
         const { sortConfig, timeConfig } = this.state;
         const {requestTypeList,severityList} = this.props; 
         return (
-            <div className="w3-padding"> 
+            <div className=""> 
                 <FilterListContent
                     name="Request Types" 
                     filterOptions={requestTypeList}

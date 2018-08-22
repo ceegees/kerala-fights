@@ -93,6 +93,9 @@ router.get([
     })
 });   
 
+router.get('/disclaimer',function(req,res){
+    res.render('disclaimer');
+})
 router.get([ 
     '/heatmap/:status?', 
     '/new',

@@ -118,7 +118,7 @@ class Home extends Component {
 
                 <footer className="w3-container w3-padding w3-center" 
                     >
-                    <p> For any feedback on changes / data / api, please mail your feedback to keralafights@ceegees.in / <a target="_blank" href="https://github.com/Ceegees/kerala-fights">GitHub</a> </p>
+                    <p> For any feedback on changes / data / api, please mail your feedback to keralafights@ceegees.in | <a target="_blank" href="https://github.com/Ceegees/kerala-fights">GitHub</a> | <a href="/disclaimer" target="_blank">Disclaimer</a></p>
                 </footer>
                 <template id="form_success">             
                     <div className="w3-center w3-container">
