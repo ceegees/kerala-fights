@@ -14,15 +14,14 @@
     }
 }
 #app {
-    background:#EDEDED;
-    padding-top:20px
+    background:#EDEDED; 
 }
 .kf-top-bar{
    border-bottom:solid 6px #EDEDED
 }
 
 .kf-top-bar-filter {
-    margin-top: 35px
+ 
 }
 
 .kf-top-bar-filter .kf-carot {
@@ -37,6 +36,11 @@
     top: -3px;
 }
 
+// .header-top-bar{
+//     .w3-bar-item {
+//         //  margin:0px 2px;
+//     }
+// }
 .kf-top-bar-filter .w3-dropdown-content {
     position: fixed;
 }

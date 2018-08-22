@@ -3,9 +3,10 @@ import { FormTextField,FormTextarea,Spinner ,GoogleMapWidget,SelectField, Google
 import axios from 'axios';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { showMessage, hideMessage } from './../redux/actions.js';    
+import { showMessage, hideMessage,getLatLng } from './../redux/actions.js';    
  
 import Rescue from './Rescue';
+
 const RowItem =({name,value}) => {
     return <div  style={{padding:"2px 0px"}} >
         <div style={{color:"#888"}}>{name}:</div>
@@ -32,7 +33,7 @@ class DetailsModal extends Component {
         this.handlePlaceChange = this.handlePlaceChange.bind(this);
     }
 
-    locationSelect(lat,lon){
+    locationSelect(lat,lon){ 
         this.state.updateForm.location_lat = lat;
         this.state.updateForm.location_lon = lon;
     }
@@ -45,37 +46,11 @@ class DetailsModal extends Component {
         this.setState({
             place:place
         });
-    }
-    initialiseGMap (latitude,longitude) {
-        if (!this.map){
-            this.map = new google.maps.Map(document.getElementById('google-map-detail'), {
-                center: {lat: latitude, lng: longitude},
-                zoom: 14,
-                zoomControl: true,
-                scaleControl:true,
-                styles: [{
-                    featureType: 'poi',
-                    stylers: [{ visibility: 'off' }]  // Turn off points of interest.
-                }, {
-                    featureType: 'transit.station',
-                    stylers: [{ visibility: 'off' }]  // Turn off bus stations, train stations, etc.
-                }],
-            });
-        } 
-        this.marker = new google.maps.Marker({
-            position: {lat: latitude, lng: longitude},
-            map: this.map
-        });
-        this.map.setCenter({lat:latitude,lng:longitude});
-        this.marker.setVisible(true);
-    }
+    } 
     componentDidMount(){
         const {item} = this.props;
         this.state.form.id = item.id;
         this.state.form.severity = item.operatorSeverity;
-        if (item.latLng && item.latLng.coordinates && item.latLng.coordinates.length == 2){
-            this.initialiseGMap(item.latLng.coordinates[0],item.latLng.coordinates[1]);
-        }
         $("#severity_select").val(item.operatorSeverity);
         axios.get(`/api/v1/rescue-worklog?id=${item.id}`).then(resp=>{
             this.setState({
@@ -127,11 +102,13 @@ class DetailsModal extends Component {
         const {update} = this.state;
         this.state.updateForm = {
             id:update.id,
+            type:update.type,
             personName:update.personName,
             phoneNumber:update.phoneNumber,
-            address:[update.location , update.address].join('') ,
+            address:[update.location,update.address].join('') ,
             information:update.information,
             peopleCount:update.peopleCount,
+            
 
             detailrescue:update.json.detailrescue,
             detailwater:update.json.detailwater,
@@ -143,30 +120,42 @@ class DetailsModal extends Component {
             detail:update.json.detail,
         } 
         this.state.updateErrors={};
-        this.setState({mode:mode},function(){
-            if (this.state.mode != 'edit') {
-                this.map = null;
-                this.initialiseGMap(12.3,18.2);
-            }
-        });
-
+        this.setState({mode:mode});
     }
 
     renderEdit(){
         const {update} = this.state; 
+        const latLng = getLatLng(update);
         return <div className="w3-panel w3-padding w3-white">
                 <div className="w3-row-padding w3-margin-bottom"> 
                     <div  className="w3-col l12"> Case ID {update.id}-{update.remoteId}</div>
                     <div className="w3-col l12 w3-margin-bottom">
                     <GooglePlacesAutoComplete  
-                            onPlaceChange={place => this.handlePlaceChange(place)}
-                            placeholder = "Search Location to drop pin" /> 
+                        onPlaceChange={place => this.handlePlaceChange(place)}
+                        placeholder = "Search Location to drop pin" /> 
                     <GoogleMapWidget mapStyle={{height: '300px'}} 
-                               place={this.state.place}
-                               locationSelect={this.locationSelect.bind(this)}/>
+                        mapId="google-edit-map" 
+                        place={this.state.place} 
+                        location={{lat:latLng.lat,lng:latLng.lng}}
+                        locationSelect={this.locationSelect.bind(this)}/>
                         
                     </div>
                 <div className="w3-col l6 s12">
+                     <SelectField inputClass="w3-input w3-small w3-border" 
+                        label="Request Type"
+                        name="type" 
+                        isMandatory="true"
+                        defaultVal={update.type}
+                        value = {this.state.updateForm.type}
+                        valueChange={this.changeUpdateValue.bind(this)}
+                        errors = {this.state.updateErrors.type} 
+                    >
+                    <option type="rescue_request">Un Categorized from Kerala rescue</option>
+                    {this.props.requestTypeList.map(item =><option 
+                            key={item.value} 
+                            value={item.value}>{item.name}</option>)}
+                    </SelectField>
+
                     <FormTextField inputClass="w3-input w3-small w3-border" 
                         label="Name"
                         name="personName" 
@@ -401,15 +390,13 @@ class DetailsModal extends Component {
             updateForm = <div>Working :{update.operator.name}</div>
         }
 
-
-
         if (this.state.mode == 'edit' && update) {
             return this.renderEdit();
         }
 
         let leftCont = <div className="w3-col l6 s12">
            
-            <RowItem name="CaseId" value={item.id+'-'+item.remoteId} />
+            <RowItem name="CaseId" value={[item.id,item.remoteId].join('-')} />
             <RowItem name="Name" value={item.personName} />
             <RowItem name="Phone" value={<a className="w3-buttom w3-tag w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`} > {item.phoneNumber}</a>} />
             <RowItem name="Source" value={link} />
@@ -422,15 +409,19 @@ class DetailsModal extends Component {
             <RowItem name="Status" value={item.status} />
             <RowItem name="CreatedAt" value={moment(item.createdAt).fromNow()} />
             <RowItem name="Volunteer Status" value={item.operatorStatus} />
-            <RowItem name="Volunteer Acted At" value={item.operatorLastUpdated} />
+            <RowItem name="Volunteer Acted" value={moment(item.operatorUpdatedAt).fromNow()} />
      
         </div> ;
+
+        const latlng = getLatLng(item);
 
        return <div className="w3-container w3-padding ">   
                 <div className="w3-row-padding w3-margin-bottom">
                     {leftCont}
-                    <div className="w3-col l6 s12"> 
-                        <div id="google-map-detail" style={mapStyle}></div> 
+                    <div className="w3-col l6 s12">  
+                        <GoogleMapWidget mapStyle={{minHeight:"200px"}} 
+                            mapId="google-map-detail" 
+                            location={latlng} />
                        {updateForm}
                     </div>
                 </div>    
@@ -443,6 +434,8 @@ class DetailsModal extends Component {
 
 export default connect((state)=>{
     return {
+        requestTypeList:state.requestTypeList,
+        severityList:state.severityList,
         statusList:state.statusList
     }
 }, { 

@@ -69,9 +69,11 @@ router.get('/auth/google-callback', passport.authenticate('google',{
 
 router.get('/auth/google', passport.authenticate('google'));
 
-function googleAuth(req,res,next) {
-    if (req.session.passport && req.user )  {
+function googleAuth(req,res,next){
+    // console.log('Checiing for user : ', req.user);
+    if (req.user )  {
         next();
+        return;
     }
     res.redirect('/auth/google'); 
 }
@@ -129,29 +131,35 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', {
 
 //SSR function import
 const ssr = require('./../views/ssr.js'); 
-router.get([ 
-    '/heatmap/:status?', 
-    '/service-providers/:status?/:page?',
-    '/',
-    ], (req, res) => {
+
+router.get([  
+    '/manage/:status?/:page?'
+    ], googleAuth,(req, res) => {
     let context = {};
     initialState.authUser = req.user;
     const { preloadedState, content}  = ssr(req,context,initialState); 
-    res.setHeader('Cache-Control', 'assets, max-age=604800') 
+    res.setHeader('Cache-Control', 'assets, max-age=60') 
     res.render('index',{
         title:'Kerala Fights',
         state:preloadedState,
         content:''
     })
 });   
-router.get([  
-    '/manage/:status?/:page?'
-    ], googleAuth,(req, res) => {
-    let context = {};
 
+router.get('/disclaimer',function(req,res){
+    res.render('disclaimer');
+})
+router.get([ 
+    '/heatmap/:status?', 
+    '/new',
+    '/:action?',
+    '/service-providers/:status?/:page?',
+    '/',
+    ], (req, res) => {
+    let context = {};
     initialState.authUser = req.user;
     const { preloadedState, content}  = ssr(req,context,initialState); 
-    res.setHeader('Cache-Control', 'assets, max-age=604800') 
+    res.setHeader('Cache-Control', 'assets, max-age=60') 
     res.render('index',{
         title:'Kerala Fights',
         state:preloadedState,

@@ -4,7 +4,7 @@ import {hideMessage} from './../redux/actions.js';
 
 class AppMessage extends Component {
     render(){
-        const { appMessage } = this.props;
+        const { appMessage } = this.props; 
         let message = null;
         if (appMessage && appMessage.text !== '') { 
             message =  <div className={`${appMessage.cls} app-top-alert`} >
@@ -13,8 +13,8 @@ class AppMessage extends Component {
                 </button>
                 <h5>{appMessage.text}</h5>
             </div>
-            if (appMessage.cls == 'w3-green'){
-                setTimeout(this.props.hideMessage,1500);
+            if (appMessage.cls == 'w3-green' && appMessage.stay == 0){
+                setTimeout(this.props.hideMessage,2000);
             }
         }
         return message;

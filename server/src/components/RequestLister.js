@@ -16,18 +16,18 @@ class  RequestItem extends Component {
     if(item.parentId){
         if (status == 'duplicates'  && item.status != 'RESOLVED' 
         && item.parentId == page){
-            inPageOption = <button onClick={e => this.props.markDuplicate(item) } className="w3-display-topright w3-small w3-button w3-amber">Mark Duplicate
+            inPageOption = <button onClick={e => this.props.markDuplicate(item) } className="w3-display-topright w3-small w3-round w3-button w3-amber">Mark Duplicate
                 of {item.parentId}-XXXX)</button> 
         } else if (page != item.parentId) {
             inPageOption = <Link to={`/manage/duplicates/${item.parentId}`}   
-            className="w3-display-topright w3-small w3-button w3-amber" >
-            View Dupliates</Link>
+            className="w3-display-topright w3-small w3-button w3-round w3-amber" >
+            View Duplicates</Link>
         }
     } 
 
     let actionItem = null;
     if (!item.operator || item.operator.id ==  authUser.id) {
-        actionItem = <button className="w3-display-bottomright w3-small w3-button w3-green" 
+        actionItem = <button className="w3-display-bottomright w3-small w3-round w3-button w3-green" 
         onClick={e => this.props.showDetailModal(item)}>Help</button>
     } else {
         actionItem = <div className="w3-tag w3-round w3-padding-small w3-display-bottomright w3-yellow">Working: {item.operator.name}</div>
@@ -35,13 +35,14 @@ class  RequestItem extends Component {
 
 
     return (<div   key={`item_${item.id}`} 
-        className="w3-display-container w3-white kf-request-item w3-margin w3-padding">
-            CaseID : {`${item.id}-${item.remoteId}`}<br/><br/>
+        className="w3-display-container w3-margin-bottom w3-white kf-request-item  w3-padding">
+            CaseID : {[ item.id,item.remoteId].join('-')}<br/><br/>
             Name :{item.personName}<br/>
             Phone : {item.phoneNumber}<br/>
             Source :<a href={`https://www.keralarescue.in/request_details/${item.remoteId}/`}  target="_blank">{item.source}</a><br/>
             District :{item.district}<br/>
             Details  :{item.information}<br/>
+            People Count  :{item.peopleCount}<br/>
             Created :{moment(item.createdAt).fromNow()}<br/>
             {(status == 'duplicates' || status == 'search') ?
                 <div>
@@ -51,7 +52,7 @@ class  RequestItem extends Component {
                 }
             <br/>
             <div>
-            {item.json && item.json.tags.map(name => 
+            {item.json && item.json.tags && item.json.tags.map(name => 
                 <div key={name} 
                     className="w3-small w3-round w3-margin-right w3-tag w3-purple">{name}</div>)}
             </div>
@@ -85,19 +86,14 @@ export default class RequestLister extends Component {
             }
             page = 1;
         }
-        const obj = {
+
+        let obj = {
             status:status,
             page:page,
             q:search,
         }
-        if (this.filter.district){
-            obj.district = this.filter.district;
-        }
         
-        if (this.filter.timeRange){
-            obj.startAt = this.filter.timeRange.start,
-            obj.endAt = this.filter.timeRange.end
-        }
+        obj = Object.assign(obj,this.filter);
         const str = qs.stringify(obj); 
         axios.get(`/api/v1/rescue-list?${str}`).then(resp=>{
             this.setState({
@@ -150,18 +146,25 @@ export default class RequestLister extends Component {
              content = <div className="w3-padding-64 w3-large w3-center">The List is empty</div>
         } else {
             pagination = <Paginator data={data} status={status} page={page} />
-            totalCount = `Total: ${data.total}`;
-            content = data.list.map(item => <RequestItem 
+            totalCount = `Total : ${data.total}`;
+            content = data.list.map(item => <RequestItem  key={item.id}
                 markDuplicate={this.markDuplicate.bind(this)} 
                 item={item}  
                 {...this.props} 
             />);
         }
-            return <div style={{minHeight:"100vh",marginTop:"64px"}} > 
+            return <div  style={{minHeight:"100vh"}} > 
+                <div className="w3-row-padding">
+                <div className="w3-col l3"> 
                     <FilterComponent  handleFilterData={this.handleFilterData.bind(this)} >
                     <div className="w3-bar-item w3-right" >{totalCount}</div>
                     </FilterComponent>  
-                {content}
+                </div>
+                <div className="w3-col l9">
+                    <div className="w3-small w3-right-align w3-padding">Results {totalCount}</div>
+                    {content}
+                </div>
+                </div>
                 <div className="w3-center ">
                 {pagination}
                 </div>
