@@ -9,6 +9,23 @@ module.exports = (sequelize, DataTypes) => {
     latitude: DataTypes.DECIMAL(10,7),
     longitude: DataTypes.DECIMAL(10,7),
     type: DataTypes.STRING,
+    peopleCount: {
+      type: DataTypes.INTEGER,
+      field: 'people_count'
+    },
+    leaderId: {
+      type: DataTypes.INTEGER,
+      field: 'leader_id'
+    },
+    role: DataTypes.STRING,
+    team: DataTypes.STRING,
+    serviceStatus: {
+      type: DataTypes.INTEGER,
+      field: 'service_status'
+    },
+    json: { 
+      type: DataTypes.JSONB 
+    },
     info: DataTypes.TEXT,
     status: DataTypes.STRING
   }, {});
