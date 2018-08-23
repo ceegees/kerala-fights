@@ -100,22 +100,37 @@ async function loadData(offset=0){
         if(data.needrescue){
             tags.push("Needs Evacuation");
         }
+
+        let type = 'rescue_request';
+        if (data.needwater || data.needfood){
+            type = 'food_and_water';
+        } else if (data.needmed){
+            type = 'medicine_blankets';
+        } else if (data.needcloth){
+            type = 'clothing';
+        } else if (data.needkit_util) {
+            type = 'kitchen_utencils';
+        } else if (data.needothers){
+            type = 'other';
+        }
+        
         let json = {}
         if (!row){
             row =  await models.HelpRequest.create({
                 remoteId: data.id,
                 source:source,
                 status:data.status.toUpperCase(),
-                type:'rescue_request'
+                type:type
             });
         } else {
+            if (row.status == 'NEW'){
+                row.status = data.status.toUpperCase(); 
+            } 
+            await row.save();
+            continue;
             json = row.json;
         }
 
-        if (row.status == 'NEW'){
-            row.status = data.status.toUpperCase();
-        } 
- 
         row.remoteId =  data.id;
         row.source  = source;
         row.district = distrctMap[data.district.substring(0,255)];
@@ -134,7 +149,6 @@ async function loadData(offset=0){
              "\nKit:", 
              "\nRescue:", 
         ];
-        row.type = 'rescue_request';
 
         const list = [
             data.detailwater,
@@ -146,18 +160,7 @@ async function loadData(offset=0){
             data.detailrescue
        ];
         
-        if (data.needwater || data.needfood){
-           row.type = 'food_and_water';
-        } else if (data.needmed){
-           row.type = 'medicine_blankets';
-        } else if (data.needcloth){
-            row.type = 'clothing';
-        } else if (data.needkit_util) {
-            row.type = kitchen_utencils;
-        } else if (data.needothers){
-            row.type = 'other';
-        }
-
+        
         const texts = list.map( (item,idx) => item != "" ?(keys[idx]+":"+item ):"" );
         row.information = data.needothers +"\n" + texts.join('');
         row.createdAt = moment(data.dateadded);

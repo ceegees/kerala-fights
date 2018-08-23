@@ -37,8 +37,8 @@ class  RequestItem extends Component {
     return (<div   key={`item_${item.id}`} 
         className="w3-display-container w3-margin-bottom w3-white kf-request-item  w3-padding">
             CaseID : {[ item.id,item.remoteId].join('-')}<br/><br/>
-            Name :{item.personName}<br/>
-            Phone : {item.phoneNumber}<br/>
+            Name :{item.personName}<br/> 
+            Type : {item.type}<br/>
             Source :<a href={`https://www.keralarescue.in/request_details/${item.remoteId}/`}  target="_blank">{item.source}</a><br/>
             District :{item.district}<br/>
             Details  :{item.information}<br/>
