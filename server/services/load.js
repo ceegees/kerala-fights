@@ -114,11 +114,10 @@ async function loadData(offset=0){
 
         if (row.status == 'NEW'){
             row.status = data.status.toUpperCase();
-        }   
+        } 
  
-        row.remoteId=  data.id;
+        row.remoteId =  data.id;
         row.source  = source;
-        row.type = 'rescue_request';
         row.district = distrctMap[data.district.substring(0,255)];
         row.location = data.location.substring(0,255);
         row.personName = data.requestee.substring(0,255);
@@ -135,6 +134,7 @@ async function loadData(offset=0){
              "\nKit:", 
              "\nRescue:", 
         ];
+        row.type = 'rescue_request';
 
         const list = [
             data.detailwater,
@@ -145,8 +145,20 @@ async function loadData(offset=0){
             data.detailkit_util,
             data.detailrescue
        ];
-        const texts = list.map( (item,idx) => item != "" ?(keys[idx]+":"+item ):"" );
+        
+        if (data.needwater || data.needfood){
+           row.type = 'food_and_water';
+        } else if (data.needmed){
+           row.type = 'medicine_blankets';
+        } else if (data.needcloth){
+            row.type = 'clothing';
+        } else if (data.needkit_util) {
+            row.type = kitchen_utencils;
+        } else if (data.needothers){
+            row.type = 'other';
+        }
 
+        const texts = list.map( (item,idx) => item != "" ?(keys[idx]+":"+item ):"" );
         row.information = data.needothers +"\n" + texts.join('');
         row.createdAt = moment(data.dateadded);
         row.json =  Object.assign(json, {
@@ -190,7 +202,8 @@ async function deDupe(){
     FROM 
         help_requests  
     GROUP BY 
-        phone_number 
+        phone_number,
+        type
     HAVING
         count(*) > 1
     ORDER BY
@@ -235,8 +248,9 @@ async function deDupe(){
         row.parent_id = null;
         row.json.duplicateCount = data.total_requests; 
         const saved = await row.save();
-     }
-     console.log('Completed updateing duplicates');
+    }
+
+    console.log('Completed updateing duplicates');
     qry = `UPDATE help_requests  SET parent_id=NULL WHERE id=parent_id`;
     console.log(qry);
     res = await sequelize.query(qry,{

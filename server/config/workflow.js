@@ -1,14 +1,16 @@
 const STATUS = {
     PHONE_DUPLICATE:'phone_duplicate',
     NEW:'new',
-    CONFIRM:'confirm',
-    RETRY:'retry',
-    NEED_HELP:'need_help',
-    ESCALATED:'escalated',
+    CONTACT:'confirm',
+    NEED_HELP:'need_help', // NEED_CONFIRMED
     ASSIGNED:'assigned',
     RESOLVED:'resolved',
+
+    RETRY:'retry',
+    ESCALATED:'escalated',
     EXTERNAL:'external'
 }
+
 
 module.exports = [
     {  
@@ -23,16 +25,11 @@ module.exports = [
                 text:'Mark As duplicate(6.Resolved)',
                 value:'duplicate_resolved',
                 target:STATUS.RESOLVED
-            },
+            }, 
             {
-                text:'Mark Duplicate (6.Resolved)',
-                value:'cleanup_duplicate',
-                target:STATUS.RESOLVED
-            },
-            {
-                text:'Call and Config (3.Confirm)',
+                text:'Contact and Confirm (3.Confirm)',
                 value:'duplcate_call',
-                target:STATUS.CONFIRM
+                target:STATUS.CONTACT
             },
             {
                 text:'Incorrect Information (6.Resolved)',
@@ -49,72 +46,71 @@ module.exports = [
         name:'Check',
         nextStates:[
                 {
-                    text:'Call and Confirm (2.Confirm)',
-                    value:'cleanup_confirm',
-                    target:STATUS.CONFIRM
+                    text:'Contact and Confirm (2.Confirm)',
+                    value:'cleanup_contact',
+                    target:STATUS.CONTACT
                 },
                 {
-                    text:'Retry (3.Retry)',
+                    text:'Retry to Contact (2.Contact)',
                     value:'cleanup_retry',
-                    target:STATUS.RETRY
+                    target:STATUS.CONTACT
                 },
                 {
-                    text:'Need Help (4.Need Help)',
+                    text:'Need Confirmed (4.Confirmed)',
                     value:'cleanup_need_help',
                     target:STATUS.NEED_HELP
                 },
                 {
-                    text:'Is Safe Now (6.Resolved)',
-                    value:'cleanup_safe_now',
+                    text:'Help Already Received (6.Resolved)',
+                    value:'cleanup_help_received',
                     target:STATUS.RESOLVED
                 },
                 {
-                    text:'Incrorrect Information / Spam (6.Resolved)',
+                    text:'Help Not Needed (6.Resolved)',
+                    value:'cleanup_help_not_needed',
+                    target:STATUS.RESOLVED
+                },
+                {
+                    text:'Incrorrect Information / Spam /Duplicate (6.Resolved)',
                     value:'cleanup_no_info',
-                    target:STATUS.RESOLVED
-                },
-                {
-                    text:'Duplicate Request (6.Resolved)',
-                    value:'cleanup_duplicate',
                     target:STATUS.RESOLVED
                 }
             ],
     },
     { 
-        key:STATUS.CONFIRM,
-        title:'2.Call',
+        key:STATUS.CONTACT,
+        title:'2.Contact',
         cls:'w3-yellow',
-        db:[STATUS.CONFIRM.toUpperCase()],
-        name:'Duplicates',
+        db:[STATUS.CONTACT.toUpperCase()],
         nextStates:[ 
             {
-                text:'Needs Help (4.Needs Help)',
-                value:"confirm_needs_help",
+                text:'Need Confirmed (3.Confirmed)',
+                value:"contact_need_confirmed",
                 target:STATUS.NEED_HELP
             },
             {
-                text:'Is Safe Now (6.Resolved)',
-                value:'confirm_is_safe',
+                text:'Help Not Needed Now (6.Resolved)',
+                value:'contact_help_not_needed',
                 target:STATUS.RESOLVED
             },
             {
-                text:'Unable to Connect(3.Retry)',
-                value:'confirm_retry',
-                target:STATUS.RETRY
+                text:'Unable to Connect / Retry (3.Contact)',
+                value:'contact_retry', //confirm_retry
+                target:STATUS.CONTACT
             }, 
             {
-                text:'5.Assigned - (Enter Phone number in comment)',
-                value:'confirm_assigned',
+                text:'Assigned - (Enter Phone number in comment)',
+                value:'contact_assigned',
                 target:STATUS.ASSIGNED
             },
             {
                 text:'Incorrect Informatoin (6.Resolved)',
-                value:'confirm_rejected',
+                value:'contact_rejected',
                 target:STATUS.RESOLVED
             },
             {
                 text:'Duplicate Request (6.Resolved)',
-                value:'cleanup_duplicate',
+                value:'contact_duplicate',
                 target:STATUS.RESOLVED
             }
         ],
@@ -122,14 +118,9 @@ module.exports = [
     { 
         key:STATUS.RETRY,
         title:'3.Retry',
-        cls:'w3-amber',
+        cls:'w3-hide',
         db:[STATUS.RETRY.toUpperCase()],
-        nextStates:[ 
-        //      {
-        //     text:'URGENT Needs Help (5.Escalate)',
-        //     value:"retry_escalated",
-        //     target:STATUS.ESCALATED
-        // },
+        nextStates:[  
         {
             text:'Need Help(4.Need Help)',
             value:"retry_action",
@@ -156,35 +147,21 @@ module.exports = [
             target:STATUS.RESOLVED
         },
         {
-            text:'Was Spurios (6.Resolved)',
-            value:"retry_rejected",
-            target:STATUS.RESOLVED
-        },
-        {
-            text:'Duplicate Request (6.Resolved)',
-            value:'cleanup_duplicate',
+            text:'Duplicate Request / Spam / Incorrect (6.Resolved)',
+            value:'cleanup_duplicate_spam',
             target:STATUS.RESOLVED
         }]
     },
     { 
         key:STATUS.NEED_HELP,
-        title:'4.Confirmed',
+        title:'3.Confirmed',
         cls:'w3-orange',
         db:[STATUS.NEED_HELP.toUpperCase()],
-        nextStates:[
-            // {
-            //     text:'URGENT Need Help(5.Escalate)',
-            //     value:"action_escalated",
-            //     target:STATUS.ESCALATED
-            // },
+        nextStates:[ 
             {
                 text:'Needs More Help (4.Need Help)',
-                value:"action_more_help",
+                value:"need_help_more",
                 target:STATUS.NEED_HELP
-            },{
-                text:'Unable to Connect (3.Retry)',
-                value:'action_retry',
-                target:STATUS.RETRY
             },
             {
                 text:'5.Assigned - (Enter Phone number in comment)',
@@ -193,31 +170,26 @@ module.exports = [
             },
             {
                 text:'No Change (3.Need Help)',
-                value:'action_action',
+                value:'need_help_no_change',
                 target:STATUS.NEED_HELP
             },{
-                text:'No More Facing issue (6.Resolved)',
-                value:'action_help_solved',
+                text:'No More Needs Help / (6.Resolved)',
+                value:'need_help_not_anymore',
                 target:STATUS.RESOLVED
             },
             {
                 text:'Help Received (6.Resolved)',
-                value:'action_help_recieved',
+                value:'need_help_recieved',
                 target:STATUS.RESOLVED
             }
         ],
     },
     { 
         key:STATUS.ESCALATED,
-        title:'5.Escalated',
+        title:'x.Escalated',
         cls:'w3-hide',
         db:[STATUS.ESCALATED.toUpperCase()],
-        nextStates:[
-            // {
-            //     text:'URGENT Needs Help (5.Escalated)',
-            //     value:"escalated_escalated",
-            //     target:STATUS.ESCALATED
-            // },
+        nextStates:[ 
             {
                 text:'No More Facing issue(6.Resolved)',
                 value:'escalated_resolved',
@@ -234,14 +206,14 @@ module.exports = [
             },        
             {
                 text:'Help Given (6.Resolved)',
-                value:'escalated_help',
+                value:'escalated_helped',
                 target:STATUS.RESOLVED
             }
         ],
     },
     { 
         key:STATUS.ASSIGNED,
-        title:'5.Assigned',
+        title:'4.Assigned',
         cls:'w3-light-green',
         db:[STATUS.ASSIGNED.toUpperCase()],
         nextStates:[
@@ -264,19 +236,18 @@ module.exports = [
             }
         ]
     },
-    
     { 
         key:STATUS.RESOLVED,
-        title:'6.Resolved',
+        title:'5.Resolved',
         cls:'w3-green',
         db:[STATUS.RESOLVED.toUpperCase()],
         nextStates:[]
     },
-    // {
-    //     key:STATUS.EXTERNAL,
-    //     title:'External',
-    //     cls:'w3-blue',
-    //     db:['PRO'],
-    //     nextStates:[]
-    // }
+    {
+        key:STATUS.EXTERNAL,
+        title:'External',
+        cls:'w3-hide',
+        db:['PRO'],
+        nextStates:[]
+    }
 ]

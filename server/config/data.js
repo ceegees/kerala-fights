@@ -24,6 +24,7 @@ module.exports = {
             name: 'Life Threatening',
         }
     ],
+     
     requestTypeList:[  
         {
             value:'food_and_water',
@@ -35,11 +36,15 @@ module.exports = {
         },
         {
             value:'medicine_blankets',
-            name:'മരുന്നുകൾ സാമഗ്രികൾ / Medicine & Blankets'
+            name:'മരുന്നുകൾ സാമഗ്രികൾ / Medicine Supply'
         },
         {
             value:'home_items',
             name:'വീട്ടുപകരണങ്ങൾ / Home Items'
+        },
+        {
+            value:'cleaning_materials',
+            name:'വീട് വൃത്തിയാക്കാൻ / Cleaning Materials'
         },
         {
             value:'clothing',
@@ -47,7 +52,7 @@ module.exports = {
         },
         {
             value:'home_lost',
-            name:'വീട് നഷ്ടപ്പെട്ടവർ / Lost Home'
+            name:'വീട് നഷ്ടപ്പെട്ടവർ - ഷെൽട്ടർ ക്യാംപുകൾ  / Lost Home'
         },
         {
             value:'kitchen_utencils',

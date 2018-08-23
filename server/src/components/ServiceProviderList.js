@@ -214,7 +214,7 @@ class ServiceProviderList extends Component {
         if (!data){
             content = <Spinner />
         } else if (data.list.length == 0){
-             content = <div className="w3-padding-64 w3-large w3-center">The List is empty</div>
+             content = <div className="w3-col l12 w3-padding-64 w3-large w3-center">The List is empty</div>
         } else {
             pagination = <Paginator data={data} page={page} />
             totalCount = `Total: ${data.total}`;

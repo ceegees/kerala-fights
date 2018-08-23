@@ -88,10 +88,11 @@ class Home extends Component {
                     {this.state.modalContent}
                     <div className=" ">
                         <div className="w3-padding-32" style={{padding:"10px"}}>
-                            <NavLink to="/service-providers/list/"><button className="w3-button w3-green w3-right w3-margin-bottom">List Service Providers</button></NavLink>
-                            <button className="w3-button w3-round w3-large w3-padding-32    w3-margin-bottom w3-block w3-blue-grey" 
+                            <NavLink className="w3-margin-bottom w3-block w3-right-align" to="/service-providers/list/">Service Providers List</NavLink>
+                            <button className="w3-button w3-round w3-large 
+                            w3-padding-32    w3-margin-bottom w3-block w3-blue-grey" 
                             onClick={this.showModal.bind(this,'request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
-                            <button className="w3-button w3-margin-bottom w3-block w3-cyan" 
+                            <button className="w3-button w3-margin-bottom w3-padding-32 w3-block w3-cyan w3-round" 
                         onClick={this.showModal.bind(this, 'help_center')}>Add Service Provider / <br className="w3-hide-large" />സേവനദാതാവ്</button>
                             <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-round w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
                             <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-round w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
@@ -108,7 +109,7 @@ class Home extends Component {
                                 <b>How You can Help</b>
                                 <ul>
                                     <li>Check the tickets and see if location is marked correctly on map</li>
-                                    <li>Check if the tickets are having the needs Marked correctly</li>
+                                    <li>Check if the tickets are having the  needs Marked correctly</li>
                                     <li>Talk to affected people and see if their needs are met.</li>
                                     <li>Coordinate with on field Volunteer to make sure help is reaching the needy.</li>
                                     <li><a target="_blank" href="https://docs.google.com/document/d/1jM_hdHgP-kxkzOtxl0n8mUGY4EzP6di2NyHIEvFp8YI/edit" >How To Use</a> , <a target="_blank"  href="https://docs.google.com/document/d/1oMs4JwHMDS9agR3voVpeGL0SMhfE35fETYNbD5rZLN8/edit">ഉപയോഗക്രമം </a></li>
@@ -125,7 +126,6 @@ class Home extends Component {
                         <iframe className="w3-margin-top" src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"500px"}}></iframe>
                     </div> 
                 </div>
-
                 <footer className="w3-container w3-padding w3-center" 
                     >
                     <p> For any feedback on changes / data / api, please mail your feedback to keralafights@ceegees.in | <a target="_blank" href="https://github.com/Ceegees/kerala-fights">GitHub</a> | <a href="/disclaimer" target="_blank">Disclaimer</a></p>

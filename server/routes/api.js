@@ -88,8 +88,6 @@ router.get('/rescue-duplicates',function(req,res){
 
 });
 
-
-
 router.get('/sheet',function(req,res) {
     const sheetId = "1sBOM5sZB3M60Jiz-SXw51ZZmlQaOhRyiZiitIcPAr7s";
     const sheetName = `ADD HELP REQUESTS(1)!A1:J1000`
@@ -122,6 +120,7 @@ router.get('/sheet',function(req,res) {
         res.json(err);
     }); 
 });
+
 router.get('/sync',async(req,res) => {
 
     //const sheetId = "1eXLEA4UW2Eq4KKcCv_9scHL_xDj0fadLd3VxyqCYu94";
@@ -247,7 +246,7 @@ router.get('/rescue-status',function(req,res){
         res.json(jsonError(ex.message));
     })
 });
- 
+
 router.get('/rescue-worklog',function(req,res){
     let request = null;
     models.HelpRequest.find({
@@ -289,7 +288,6 @@ router.get('/rescue-worklog',function(req,res){
     })
 });
 
-
 router.post('/rescue-release-lock',function(req,res){
     models.HelpRequest.findById(req.body.id).then(item => {
         if (req.user && req.user.id == item.operatorId){
@@ -305,7 +303,6 @@ router.post('/rescue-release-lock',function(req,res){
         res.json(jsonError(ex.message));
     })
 })
-
 
 router.post('/rescue-update',function(req,res){
     let rescue = null;
@@ -445,7 +442,7 @@ router.get('/rescue-list',function(req,res){
         }
  
         ['id','parentId','remoteId'].forEach(name => {
-            if (isNaN(ors[name])) {
+            if (isNaN(ors[name]) || ors[name].length > 8) {
                 delete(ors[name]);
             }
         })
@@ -461,7 +458,7 @@ router.get('/rescue-list',function(req,res){
         }
     }
 
-    if (req.query.severity){
+    if (req.query.severity && req.query.severity.length < 8){
         whereQuery.operatorSeverity = req.query.severity;
     }
     
@@ -493,13 +490,30 @@ router.get('/rescue-list',function(req,res){
         per_page:params.per_page,
     }
 
+    let sortOptions = [ 
+        ['operatorLockAt','DESC NULLS FIRST'],
+        ['operatorUpdatedAt','DESC NULLS FIRST'],
+        ['createdAt','DESC']
+    ];
+
+    if (req.query.sortOn == 'demand'){
+        sortOptions = [ 
+            ['peopleCount','DESC NULLS LAST'],
+        ];
+    } else if (req.query.sortOn == 'oldest') {
+        sortOptions = [ 
+            ['createdAt','ASC'],
+        ];
+    } else if (req.query.sortOn == 'demand_desc'){
+        sortOptions = [ 
+            ['peopleCount','DESC NULLS FIRST'],
+            ['createdAt','ASC'],
+        ];
+    }
+
     models.HelpRequest.findAll({
         where:whereQuery,
-        order:[ 
-            ['operatorLockAt','DESC NULLS FIRST'],
-            ['operatorUpdatedAt','DESC NULLS FIRST'],
-            ['createdAt','DESC']
-        ],
+        order:sortOptions,
         offset:(params.page -1)*params.per_page,
         limit:params.per_page,
         include :[ { 
@@ -620,6 +634,7 @@ router.get('/angels',function(req,res){
         res.json(list);
     })
 });
+
 router.post('/add-rescue',function(req,res){ 
     try {
         const data = req.body;        
@@ -669,7 +684,6 @@ router.post('/add-rescue',function(req,res){
         
 });
 
-
 router.post('/add-safe-user',function(req,res){ 
     try {
         const data = req.body;        
@@ -701,7 +715,6 @@ router.post('/add-safe-user',function(req,res){
         res.json(jsonError('Missing parameters' , {...req.body}) );
     }   
 });
-
 
 router.post('/rescue/volunteer/register', function(req,res) {
     let name = req.body.name;
@@ -774,7 +787,6 @@ router.post('/rescue/volunteer/register', function(req,res) {
         });
     });
 });
-
 
 router.post('/rescue/volunteer/status/update', function(req,res) {
     let phoneNumber = req.body.phoneNumber;

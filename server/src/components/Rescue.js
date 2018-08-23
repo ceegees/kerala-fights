@@ -133,7 +133,7 @@ class Rescue extends Component{
                             errors = {this.state.errors.help_type}>
                             <option value=""> - select help type - </option>
                             {this.props.requestTypes.map((item, idx) => {
-                                return <option key={idx} value={item.key}>{item.name}</option>
+                                return <option key={idx} value={item.value}>{item.name}</option>
                             })} 
                         </SelectField> 
                         </div>

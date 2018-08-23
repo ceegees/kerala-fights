@@ -331,8 +331,8 @@ class DetailsModal extends Component {
         let updateForm = null; 
         if (update && (!update.operator || update.operator.id == this.props.authUser.id) ) {
         
-            updateForm = <form className="w3-row-padding"> 
-                <div className="w3-col s12">  
+            updateForm = <form className="w3-margin-top"> 
+                <div  >  
                     <FormTextarea 
                         label="Comments"
                         placeholder="Add your comments after action, eg: called them they are fine"
@@ -344,7 +344,8 @@ class DetailsModal extends Component {
                         errors = {this.state.errors.comments} 
                     />
                 </div>
-                <div className="w3-col s12"><SelectField 
+                <div >
+                    <SelectField 
                     label="How Severe is the issue"
                     id="severity_select"
                     name="severity"
@@ -364,7 +365,7 @@ class DetailsModal extends Component {
                 <option value="8">Life Threatening</option>
                 </SelectField>
             </div>
-                <div className="w3-col s12">
+                <div  >
                     <SelectField 
                         label="Change Status"
                         name="status"

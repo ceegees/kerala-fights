@@ -366,6 +366,7 @@ export class GoogleMapWidget extends Component {
             lng:place.geometry.location.lng()
         }); 
     }
+
     setMarker(location){  
         if (this.marker == null) {
             this.marker = new google.maps.Marker({
@@ -395,7 +396,6 @@ export class GoogleMapWidget extends Component {
         geocoder.geocode({
             latLng: location
         }, (responses) => {
-            
             if (responses && responses.length > 0) {
                 if (this.props.locationSelect){
                     this.props.locationSelect(location.lat(),location.lng(), responses[0]);  
@@ -466,10 +466,9 @@ export class HeaderSection extends Component {
                     <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                     <div className="w3-right w3-hide-small">  
                         {this.props.authUser ? <a className="w3-bar-item   w3-button " href="/manage">Manage</a> : <a className="w3-bar-item  w3-yellow w3-button " href="/manage">Volunteer Login</a>} 
-                        {!this.props.authUser ? <a className="w3-bar-item w3-hide w3-button " href="/auth/facebook">Fb Login</a> : null} 
-                        <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button ">Rescue Centers</a> 
-                        <a target="_blank" href="https://www.keralarescue.in/contactus/" className="w3-bar-item w3-button ">Contact Rescue</a> 
                         <NavLink className="w3-bar-item w3-button " to="/heatmap/need_help">HeatMap</NavLink>
+                        <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button ">Rescue Centers</a>  
+                       
                     </div>
                 </nav> 
                 <div className={`w3-bar-block w3-border-top w3-hide-large w3-hide-medium ${this.state.mobileMenu}`}>
@@ -498,8 +497,8 @@ export class DemanSupplyTab extends Component {
     }
     render(){
         const {tabName} = this.state;
-        const demandBtnCls = tabName == 'demand' ? 'w3-green':'w3-light-grey';
-        const supplyBtnCls = tabName != 'demand' ? 'w3-green':'w3-light-grey';
+        const demandBtnCls = tabName == 'demand' ? 'w3-white':'w3-light-grey';
+        const supplyBtnCls = tabName != 'demand' ? 'w3-white':'w3-light-grey';
 
         const demandTabCls = this.state.tabName == 'demand' ? 'w3-show':'w3-hide';
         const supplyTabCls = this.state.tabName != 'demand' ? 'w3-show':'w3-hide';
@@ -507,8 +506,6 @@ export class DemanSupplyTab extends Component {
         if (this.state.tabName != 'demand') {
             message = 'Drag and Zoom the map to Kerala / മാപ്പ് കേരളത്തിലേക്ക് സൂം (Zoom ) ചെയ്യുക'
         }
-
-        
         
         return <div>
             <div className="w3-bar">

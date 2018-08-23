@@ -6,30 +6,33 @@ import moment from 'moment';
 class FilterListContent extends React.Component {
 
     render() {
-        const filterLists = [<option value="" key="nothin">All</option>];
+        const optionList = [];
+        if (this.props.name != 'Sort On'){
+            optionList.push(<option value="" key="nothin">All</option>);
+        }
         const { filterOptions } = this.props; 
         if (Array.isArray(filterOptions)) {
             filterOptions.map((item, key) => { 
-                filterLists.push(
+                optionList.push(
                     <option key={item.value} value={item.value}>{item.name}</option> 
                 );
             });
         } else if (!Array.isArray(filterOptions) && typeof(filterOptions) === "object") {
             Object.keys(filterOptions).forEach((key) => {
-                filterLists.push(
+                optionList.push(
                     <option key={key} > {filterOptions[key]}</option>
                 );
             });
         }
         if (this.props.name == 'Request Types'){
-            filterLists.push(
+            optionList.push(
                 <option key="rescue_request"  value="rescue_request">Un Categorized from Kerala rescue</option>);
         }
 
         return  <div style={{marginBottom:"6px"}}>
             <label>{this.props.name}</label>
         <select onChange={this.props.handleFilterData} className="w3-large" className="w3-input w3-select" style={{height:"32px"}}> 
-            {filterLists}
+            {optionList}
         </select>
         </div>
     }
@@ -119,12 +122,12 @@ class FilterComponent extends React.Component {
         const {requestTypeList,severityList} = this.props; 
         return (
             <div className=""> 
-            {data && <div className="w3-center w3-padding w3-blue w3-margin-bottom">
-                <h4 >Total Requests  {data.total}</h4>
-            </div>}
-              {data && <div className="w3-center w3-padding w3-orange">
-              <h4 >Total Demand {data.demand}</h4>
-          </div>}
+            <div className="w3-center w3-padding w3-blue w3-margin-bottom">
+                <h4 >Total Requests {data &&  data.total} </h4>
+            </div>
+              <div className="w3-center w3-padding w3-orange">
+                <h4 >Total Demand {data && data.demand}</h4>
+            </div>
                 <FilterListContent
                     name="Request Types" 
                     filterOptions={requestTypeList}
@@ -151,6 +154,29 @@ class FilterComponent extends React.Component {
                     name="Severity"
                     filterOptions={severityList}
                     handleFilterData={this.handleFilterData.bind(this,'severity')}
+                /> 
+
+                <FilterListContent
+                    name="Sort On"
+                    filterOptions={[
+                        {
+                            value:'recent',
+                            name:'Recent First'
+                        },
+                        {
+                            value:'oldest',
+                            name:'Oldest First'
+                        },
+                        {
+                            value:'demand',
+                            name:'Demand'
+                        },
+                        {
+                            value:'demand_desc',
+                            name:'Demand Unknown First'
+                        }
+                    ]}
+                    handleFilterData={this.handleFilterData.bind(this,'sortOn')}
                 /> 
 
                 {/* <FilterListContent
