@@ -4,6 +4,7 @@ import { FormTextField,FormTextarea,Spinner,SelectField,Reveal, HeaderSection} f
 import axios from 'axios';
 import moment from 'moment';
 import {NavLink,Link,withRouter,Switch,Route} from 'react-router-dom';
+import ServiceProviderFilter from './ServiceProviderFilter';
 import qs from 'query-string';
 
 class ServiceProvider extends Component {
@@ -12,7 +13,7 @@ class ServiceProvider extends Component {
         const {item} = this.props;
 
         return (
-            <div key={`item_${item.id}`} className="w3-col l4 m6 w3-medium" style={{height: '100%'}}>
+            <div key={`item_${item.id}`} className="w3-col l6 w3-medium" style={{height: '100%'}}>
                 <div className="w3-margin w3-white w3-padding w3-small w3-border" style={{position: 'relative'}}>
                     <strong className="w3-text-gray">Contact Name:</strong> {item.contactName}<br/>
                     <strong className="w3-text-gray">Phone:</strong> {item.phoneNumber}<br/>
@@ -121,8 +122,8 @@ class DetailsModal extends Component {
 
        return (
             <div className="w3-container w3-padding">   
-                <h4 className="w3-center w3-margin-bottom">Service Provider Details</h4>
-                <div className="w3-row w3-margin-bottom">
+                <h4 className="w3-center w3-margin-bottom" style={{marginTop: '0px'}}>Service Provider Details</h4>
+                <div className="w3-row w3-margin-bottom" style={{paddingBottom: '20px'}}>
                     {leftCont}
                     <div className="w3-col l6"> 
                         <div className="w3-padding-16"><strong className="w3-text-gray">Address:</strong> 
@@ -155,11 +156,12 @@ class ServiceProviderList extends Component {
             page = 1;
         }
 
-        const obj = {
+        let obj = {
             status: status,
             page: page,
             q: search,
         }
+        obj = Object.assign(obj,this.filter);
         const str = qs.stringify(obj); 
         axios.get(`/api/v1/service-provider-list?${str}`).then(resp=>{
             this.setState({
@@ -230,18 +232,22 @@ class ServiceProviderList extends Component {
         return (
             <div style={{minHeight: "100vh"}}>
                 <HeaderSection authUser={this.props.authUser} />
-                <div>
-                    <div className="w3-padding">
-                        <input className="w3-padding-small w3-border" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" /> 
-                        <div className="w3-bar-item w3-right-align">{totalCount}</div>
+                <div className="w3-row">
+                    <div className="w3-col m4 l3 w3-padding">
+                        <ServiceProviderFilter data={data}  
+                            handleFilterData={this.handleFilterData.bind(this)} />
                     </div>
-                    <div className="w3-row" style={{display: 'flex', flexFlow: 'wrap'}}> 
-                        {content}
+                    <div className="w3-col m8 l9">
+                        <div className="w3-padding">
+                            <input className="w3-padding-small w3-border" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" />
+                        </div>
+                        <div className="w3-row" style={{display: 'flex', flexFlow: 'wrap'}}> 
+                            {content}
+                        </div>
                     </div>
-                    <div className="w3-center ">
+                    <div className="w3-col w3-center">
                         {pagination}
                     </div>
-
                     {this.state.modal}
                 </div>
             </div>
