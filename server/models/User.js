@@ -30,6 +30,27 @@ module.exports = (sequelize, DataTypes) => {
         type:DataTypes.STRING,
         field: 'profile_link' 
     },
+    leaderId : {
+        type: DataTypes.INTEGER,
+        field: 'leader_id' 
+    },
+    role: {
+        type: DataTypes.STRING
+    },
+    team: {
+        type: DataTypes.STRING
+    },
+    aadharNumber : {
+        type: DataTypes.STRING,
+        field: 'aadhar_number' 
+    },
+    passwordToken : {
+        type: DataTypes.STRING,
+        field: 'password_token' 
+    },
+    json: { 
+      type: DataTypes.JSONB 
+    },
     createdAt: { 
         type: DataTypes.DATE, 
         field: 'created_at' 

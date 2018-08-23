@@ -71,6 +71,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE, 
       field: 'operator_updated_at' 
     },
+    fulfilledBy : {
+        type: DataTypes.INTEGER,
+        field: 'fulfilled_by' 
+    },
+    serviceFeedback : {
+        type: DataTypes.TEXT,
+        field: 'service_feedback' 
+    },
+    serviceProviderRating : {
+        type: DataTypes.INTEGER,
+        field: 'service_provider_rating' 
+    },
     createdAt: { type: DataTypes.DATE, field: 'created_at' },
     updatedAt: { type: DataTypes.DATE, field: 'updated_at' },
   }, {
