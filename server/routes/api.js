@@ -5,7 +5,11 @@ const service = require('../services/google.js');
 const models = require('../models');
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(require('../config/config'));
-const {statusList} = require('../config/data');
+const config  = require('../config/data');
+const {statusList} = config;
+router.get('/config',function(req,res){
+    res.json(jsonSuccess(config));
+})
 const Op = Sequelize.Op;
 const moment = require('moment');
 function filterFromQuery(query,def={}){
@@ -51,6 +55,8 @@ router.get('/auth-user',function(req,res){
 router.get('/message', function (req, res, next) {
     res.json({ title: 'Ceegees' });
 });
+
+
 
 router.get('/rescue-substatus',function(req,res){
     sequelize.query("select status,operator_status ,count(*) from help_requests group by status,operator_status order BY status,operator_status",{
@@ -648,7 +654,8 @@ router.post('/add-rescue',function(req,res){
             address:data.address +"\n"+ ((data.alternate_numbers)?data.alternate_numbers:''),
             powerBackup:data.power_backup,
             information:data.member_details,
-            source:'keralafights',
+            remoteId:data.remoteId || null, 
+            source:data.source || 'keralafights',
             status:'NEW',
             latLng:{
                 type:'Point',
@@ -700,7 +707,7 @@ router.post('/add-safe-user',function(req,res){
                 coordinates: [data.location_lat,data.location_lon]
             },
             latitude: data.location_lat,
-            longitude: data.location_lon
+            longitude: data.location_lon,
         };
 
         models.SafeUser.create(passed).then(resp => {

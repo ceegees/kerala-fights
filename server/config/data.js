@@ -64,15 +64,11 @@ module.exports = {
         },
         {
             value:'rescue',
-            name:'രക്ഷപെടുത്തൂ / Rescue Me'
-        },
-        {
-            value:'rescue_someone',
-            name:'മറ്റൊരാളെ രക്ഷപെടുത്തൂ /Rescue Someone'
-        },
+            name:'രക്ഷപെടുത്തൽ / Rescue '
+        }, 
         {
             value:'other',
-            name:'Other / മറ്റുള്ളവ '
+            name:'മറ്റുള്ളവ / Others'
         }
     ],
     statusList :workflowStates,

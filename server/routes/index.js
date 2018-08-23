@@ -23,7 +23,6 @@ GOOGLE_APP_SECRET = 'Z0KAE4ZU2rnX5kt0qSVsbm4T'
 // FACEBOOK_APP_ID = '756308454761013'; // test idsss
 // FACEBOOK_APP_SECRET = '27525342c32b054d7056fcdeb6f072f3';
 
-
 FACEBOOK_APP_ID = '286493875499029'; // live ids
 FACEBOOK_APP_SECRET = '39147871f13aaefa2f2ae07f9f37a33f';
 
@@ -93,7 +92,14 @@ passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: "https://keralafights.com/auth/facebook/callback",
-    profileFields: ['id', 'emails', 'displayName', 'name', 'gender', 'picture.type(small)'] //This
+    profileFields: ['id',  
+        'emails', 
+        'displayName', 
+        'name', 
+        'gender', 
+        'picture.type(small)'
+    ] ,
+    scope:['email']
 },
 
 function(accessToken, refreshToken, profile, done) {
@@ -151,7 +157,6 @@ router.get([
     const { preloadedState, content}  = ssr(req,context,initialState); 
     res.setHeader('Cache-Control', 'assets, max-age=60') 
     res.render('index',{
-
         version:VERSION,
         title:'Kerala Fights',
         state:preloadedState,
