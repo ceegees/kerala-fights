@@ -858,6 +858,7 @@ router.post('/add-service-provider',function(req,res) {
             phoneNumber: data.phoneNumber,
             type: data.type,
             address: data.address,
+            district: data.district,
             peopleCount: data.peopleCount,
             kidsCount: data.kidsCount,
             maleCount: data.maleCount,

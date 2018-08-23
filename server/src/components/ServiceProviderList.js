@@ -17,6 +17,7 @@ class ServiceProvider extends Component {
                     <strong className="w3-text-gray">Contact Name:</strong> {item.contactName}<br/>
                     <strong className="w3-text-gray">Phone:</strong> {item.phoneNumber}<br/>
                     <strong className="w3-text-gray">Type:</strong> <span className="w3-tag w3-round w3-amber" style={{textTransform: 'capitalize'}}>{item.type.replace(/_/g, ' ')}</span><br/>
+                    <strong className="w3-text-gray">District:</strong> {item.district}<br/>
                     <strong className="w3-text-gray">Number of People:</strong> {item.peopleCount}<br/>
                     <strong className="w3-text-gray">Number of Kids:</strong> {item.kidsCount}<br/>
                     <strong className="w3-text-gray">Created:</strong> {moment(item.createdAt).fromNow()}<br/>
@@ -101,16 +102,15 @@ class DetailsModal extends Component {
                     </span>
                 </div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">Type of help:</strong> <span className="w3-tag w3-round w3-amber" style={{textTransform: 'capitalize'}}>{item.type.replace(/_/g, ' ')}</span></div>
-                <div className="w3-padding-small"><strong className="w3-text-gray">Address:</strong> 
-                    <div className="w3-border w3-padding-small w3-light-gray">{item.address}</div>
-                </div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">District:</strong> {item.district}</div>
+                
                 <div className="w3-padding-small"><strong className="w3-text-gray">Number of people:</strong> {item.peopleCount}</div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">Number of kids:</strong> {item.kidsCount}</div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">Number of Females:</strong> {item.femaleCount}</div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">Number of Males:</strong> {item.maleCount}</div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">More Information:</strong> 
                     {(item.information)?
-                        <div className="w3-border w3-padding-small w3-light-gray">{item.information}</div>
+                        <div className="w3-border w3-padding-small w3-padding-16 w3-light-gray w3-round">{item.information}</div>
                         : null
                     }
                 </div>
@@ -125,6 +125,9 @@ class DetailsModal extends Component {
                 <div className="w3-row w3-margin-bottom">
                     {leftCont}
                     <div className="w3-col l6"> 
+                        <div className="w3-padding-16"><strong className="w3-text-gray">Address:</strong> 
+                            <div className="w3-border w3-padding-small w3-padding-16 w3-light-gray w3-round">{item.address}</div>
+                        </div>
                         <div id="google-map-detail" style={{minHeight:"250px"}}></div>
                     </div>
                 </div>
