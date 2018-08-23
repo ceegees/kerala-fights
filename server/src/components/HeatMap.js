@@ -85,7 +85,13 @@ class HeatMap extends Component {
             });
         });
 
-        axios.get(`/api/v1/volunteer-list?${str}`).then(resp => {
+        let volQuery = {
+            status: 'ACTIVE',
+            per_page: 3000
+        }
+        volQuery = Object.assign(volQuery, this.filter);
+        const volQueryString = qs.stringify(volQuery);
+        axios.get(`/api/v1/volunteer-list?${volQueryString}`).then(resp => {
             resp.data.data.list.map(item => {
                 if (REQUEST_TYPES.indexOf(item.type) == -1) {
                     return;

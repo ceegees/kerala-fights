@@ -994,6 +994,11 @@ router.get('/volunteer-list',function(req,res){
         ];
     }
 
+    whereQuery.status = 'ACTIVE';
+    if (req.query.status) {
+        whereQuery.status = req.query.status;
+    }
+    
     models.RescueVolunteer.findAll({
         where: whereQuery,
         order:sortOptions,
