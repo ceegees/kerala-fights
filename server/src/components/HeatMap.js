@@ -54,9 +54,6 @@ class HeatMap extends Component {
         const str = qs.stringify(obj); 
         axios.get(`/api/v1/rescue-list?${str}`).then(resp => {
             resp.data.data.list.map(item => {
-                if (REQUEST_TYPES.indexOf(item.type) == -1) {
-                    return;
-                }
                 var marker = new google.maps.Marker({
                     position: getLatLng(item),
                     map: this.map,
@@ -90,9 +87,9 @@ class HeatMap extends Component {
 
         axios.get(`/api/v1/volunteer-list?${str}`).then(resp => {
             resp.data.data.list.map(item => {
-                // if (REQUEST_TYPES.indexOf(item.type) == -1) {
-                //     return;
-                // }
+                if (REQUEST_TYPES.indexOf(item.type) == -1) {
+                    return;
+                }
                 var marker = new google.maps.Marker({
                     position: {
                         lat: parseFloat(""+item.latitude),
