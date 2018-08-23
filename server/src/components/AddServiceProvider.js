@@ -99,6 +99,10 @@ class AddHelpCentre extends Component{
             errors['type'] = "Service Type is required"
         }
 
+        if (!formData.district) {
+            errors['district'] = "District is required"
+        }
+
         if (!formData.address) {
             errors['address'] = "Address is required"
         }
@@ -217,6 +221,35 @@ class AddHelpCentre extends Component{
                         </div>
 
                         <div className="w3-col l6 s12">
+                            <SelectField
+                                label="ജില്ല"
+                                place="district"
+                                name="district"
+                                selectClass="w3-select w3-border"
+                                isMandatory="true"
+                                value = {this.state.form.district}
+                                valueChange={this.changeFormValue.bind(this)}
+                                errors = {this.state.errors.district}>
+                                <option value="">- Select District -</option>
+                                <option value="Alappuzha">Alappuzha</option>
+                                <option value="Ernakulam">Ernakulam</option>
+                                <option value="Idukki">Idukki</option>
+
+                                <option value="Kannur">Kannur</option>
+                                <option value="Kasaragod">Kasaragod</option>
+                                <option value="Kollam">Kollam</option>
+
+                                <option value="Kottayam">Kottayam</option>
+                                <option value="Kozhikode">Kozhikode</option>
+                                <option value="Malappuram">Malappuram</option>
+
+                                <option value="Palakkad">Palakkad</option>
+                                <option value="Pathanamthitta">Pathanamthitta</option>
+                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                <option value="Thrissur">Thrissur</option>
+                                <option value="Wayanad">Wayanad</option>
+                            </SelectField> 
+
                             <FormTextarea 
                                 name="address"
                                 label="അഡ്രെസ്സ്"

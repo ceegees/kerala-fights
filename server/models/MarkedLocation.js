@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     type: { type: DataTypes.STRING, field: 'type' },
     contactName: { type: DataTypes.STRING, field: 'contact_name' },
     phoneNumber: { type: DataTypes.STRING, field: 'phone_number' },
+    district: { type: DataTypes.STRING },
     address: { type: DataTypes.TEXT, field: 'address' },
     peopleCount: { type: DataTypes.INTEGER, field: 'people_count' },
     kidsCount: { type: DataTypes.INTEGER, field: 'kids_count' },
@@ -18,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     longitude: { type: DataTypes.DECIMAL(10,7), field: 'longitude' },
     information: { type: DataTypes.TEXT, field: 'information' },
     serviceEndDate: { type: DataTypes.DATE, field: 'service_end_date' },
+    json: { 
+      type: DataTypes.JSONB 
+    },
     createdAt: { type: DataTypes.DATE, field: 'created_at' },
     updatedAt: { type: DataTypes.DATE, field: 'updated_at' },
 }, {
