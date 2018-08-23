@@ -730,6 +730,12 @@ router.post('/rescue/volunteer/register', function(req,res) {
     let latitude = req.body.latitude;
     let longitude = req.body.longitude;
     let info = req.body.info;
+    let peopleCount = req.body.peopleCount;
+    if (parseInt(peopleCount)) {
+        peopleCount = parseInt(peopleCount);
+    } else {
+        peopleCount = 0;
+    }
 
     const phoneRegExp = /^[0-9]{10}$/; 
 
@@ -769,7 +775,8 @@ router.post('/rescue/volunteer/register', function(req,res) {
             type: type,
             latitude: latitude,
             longitude: longitude,
-            info: info
+            info: info,
+            peopleCount: peopleCount
         }
     }).spread((resVol, created) => {
         if (! created) {
@@ -778,6 +785,7 @@ router.post('/rescue/volunteer/register', function(req,res) {
             resVol.set('latitude', latitude);
             resVol.set('longitude', longitude);
             resVol.set('info', info);
+            resVol.set('peopleCount', peopleCount);
             return resVol.save();
         } else {
             return resVol;
@@ -934,6 +942,70 @@ router.get('/service-provider-list',function(req,res){
         }).then(count => {
             totalCount = count;
             return models.MarkedLocation.sum('peopleCount', {
+                where: whereQuery,
+            });
+        }).then(fulfillCount => {
+            return {
+                total: totalCount,
+                fulfillableCount: (fulfillCount)?fulfillCount:0,
+                page: params.page,
+                page_max: Math.floor(totalCount /params.per_page),
+                per_page: params.per_page,
+                list: list
+            }
+        });
+    }).then(data =>{
+        res.json(jsonSuccess(
+            data
+        ));
+    });
+
+});
+
+
+router.get('/volunteer-list',function(req,res){
+    const params = filterFromQuery(req.query);
+    let whereQuery = {};
+    
+    if (req.query.q) {
+        const ors = {
+            phoneNumber: {
+                [Op.like]: `${req.query.q}%`
+            },
+            name: {
+                [Op.like]:`${req.query.q}%`
+            }
+        }
+        whereQuery = {
+           [Op.or]: ors
+        } 
+    }
+
+    if (req.query.requestType){
+        whereQuery.type = req.query.requestType;
+    }
+
+    let sortOptions = [
+        ['createdAt','DESC']
+    ];
+    if (req.query.sortOn == 'oldest') {
+        sortOptions = [ 
+            ['createdAt','ASC'],
+        ];
+    }
+
+    models.RescueVolunteer.findAll({
+        where: whereQuery,
+        order:sortOptions,
+        offset: (params.page -1)*params.per_page,
+        limit: params.per_page
+    }).then(list => {
+        let totalCount = null;
+        return models.RescueVolunteer.count({
+            where: whereQuery,
+        }).then(count => {
+            totalCount = count;
+            return models.RescueVolunteer.sum('peopleCount', {
                 where: whereQuery,
             });
         }).then(fulfillCount => {

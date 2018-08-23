@@ -59,7 +59,7 @@ export const Paginator = ({page,status,data}) => {
 }
 
 
-class DetailsModal extends Component {
+export class ServiceProviderDetail extends Component {
 
     componentDidMount() {
         const {item} = this.props;
@@ -202,7 +202,7 @@ class ServiceProviderList extends Component {
         this.setState({
             modal: (
                 <Reveal onClose={this.hideModal.bind(this)}>
-                    <DetailsModal hideModal={this.hideModal.bind(this)} 
+                    <ServiceProviderDetail hideModal={this.hideModal.bind(this)} 
                         item={item} />
                 </Reveal>
             )

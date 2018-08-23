@@ -1,4 +1,5 @@
 const workflowStates = require('./workflow');
+const mapIconList = require('./mapIconList');
 
 module.exports = {
     lastUpdateTime:0,
@@ -24,7 +25,6 @@ module.exports = {
             name: 'Life Threatening',
         }
     ],
-     
     requestTypeList:[  
         {
             value:'food_and_water',
@@ -87,5 +87,6 @@ module.exports = {
         "tvm":"Thiruvananthapuram",
         "tcr":"Thrissur",
         "wnd":"Wayanad",
-    }
+    },
+    mapIconList: mapIconList
 }
