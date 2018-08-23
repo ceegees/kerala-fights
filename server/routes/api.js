@@ -882,7 +882,7 @@ router.post('/add-service-provider',function(req,res) {
 
 router.get('/service-provider-list',function(req,res){
     const params = filterFromQuery(req.query);
-    let whereQuery = null;
+    let whereQuery = {};
     
     if (req.query.q) {
         const ors = {
@@ -898,30 +898,53 @@ router.get('/service-provider-list',function(req,res){
         } 
     }
 
+    if (req.query.requestType){
+        whereQuery.type = req.query.requestType;
+    }
+
+    if (req.query.district){
+        whereQuery.district = req.query.district;
+    }
+
+    let sortOptions = [
+        ['createdAt','DESC']
+    ];
+    if (req.query.sortOn == 'oldest') {
+        sortOptions = [ 
+            ['createdAt','ASC'],
+        ];
+    }
+
     models.MarkedLocation.findAll({
         where: whereQuery,
-        order: [
-            ['createdAt','DESC']
-        ],
+        order:sortOptions,
         offset: (params.page -1)*params.per_page,
         limit: params.per_page
     }).then(list => {
+        let totalCount = null;
         return models.MarkedLocation.count({
             where: whereQuery,
         }).then(count => {
+            totalCount = count;
+            return models.MarkedLocation.sum('peopleCount', {
+                where: whereQuery,
+            });
+        }).then(fulfillCount => {
             return {
-                total: count,
+                total: totalCount,
+                fulfillableCount: (fulfillCount)?fulfillCount:0,
                 page: params.page,
-                page_max: Math.floor(count /params.per_page),
+                page_max: Math.floor(totalCount /params.per_page),
                 per_page: params.per_page,
                 list: list
             }
-        })
+        });
     }).then(data =>{
         res.json(jsonSuccess(
             data
         ));
     });
+
 });
 
 module.exports = router;

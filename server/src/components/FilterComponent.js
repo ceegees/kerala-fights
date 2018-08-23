@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'; 
 import moment from 'moment';
 
-class FilterListContent extends React.Component {
+export class FilterListContent extends React.Component {
 
     render() {
         const optionList = [];
