@@ -78,7 +78,7 @@ class ServiceProviderFilter extends React.Component {
                 <div className="w3-center w3-padding w3-blue w3-margin-bottom">
                     <h4 className="w3-center">Total Service Providers <br />{data &&  data.total} </h4>
                 </div>
-                <div className="w3-center w3-padding w3-orange">
+                <div className="w3-center w3-padding w3-green">
                     <h4 className="w3-center">Demand serviceable <br /> {data &&  data.fulfillableCount} </h4>
                 </div>
                 <div className="w3-margin-top">

@@ -8,7 +8,7 @@ var ejs = require('ejs');
 var Sequelize = require('sequelize');
 
 var models = require('../models');
-const VERSION = 1.8;
+const VERSION = 1.9;
 
 const initialState = require('../config/data');
 const Op = Sequelize.Op;

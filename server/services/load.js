@@ -123,6 +123,10 @@ async function loadData(offset=0){
                 type:type
             });
         } else {
+            if (row.type  == 'rescue_request' ) {
+                row.type = type;
+            }
+
             if (row.status == 'NEW'){
                 row.status = data.status.toUpperCase(); 
             } 
