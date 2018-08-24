@@ -122,68 +122,70 @@ class FilterComponent extends React.Component {
         const {requestTypeList,severityList} = this.props; 
         return (
             <div className=""> 
-            <div className="w3-center w3-padding w3-blue w3-margin-bottom">
-                <h4 >Total Requests {data &&  data.total} </h4>
-            </div>
-              <div className="w3-center w3-padding w3-orange">
-                <h4 >Total Demand {data && data.demand}</h4>
-            </div>
-                <FilterListContent
-                    name="Request Types" 
-                    filterOptions={requestTypeList}
-                    handleFilterData={this.handleFilterData.bind(this,'requestType')} 
-                /> 
-                {/* <FilterListContent
-                    name="Status"
-                    filterOptions={districtMap}
-                    handleFilterData={this.handleFilterData}
-                />   */}
+                <div className="w3-center w3-padding w3-blue w3-margin-bottom">
+                    <h4 >Total Requests {data &&  data.total} </h4>
+                </div>
+                  <div className="w3-center w3-padding w3-orange">
+                    <h4 >Total Demand {data && data.demand}</h4>
+                </div>
+                <div className="w3-margin-top">
+                    <FilterListContent
+                        name="Request Types" 
+                        filterOptions={requestTypeList}
+                        handleFilterData={this.handleFilterData.bind(this,'requestType')} 
+                    /> 
+                    {/* <FilterListContent
+                        name="Status"
+                        filterOptions={districtMap}
+                        handleFilterData={this.handleFilterData}
+                    />   */}
 
-                <FilterListContent
-                    name="Districts"
-                    filterOptions={districtMap}
-                    handleFilterData={this.handleFilterData.bind(this,'district')}
-                />  
-                <FilterListContent
-                    name="Time Range"
-                    filterOptions={timeConfig}
-                    handleFilterData={this.handleTimeRange.bind(this,'time')}
-                />  
+                    <FilterListContent
+                        name="Districts"
+                        filterOptions={districtMap}
+                        handleFilterData={this.handleFilterData.bind(this,'district')}
+                    />  
+                    <FilterListContent
+                        name="Time Range"
+                        filterOptions={timeConfig}
+                        handleFilterData={this.handleTimeRange.bind(this,'time')}
+                    />  
 
-                <FilterListContent
-                    name="Severity"
-                    filterOptions={severityList}
-                    handleFilterData={this.handleFilterData.bind(this,'severity')}
-                /> 
+                    <FilterListContent
+                        name="Severity"
+                        filterOptions={severityList}
+                        handleFilterData={this.handleFilterData.bind(this,'severity')}
+                    /> 
 
-                <FilterListContent
-                    name="Sort On"
-                    filterOptions={[
-                        {
-                            value:'recent',
-                            name:'Recent First'
-                        },
-                        {
-                            value:'oldest',
-                            name:'Oldest First'
-                        },
-                        {
-                            value:'demand',
-                            name:'Demand'
-                        },
-                        {
-                            value:'demand_desc',
-                            name:'Demand Unknown First'
-                        }
-                    ]}
-                    handleFilterData={this.handleFilterData.bind(this,'sortOn')}
-                /> 
+                    <FilterListContent
+                        name="Sort On"
+                        filterOptions={[
+                            {
+                                value:'recent',
+                                name:'Recent First'
+                            },
+                            {
+                                value:'oldest',
+                                name:'Oldest First'
+                            },
+                            {
+                                value:'demand',
+                                name:'Demand'
+                            },
+                            {
+                                value:'demand_desc',
+                                name:'Demand Unknown First'
+                            }
+                        ]}
+                        handleFilterData={this.handleFilterData.bind(this,'sortOn')}
+                    /> 
 
-                {/* <FilterListContent
-                    name="Sort option"
-                    filterOptions={sortConfig}
-                    handleFilterData={this.handleFilterData}
-                /> */}
+                    {/* <FilterListContent
+                        name="Sort option"
+                        filterOptions={sortConfig}
+                        handleFilterData={this.handleFilterData}
+                    /> */}
+                </div>
             </div>
         );
     }
