@@ -39,7 +39,7 @@ class VolunteerDetail extends Component {
 
         let leftCont = (
             <div className="w3-col l6 s12">
-                <div className="w3-padding-small"><strong className="w3-text-gray">Contact Name:</strong> {item.contactName}</div>
+                <div className="w3-padding-small"><strong className="w3-text-gray">Contact Name:</strong> {item.name}</div>
                 <div className="w3-padding-small"><strong className="w3-text-gray">Phone Number:</strong> <span>
                     <a className="w3-buttom w3-tag w3-redice w3-round w3-blue" href={`tel:${item.phoneNumber}`}>{item.phoneNumber}</a>
                     </span>
@@ -63,7 +63,7 @@ class VolunteerDetail extends Component {
 
        return (
             <div className="w3-container w3-padding">   
-                <h4 className="w3-center w3-margin-bottom" style={{marginTop: '0px'}}>Service Provider Details</h4>
+                <h4 className="w3-center w3-margin-bottom" style={{marginTop: '0px'}}>Volunteer Detail</h4>
                 <div className="w3-row w3-margin-bottom" style={{paddingBottom: '20px'}}>
                     {leftCont}
                     <div className="w3-col l6">
