@@ -262,6 +262,9 @@ function lockRequest(req,res){
             model: models.User ,as:'operator' 
         }]
     }).then(item => {
+        if (!item){
+            throw new Error("Invalid id");
+        }
         if (item.operatorLockAt != null) {
             return item;
         }
@@ -323,7 +326,7 @@ router.post('/rescue-release-lock',function(req,res){
     }).catch(ex => {
         res.json(jsonError(ex.message));
     })
-})
+});
 
 router.post('/rescue-update',function(req,res){
     let rescue = null;
@@ -869,8 +872,6 @@ router.post('/rescue/volunteer/status/update', function(req,res) {
     });
 });
 
-
-
 router.post('/add-service-provider',function(req,res) {
     try {
         const data = req.body;        
@@ -894,7 +895,12 @@ router.post('/add-service-provider',function(req,res) {
             serviceEndDate: data.serviceEndDate
         };
 
-        models.MarkedLocation.create(passed).then(resp => {
+        models.MarkedLocation.findOrCreate({
+            where:{
+                phoneNumber:data.phoneNumber
+            },
+            defaults:passed
+        }).then(resp => {
             res.json(jsonSuccess({
                 db: resp,
                 passed: passed,
@@ -906,7 +912,6 @@ router.post('/add-service-provider',function(req,res) {
         res.json(jsonError('Missing parameters' , {...req.body}) );
     }   
 });
-
 
 router.get('/service-provider-list',function(req,res){
     const params = filterFromQuery(req.query);
@@ -974,7 +979,6 @@ router.get('/service-provider-list',function(req,res){
     });
 
 });
-
 
 router.get('/volunteer-list',function(req,res){
     const params = filterFromQuery(req.query);

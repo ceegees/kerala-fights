@@ -7,9 +7,9 @@ var path = require('path');
 var ejs = require('ejs');
 var Sequelize = require('sequelize');
 
-var models = require('../models');
-const VERSION = 2.2;
+var models = require('../models'); 
 const {
+    VERSION,
     GOOGLE_APP_ID,
     GOOGLE_APP_SECRET,
     FACEBOOK_APP_ID,
@@ -169,8 +169,10 @@ router.get('/update',function(req,res){
         return res.redirect('/?missing_ticket_id=1');
     }
     
-    const hash = crypto.createHmac('sha1', PARTNER_1_KEY).update(req.query.p).digest('hex');
-//http://localhost:5050/update?p=9740525347&n=giju&t=2e1a04b2c3&kr=45409
+    const hash = crypto.createHmac('sha1', PARTNER_1_KEY)
+        .update(req.query.p+":"+req.query.kr)
+        .digest('hex');
+         
     console.log('hash:',hash);
     if (hash.indexOf(req.query.t) !== 0) {
         return res.redirect('/?token_missmatch=1');

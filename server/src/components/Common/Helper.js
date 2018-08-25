@@ -312,14 +312,14 @@ export class DemandSupplyTab extends Component {
                 {this.props.children[0]}
             </div>
             <div className={`${this.state.supplyTab} google-maps-supply`}   >
-               
+                <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5"  style={{  
+                                border:"0"
+                            }} onLoad={this.hideAfterLoad.bind(this)}/>
             </div>
         </div> 
     }
 }
 
 /*
- <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5"  style={{  
-                                border:"0"
-                            }} onLoad={this.hideAfterLoad.bind(this)}/> 
+  
 */

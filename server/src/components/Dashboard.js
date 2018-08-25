@@ -77,6 +77,7 @@ class Dashboard extends Component{
             this.props.showModal('update_request',{
                 id:requestId
             });
+            this.props.history.replace('/dashboard');
         }
     }
     componentWillReceiveProps(nextProps){ 
@@ -88,6 +89,7 @@ class Dashboard extends Component{
             this.props.showModal('update_request',{
                 id:requestId
             });
+            this.props.history.replace('/dashboard');
         }
     }
 
