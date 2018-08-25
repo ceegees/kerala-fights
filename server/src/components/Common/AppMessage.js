@@ -1,6 +1,6 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
-import {hideMessage} from './../redux/actions.js';
+import {hideMessage} from './../../redux/actions.js';
 
 class AppMessage extends Component {
     render(){

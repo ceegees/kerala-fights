@@ -1,7 +1,7 @@
 import React, {Component} from 'react'; 
 import {Link,NavLink} from 'react-router-dom';
 import axios from 'axios'; 
-
+    
 export class ErrorHelperText extends Component {
     static get defaultProps() {
         return {
@@ -22,7 +22,7 @@ export class ErrorHelperText extends Component {
     }
 }
 
-export const Paginator = ({page,status,data}) => {
+export const Paginator = ({page,base,data}) => {
     page = page - 10;
     const pages = [];
     if(page < 1){
@@ -38,14 +38,15 @@ export const Paginator = ({page,status,data}) => {
     }
 
     return <div className="w3-bar">
-        <NavLink to={`/manage/${status}/1`} className="w3-button">&laquo;</NavLink> 
+        <NavLink to={`${base}/1`} className="w3-button">&laquo;</NavLink> 
         {
-            pages.map( page=> <NavLink key={`page_${page}`} to={`/manage/${status}/${page}`} 
+            pages.map( page=> <NavLink key={`page_${page}`} to={`${base}/${page}`} 
                 className="w3-button">{page}</NavLink> )
         }
-        <NavLink to={`/manage/${status}/${lastPage}`} className="w3-button">&raquo;</NavLink>
+        <NavLink to={`${base}/${lastPage}`} className="w3-button">&raquo;</NavLink>
     </div>
 }
+
 
 export const Spinner = (props = {message:'Loading Data', mode:'big' }) => { 
     let  paddingCls = 'w3-padding-64';
@@ -322,6 +323,7 @@ export class GooglePlacesAutoComplete extends Component {
         )
     }
 }
+
 export class GoogleMapWidget extends Component {
     constructor(arg){
         super(arg);
@@ -342,8 +344,7 @@ export class GoogleMapWidget extends Component {
         //     this.setMarker(nextProps.location);
         //     return;
         // }
-
-        console.log('place :',nextProps.place);
+ 
         if (nextProps.place == this.props.place) {
             return;
         }
@@ -443,65 +444,31 @@ export class GoogleMapWidget extends Component {
     }
 }
 
-export class HeaderSection extends Component {
 
-    constructor(arg) {
-        super(arg);
-        this.state = {
-            mobileMenu: 'w3-hide'
-        }
-    }
-
-    togggleMobile() {
-        this.setState({mobileMenu:(this.state.mobileMenu == 'w3-hide')? 'w3-show' : 'w3-hide'})
-    }
-
-    render(){
-        return (
-            <section className="top_section"> 
-                <nav className="w3-bar w3-blue header-top-bar">
-                    <div className="w3-left">
-                        <a className="w3-bar-item w3-button" href="/">Kerala Flood Relief - കേരളം പൊരുതുന്നു , ഒരുമിച്ച് </a>
-                    </div>
-                    <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
-                    <div className="w3-right w3-hide-small">  
-                        {this.props.authUser ? <a className="w3-bar-item   w3-button " href="/manage">Manage</a> : <a className="w3-bar-item  w3-yellow w3-button " href="/manage">Volunteer Login</a>} 
-                        <NavLink className="w3-bar-item w3-button " to="/heatmap/need_help">HeatMap</NavLink>
-                        <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button ">Rescue Centers</a>  
-                       
-                    </div>
-                </nav> 
-                <div className={`w3-bar-block w3-border-top w3-hide-large w3-hide-medium ${this.state.mobileMenu}`}>
-                    {this.props.authUser ? <a className="w3-bar-item   w3-button " href="/manage">Manage</a> : <a className="w3-bar-item  w3-yellow w3-button " href="/manage">Volunteer Login</a>} 
-                    {!this.props.authUser ? <a className="w3-bar-item w3-hide w3-button " href="/auth/facebook">Fb Login</a> : null} 
-                    <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button w3-blue">Rescue Centers</a> 
-                    <a target="_blank" href="https://www.keralarescue.in/contactus/" className="w3-bar-item w3-button w3-blue">Contact Rescue</a> 
-                    <NavLink className="w3-bar-item w3-button w3-blue" to="/heatmap/need_help">HeatMap</NavLink>
-                </div>
-                {this.props.children}
-            </section> 
-        )
-    }
-}
-
-
-export class DemanSupplyTab extends Component {
+export class DemandSupplyTab extends Component {
     constructor(arg){
         super(arg);
         this.state = {
-            tabName : 'demand'
+            tabName : 'demand',
+            demandTab:'w3-show',
+            supplyTag:'w3-show'
         }
     }
     tabChange(name){
-        this.setState({tabName:name});
+        this.setState({
+            tabName:name,
+            demandTab: name == 'demand' ? 'w3-show':'w3-hide',
+            supplyTab :  name != 'demand' ? 'w3-show':'w3-hide'
+        });
+    } 
+    hideAfterLoad(){
+        this.tabChange('demand');
     }
     render(){
         const {tabName} = this.state;
         const demandBtnCls = tabName == 'demand' ? 'w3-white':'w3-light-grey';
         const supplyBtnCls = tabName != 'demand' ? 'w3-white':'w3-light-grey';
 
-        const demandTabCls = this.state.tabName == 'demand' ? 'w3-show':'w3-hide';
-        const supplyTabCls = this.state.tabName != 'demand' ? 'w3-show':'w3-hide';
         let message = '';
         if (this.state.tabName != 'demand') {
             message = 'Drag and Zoom the map to Kerala / മാപ്പ് കേരളത്തിലേക്ക് സൂം (Zoom ) ചെയ്യുക'
@@ -516,58 +483,14 @@ export class DemanSupplyTab extends Component {
                 <div className="w3-bar-item" >
                     <span className="w3-small w3-text-red">{message}</span></div>
             </div>
-            <div className={demandTabCls}>
+            <div className={this.state.demandTab}>
                 {this.props.children[0]}
             </div>
-            <div className={supplyTabCls}>
-                {this.props.children[1]}
+            <div className={`${this.state.supplyTab} google-maps-supply`}   >
+                <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5"  style={{  
+                                border:"0"
+                            }} onLoad={this.hideAfterLoad.bind(this)}/> 
             </div>
         </div> 
-    }
-}
-export class Leaderboard extends Component {
-
-    constructor(arg){
-        super(arg);
-        this.state = {
-            data:null
-        }
-    }
-
-    componentDidMount(){
-        axios.get('/api/v1/angels').then(resp=>{ 
-            this.setState({
-                data:resp.data
-            })
-        });
-
-    }
-
-    render(){
-        let content = <Spinner />
-        
-        if (this.state.data) {
-            content = 
-            <table className="w3-table w3-table-all">   
-                <tbody className="w3-right-align">
-                {
-                    this.state.data.map((item, idx) => {
-                    return <tr key={`pos_${idx}`}>
-                        <td style={{width:"40px",lineHeight:'32px'}}> {idx + 1} </td>
-                        <td style={{width:"40px",lineHeight:'32px'}}>
-                        <img src={item.picture} style={{width:"32px",height:"32px"}} />
-                        </td>
-                        <td style={{lineHeight:'32px'}}>  {item.name}</td>
-                        <td  style={{lineHeight:'32px'}}>   {item.total} help requests updated </td>
-                    </tr>
-                })}
-                </tbody>
-            </table>
-        }
-        
-        return <div className=" w3-small w3-margin"> 
-            <h5 className="w3-center">The Fighters</h5>        
-            {content}
-        </div>
     }
 }

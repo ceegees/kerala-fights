@@ -1,14 +1,14 @@
 import Home from './components/Home' 
 import AdminDashboard from './components/AdminDashboard'
-import ServiceProviderList from './components/ServiceProviderList'
+import ServiceProviderList from './components/Provider/Lister'
 import HeatMap from './components/HeatMap'
-import Rescue from './components/Rescue'
+import AddRequestModal from './components/Request/AddModal'
 
 const routes =  [ 
   {
     path: '/new',
     exact: true,
-    component: Rescue,
+    component: AddRequestModal,
   }, 
   {
     path:'/heatmap/:status?',
@@ -16,7 +16,16 @@ const routes =  [
     component:HeatMap
   },
   {
+    path: '/dashboard', 
+    component: AdminDashboard,
+  },
+  {
     path: '/manage/:status?/:page?',
+    exact: true,
+    component: AdminDashboard,
+  },
+  {
+    path: '/requests/:status?/:page?',
     exact: true,
     component: AdminDashboard,
   },
@@ -26,12 +35,12 @@ const routes =  [
     component: ServiceProviderList,
   },
   {
-    path: '/',  
+    path: '/home/:label',  
     exact:true,
     component: Home,
   },
   {
-    path: '/:label',  
+    path: '/',  
     component: Home,
   },
 ];

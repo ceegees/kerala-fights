@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'; 
 import moment from 'moment';
-import {FilterListContent} from './FilterComponent.js';
-
+import FilterSelect from '../Common/FilterSelect.js';
 
 class ServiceProviderFilter extends React.Component {
     constructor (args) {
@@ -70,29 +69,30 @@ class ServiceProviderFilter extends React.Component {
     }
 
     render() {
-        const { districtMap,data } = this.props;
+        const { districtMap,data ,search} = this.props;
         const { sortConfig, timeConfig } = this.state;
         const {requestTypeList,severityList} = this.props; 
         return (
             <div className=""> 
                 <div className="w3-center w3-padding w3-blue w3-margin-bottom">
-                    <h4 className="w3-center">Total Service Providers <br />{data &&  data.total} </h4>
+                    <h4 className="w3-left-align">Total Providers:{data &&  data.total} </h4>
                 </div>
                 <div className="w3-center w3-padding w3-green">
-                    <h4 className="w3-center">Demand serviceable <br /> {data &&  data.fulfillableCount} </h4>
+                    <h4 className="w3-left-align">Demand Serviceable:{data &&  data.fulfillableCount} </h4>
                 </div>
+                <div className="w3-small w3-margin-top">{search && `Search "${search}"`}</div>
                 <div className="w3-margin-top">
-                    <FilterListContent
+                    <FilterSelect
                         name="Request Types" 
                         filterOptions={requestTypeList}
                         handleFilterData={this.handleFilterData.bind(this,'requestType')} />
 
-                    <FilterListContent
+                    <FilterSelect
                         name="Districts"
                         filterOptions={districtMap}
                         handleFilterData={this.handleFilterData.bind(this,'district')} />
 
-                    <FilterListContent
+                    <FilterSelect
                         name="Sort On"
                         filterOptions={[
                             {
@@ -115,6 +115,7 @@ const mapStateToProps = (state) => {
     return {
         districtMap: state.districtMap,
         statusList: state.statusList,
+        search:state.searchText,
         severityList:state.severityList,
         requestTypeList:state.requestTypeList
     }

@@ -1,9 +1,9 @@
 import  React,{ Component } from 'react'; 
-import { FormTextField,FormTextarea,GooglePlacesAutoComplete,GoogleMapWidget ,SelectField,Reveal} from './Helper.js';  
+import { FormTextField,FormTextarea,GooglePlacesAutoComplete,GoogleMapWidget ,SelectField,Reveal} from './../Common/Helper.js';  
 import axios from 'axios';
 import { connect } from 'react-redux';
 
-import { showMessage, hideMessage } from './../redux/actions.js';
+import { showMessage, hideMessage } from './../../redux/actions.js';
 
 class AddHelpCentre extends Component{
 
@@ -84,9 +84,7 @@ class AddHelpCentre extends Component{
             return;
         }
 
-        let formData = Object.assign({},this.state.form);
-        console.log(formData);
-
+        let formData = Object.assign({},this.state.form); 
         let errors = {};
         if (!formData.contactName) {
             errors['contactName'] = "Name is required"

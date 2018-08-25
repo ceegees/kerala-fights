@@ -20,6 +20,14 @@ export const showMessage = (type, text,stay=0) => {
     };
 }
 
+export const setSearch = (text) => {
+
+    return {
+        type:'SEARCH_TEXT',
+        value:text
+    }
+}
+
 export const getLatLng = (item) => {
     let lat = null;
     let lng = null;

@@ -1,9 +1,9 @@
 import  React,{ Component } from 'react'; 
-import { FormTextField,FormTextarea,GooglePlacesAutoComplete,GoogleMapWidget ,SelectField,Reveal} from './Helper.js';  
+import { FormTextField,FormTextarea,GooglePlacesAutoComplete,GoogleMapWidget ,SelectField,Reveal} from './../Common/Helper.js';  
 import axios from 'axios';
 import { connect } from 'react-redux';
 
-import { showMessage, hideMessage } from './../redux/actions.js';
+import { showMessage, hideMessage } from './../../redux/actions.js';
 
 class MarkSafe extends Component{
 

@@ -1,14 +1,15 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
-import {HeaderSection,Reveal,DemanSupplyTab} from './Helper';
+import {Reveal,DemandSupplyTab} from './Common/Helper';
+import Header from './Common/Header';
 import axios from 'axios';   
-import AppMessage from './AppMessage.js';
+import AppMessage from './Common/AppMessage.js';
 import {getLatLng} from '../redux/actions';
-import DetailsModal from './DetailsModal';
-import FilterComponent from './FilterComponent';
-import {ServiceProviderDetail} from './ServiceProviderList';
-import VolunteerDetail from './VolunteerDetail';
+import DetailsModal from './Request/Details';
+import RequestFilter from './Request/Filter';
+import {ServiceProviderDetail} from './Provider/Lister';
+import VolunteerDetail from './Modals/VolunteerDetail';
 import qs from 'query-string';
 
 class HeatMap extends Component {
@@ -17,7 +18,6 @@ class HeatMap extends Component {
         this.state = {
             modal:null,
             data:null,
-            tabName:'demand'
         }
         this.map = null;
         this.markerCluster = null;
@@ -42,11 +42,13 @@ class HeatMap extends Component {
         });
 
         this.markers = [];
-        const {status = 'new'} = this.props.match.params;
+        const {status = ''} = this.props.match.params;
+        const {search} = this.props;
 
         let obj = {
             location:1,
             status:status,
+            q:search,
             per_page:3000
         }
         
@@ -115,11 +117,14 @@ class HeatMap extends Component {
 
     handleFilterData(filterData) {
         this.filter = filterData;
-        this.fetchData(this.props);
+        this.fetchData();
     }
 
     componentDidUpdate(nextProps,nextState){
         if (nextProps.match.params.status != this.props.match.params.status){
+            this.fetchData();
+        } 
+        if (nextProps.search != this.props.search){
             this.fetchData();
         }
     }
@@ -185,37 +190,21 @@ class HeatMap extends Component {
             },2000)
         
         }  
-    }
-    tabChange(name){
-        this.setState({tabName:name});
-    }
+    } 
     render() {
         return <div>
             <AppMessage />
-            <HeaderSection authUser={this.props.authUser}>
-            <div className="w3-bar w3-teal  kf-top-bar">
-                <div className="w3-right "> 
-                    {this.props.statusList.map(item=>{
-                            return <NavLink key={item.key}
-                            activeClassName="active" 
-                            className={`w3-bar-item w3-button w3-small ${item.cls}`}
-                            to={`/heatmap/${item.key}`}>
-                                {item.title}
-                        </NavLink>
-                    })} 
-                </div>
-            </div>
-            </HeaderSection>
+            <Header subHeader="heatmap" />
             {this.state.modal}
             <div className="w3-row-padding" >
                 <div className="w3-col s12 m9 l3">
-                    <FilterComponent data={this.state.data} handleFilterData={this.handleFilterData.bind(this)} />
+                    <RequestFilter data={this.state.data} handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
                 <div className="w3-col s12 l9 m9">
-                    <DemanSupplyTab >
-                        <div id="google-map" style={{height:"90vh"}}></div>
-                        <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5" style={{width:"100%",height:"900px"}}/>
-                    </DemanSupplyTab>
+                    <DemandSupplyTab >
+                        <div id="google-map" style={{height:"90vh"}}></div> 
+                        <div>Demand</div>
+                    </DemandSupplyTab>
                 </div>
             </div>
         </div>
@@ -227,6 +216,7 @@ function mapStateToProps(state) {
         statusList: state.statusList,
         authUser: state.authUser,
         requestTypeList: state.requestTypeList,
+        search:state.searchText,
         mapIconList: state.mapIconList
     }
 }

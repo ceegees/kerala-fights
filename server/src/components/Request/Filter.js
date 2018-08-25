@@ -2,41 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'; 
 import moment from 'moment';
-
-export class FilterListContent extends React.Component {
-
-    render() {
-        const optionList = [];
-        if (this.props.name != 'Sort On'){
-            optionList.push(<option value="" key="nothin">All</option>);
-        }
-        const { filterOptions } = this.props; 
-        if (Array.isArray(filterOptions)) {
-            filterOptions.map((item, key) => { 
-                optionList.push(
-                    <option key={item.value} value={item.value}>{item.name}</option> 
-                );
-            });
-        } else if (!Array.isArray(filterOptions) && typeof(filterOptions) === "object") {
-            Object.keys(filterOptions).forEach((key) => {
-                optionList.push(
-                    <option key={key} > {filterOptions[key]}</option>
-                );
-            });
-        }
-        if (this.props.name == 'Request Types'){
-            optionList.push(
-                <option key="rescue_request"  value="rescue_request">Un Categorized from Kerala rescue</option>);
-        }
-
-        return  <div style={{marginBottom:"6px"}}>
-            <label>{this.props.name}</label>
-        <select onChange={this.props.handleFilterData} className="w3-large" className="w3-input w3-select" style={{height:"32px"}}> 
-            {optionList}
-        </select>
-        </div>
-    }
-}
+import FilterSelect from '../Common/FilterSelect';
 
 class FilterComponent extends React.Component {
     constructor (args) {
@@ -119,45 +85,43 @@ class FilterComponent extends React.Component {
     render() {
         const { districtMap,data } = this.props;
         const { sortConfig, timeConfig } = this.state;
-        const {requestTypeList,severityList} = this.props; 
+        const {requestTypeList,severityList,searchText} = this.props; 
         return (
             <div className=""> 
-                <div className="w3-center w3-padding w3-blue w3-margin-bottom">
+                <div className="w3-aligh-left w3-padding w3-blue w3-margin-bottom">
                     <h4 >Total Requests {data &&  data.total} </h4>
                 </div>
-                  <div className="w3-center w3-padding w3-orange">
+                  <div className="w3-align-left w3-padding w3-orange">
                     <h4 >Total Demand {data && data.demand}</h4>
                 </div>
+                <div className="w3-small w3-margin-top">
+                {searchText && `Searching " ${searchText}"`}
+                </div>
                 <div className="w3-margin-top">
-                    <FilterListContent
+                    <FilterSelect
                         name="Request Types" 
                         filterOptions={requestTypeList}
                         handleFilterData={this.handleFilterData.bind(this,'requestType')} 
                     /> 
-                    {/* <FilterListContent
-                        name="Status"
-                        filterOptions={districtMap}
-                        handleFilterData={this.handleFilterData}
-                    />   */}
-
-                    <FilterListContent
+                  
+                    <FilterSelect
                         name="Districts"
                         filterOptions={districtMap}
                         handleFilterData={this.handleFilterData.bind(this,'district')}
                     />  
-                    <FilterListContent
+                    <FilterSelect
                         name="Time Range"
                         filterOptions={timeConfig}
                         handleFilterData={this.handleTimeRange.bind(this,'time')}
                     />  
 
-                    <FilterListContent
+                    <FilterSelect
                         name="Severity"
                         filterOptions={severityList}
                         handleFilterData={this.handleFilterData.bind(this,'severity')}
                     /> 
-
-                    <FilterListContent
+                    
+                    <FilterSelect
                         name="Sort On"
                         filterOptions={[
                             {
@@ -179,12 +143,6 @@ class FilterComponent extends React.Component {
                         ]}
                         handleFilterData={this.handleFilterData.bind(this,'sortOn')}
                     /> 
-
-                    {/* <FilterListContent
-                        name="Sort option"
-                        filterOptions={sortConfig}
-                        handleFilterData={this.handleFilterData}
-                    /> */}
                 </div>
             </div>
         );
@@ -195,6 +153,7 @@ const mapStateToProps = (state) => {
     return {
         districtMap: state.districtMap,
         statusList: state.statusList,
+        searchText:state.searchText,
         severityList:state.severityList,
         requestTypeList:state.requestTypeList
     }

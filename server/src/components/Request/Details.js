@@ -1,11 +1,10 @@
 import  React,{ Component } from 'react'; 
-import { FormTextField,FormTextarea,Spinner ,GoogleMapWidget,SelectField, GooglePlacesAutoComplete} from './Helper.js';  
+import { FormTextField,FormTextarea,Spinner ,GoogleMapWidget,SelectField, GooglePlacesAutoComplete} from './../Common/Helper.js';  
 import axios from 'axios';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { showMessage, hideMessage,getLatLng } from './../redux/actions.js';    
- 
-import Rescue from './Rescue';
+import { showMessage, hideMessage,getLatLng } from './../../redux/actions.js';    
+  
 
 const RowItem =({name,value}) => {
     return <div  style={{padding:"2px 0px"}} >
@@ -376,7 +375,7 @@ class DetailsModal extends Component {
                         errors = {this.state.errors.status}
                         >
                         <option value="--">---</option>
-                    {obj && obj.nextStates.map(item => <option value={item.value}>{item.text}</option>)}
+                    {obj && obj.nextStates.map(item => <option key={item.value} value={item.value}>{item.text}</option>)}
                     </SelectField>
                 </div>
                 <div className="w3-col s12 w3-margin-top">

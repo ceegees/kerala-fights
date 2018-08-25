@@ -1,11 +1,13 @@
 import  React,{ Component } from 'react';
 import { connect } from 'react-redux';
-import { FormTextField,FormTextarea,Spinner,SelectField,Reveal, HeaderSection} from './Helper.js';  
 import axios from 'axios';
 import moment from 'moment';
-import {NavLink,Link,withRouter,Switch,Route} from 'react-router-dom';
-import ServiceProviderFilter from './ServiceProviderFilter';
 import qs from 'query-string';
+import {NavLink,Link,withRouter} from 'react-router-dom';
+
+import ProviderFilter from './Filter';
+import Header from '../Common/Header';
+import { Spinner,Reveal} from './../Common/Helper';  
 
 class ServiceProvider extends Component {
 
@@ -148,7 +150,8 @@ class ServiceProviderList extends Component {
     }
 
     fetchData(props){
-        let {page=1, status='list', search=''} = props.match.params;
+        let {page=1, status='list'} = props.match.params;
+        let {search} = props;
         this.setState({data: null});
 
         if (status == 'search'){ 
@@ -173,18 +176,10 @@ class ServiceProviderList extends Component {
     componentDidMount() {
         this.fetchData(this.props);
     }
-
-    searchRequests(e){
-        console.log('val',e.target.value)
-        if (e.target.value != '') {
-            this.props.history.replace('/service-providers/search/'+e.target.value)
-        } else {
-            this.props.history.replace('/service-providers/list/')
-        }
-    }
-
+ 
     componentWillReceiveProps(nextProps){
-        if (nextProps.match.params != this.props.match.params){ 
+        if (nextProps.match.params != this.props.match.params
+        || this.props.search  != nextProps.search){ 
             this.fetchData(nextProps);
         }
     }
@@ -231,16 +226,13 @@ class ServiceProviderList extends Component {
 
         return (
             <div style={{minHeight: "100vh"}}>
-                <HeaderSection authUser={this.props.authUser} />
+                <Header />
                 <div className="w3-row">
                     <div className="w3-col m4 l3 w3-padding">
-                        <ServiceProviderFilter data={data}  
+                        <ProviderFilter data={data}  
                             handleFilterData={this.handleFilterData.bind(this)} />
                     </div>
-                    <div className="w3-col m8 l9">
-                        <div className="w3-padding">
-                            <input className="w3-padding-small w3-border" onChange={this.searchRequests.bind(this)} placeholder="Name / Phone number" />
-                        </div>
+                    <div className="w3-col m8 l9"> 
                         <div className="w3-row" style={{display: 'flex', flexFlow: 'wrap'}}> 
                             {content}
                         </div>
@@ -257,7 +249,8 @@ class ServiceProviderList extends Component {
 
 function mapStateToProps(state) {  
     return {
-       authUser: state.authUser
+       authUser: state.authUser,
+       search:state.searchText
     }
 }
 
