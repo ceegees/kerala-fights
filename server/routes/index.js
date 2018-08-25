@@ -8,7 +8,7 @@ var ejs = require('ejs');
 var Sequelize = require('sequelize');
 
 var models = require('../models');
-const VERSION = 1.9;
+const VERSION = 2.2;
 
 const initialState = require('../config/data');
 const Op = Sequelize.Op;
@@ -74,7 +74,7 @@ passport.use(new GoogleStrategy({
 
 router.get('/auth/google-callback', passport.authenticate('google',{
     failureRedirect: '/?failed_login=true',
-    successRedirect:'/manage'   
+    successRedirect:'/dashboard'   
 })); 
 
 router.get('/auth/google', passport.authenticate('google'));
@@ -143,19 +143,22 @@ router.get('/auth/facebook', passport.authenticate('facebook'));
 
 router.get('/auth/facebook/callback', passport.authenticate('facebook', {
     failureRedirect: '/?failed_login=true',
-    successRedirect: '/manage', 
+    successRedirect: '/dashboard', 
 }));
 
 //SSR function import
 const ssr = require('./../views/ssr.js'); 
 
 router.get([  
-    '/manage/:status?/:page?'
+    '/manage/:status?/:page?',
+    '/dashboard'
     ], googleAuth,(req, res) => {
     let context = {};
     initialState.authUser = req.user;
+    initialState.searchText = '';
+    
     const { preloadedState, content}  = ssr(req,context,initialState); 
-    res.setHeader('Cache-Control', 'assets, max-age=60') 
+    res.setHeader('Cache-Control', 'assets, max-age=5') 
     res.render('index',{
         version:VERSION,
         title:'Kerala Fights',
@@ -168,16 +171,20 @@ router.get('/disclaimer',function(req,res){
     res.render('disclaimer');
 })
 router.get([ 
+    '/requests/:status?/:page?',
     '/heatmap/:status?', 
+    '/search/:query/:page',
     '/new',
-    '/:action?',
+    '/home/:action?',
     '/service-providers/:status?/:page?',
     '/',
     ], (req, res) => {
     let context = {};
     initialState.authUser = req.user;
+    initialState.searchText = '';
+
     const { preloadedState, content}  = ssr(req,context,initialState); 
-    res.setHeader('Cache-Control', 'assets, max-age=60') 
+    res.setHeader('Cache-Control', 'assets, max-age=5') 
     res.render('index',{
         title:'Kerala Fights',
         version:VERSION,

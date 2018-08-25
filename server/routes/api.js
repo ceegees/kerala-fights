@@ -240,7 +240,7 @@ router.get('/sync',async(req,res) => {
 });
 
 router.get('/rescue-status',function(req,res){
-    sequelize.query("SELECT count(*) as total, status from help_requests group by status",{  
+    sequelize.query("SELECT count(*) as total, status from help_requests group by status order by total desc",{  
         plain: false,
         raw: false,
         type: Sequelize.QueryTypes.SELECT
@@ -377,20 +377,17 @@ router.post('/rescue-update',function(req,res){
 router.get('/my-activity',function(req,res){
     models.WorkLog.findAll({
         where:{
-            actorId:item.id
+            actorId:req.user.id
         },
         order:[
             ['createdAt','DESC']
-        ],
-        include :[ { 
-            model: models.User ,as:'actor' 
-        }]
+        ]
     }).then(list => {
-        res.json(list);
+        res.json(jsonSuccess(list));
     })
 });
 
-router.get('/rescue-list',function(req,res){
+router.get('/rescue-list',function(req,res){    
     const params = filterFromQuery(req.query,{status:''})
     params.status = params.status.toLowerCase();
     const state = statusList.find(i => i.key == params.status);
@@ -455,7 +452,7 @@ router.get('/rescue-list',function(req,res){
 
         whereQuery = {
            [Op.or] :ors
-        } 
+        }  
     }
 
     if (req.query.location){ 
@@ -655,6 +652,7 @@ router.post('/add-rescue',function(req,res){
             powerBackup:data.power_backup,
             information:data.member_details,
             remoteId:data.remoteId || null, 
+            refId:data.refId || null,
             source:data.source || 'keralafights',
             status:'NEW',
             latLng:{
@@ -902,10 +900,10 @@ router.get('/service-provider-list',function(req,res){
     if (req.query.q) {
         const ors = {
             phoneNumber: {
-                [Op.like]: `${req.query.q}%`
+                [Op.iLike]: `${req.query.q}%`
             },
             contactName: {
-                [Op.like]:`${req.query.q}%`
+                [Op.iLike]:`${req.query.q}%`
             }
         }
         whereQuery = {
