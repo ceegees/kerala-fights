@@ -27,7 +27,7 @@ export default class FilterSelect extends React.Component {
 
         return  <div style={{marginBottom:"6px"}}>
             <label>{this.props.name}</label>
-        <select onChange={this.props.handleFilterData} className="w3-large" className="w3-input w3-select" style={{height:"32px"}}> 
+        <select onChange={this.props.handleFilterData} className="w3-large" className="w3-select kf-form-input-select" > 
             {optionList}
         </select>
         </div>

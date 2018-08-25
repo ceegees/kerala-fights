@@ -44,7 +44,7 @@ export default class Leaderboard extends Component {
         }
         
         return <div className=" w3-white w3-small">  
-            <h4 className="w3-center w3-padding w3-blue-grey">The Fighters</h4> 
+            <h5 className="w3-center w3-padding w3-blue-grey">The Fighters</h5> 
             {content}
         </div>
     }

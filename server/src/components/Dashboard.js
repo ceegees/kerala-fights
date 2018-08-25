@@ -1,24 +1,21 @@
 import  React,{ Component } from 'react'; 
 import {NavLink,withRouter} from 'react-router-dom';
 import { connect } from 'react-redux'; 
-import { showMessage, hideMessage } from './../redux/actions.js';   
+import { showMessage, hideMessage,showModal } from './../redux/actions.js';   
 import AppMessage from './Common/AppMessage.js'; 
 import AddRequestModal from './Request/AddModal';
 import Header from './Common/Header';
 import RequestPanel from './Request/Panel';
+import RequestLister from './Request/Lister';
 import Status from './Widgets/Status.js';
 import Leaderboard from './Widgets/Leaderboard.js';
-import Activity from './Widgets/Activity.js';
-import axios  from 'axios';
-import  moment from 'moment';
-
+import Activity from './Widgets/Activity.js'; 
 
 export class DashboardInfo extends  Component {
 
     render() {
-        return <div className="w3-container kf-manage-container">
-            <div>
-                <div className="w3-row-padding ">
+        return <div className="w3-container kf-manage-container"> 
+            <div className="w3-row-padding ">
                     <div className="w3-col l7 s12">
                         <h3>What to do </h3>
                         <ul className="w3-ul">
@@ -40,12 +37,12 @@ export class DashboardInfo extends  Component {
                             reload the page</b> </li>
                             <li><a target="_blank" href="https://docs.google.com/document/d/1jM_hdHgP-kxkzOtxl0n8mUGY4EzP6di2NyHIEvFp8YI/edit" >How To Use</a> , <a target="_blank"  href="https://docs.google.com/document/d/1oMs4JwHMDS9agR3voVpeGL0SMhfE35fETYNbD5rZLN8/edit">ഉപയോഗക്രമം </a></li>
                         </ul>
-                        <NavLink  to="/manage/duplicates" 
+                        <NavLink  to="/request/duplicates" 
                             className="w3-button  w3-block w3-blue w3-margin-bottom">
                             Check If duplicates are Marked correctly
                         </NavLink>  
-                        <NavLink  to="/manage/one_item/new" 
-                            className="w3-button  w3-block w3-green w3-margin-bottom">
+                        <NavLink  to="/request/one_item/new" 
+                            className="w3-button w3-hide  w3-block w3-green w3-margin-bottom">
                             Start working on a Help request 
                         </NavLink>   
                         <Status/>
@@ -55,77 +52,61 @@ export class DashboardInfo extends  Component {
                         <Leaderboard /> 
                     </div>
                 </div> 
-            </div> 
         </div>
     }
 }
  
-export class OneAtATime extends Component {
-    constructor(arg){
-        super(arg);
-        this.state = {
-            data:null
-        }
-    }
-    fetchData(){
-        this.setState({data:null});
-        const {status='new'} = this.props;
-        axios.get(`/api/v1/rescue-list?status=${status}&per_page=1`).then(resp=>{
-            this.setState({
-                data:resp.data.data
-            });
-        });
-    }
-    
-    componentDidMount(){
-        this.fetchData(this.props);
-    }
-    render(){
-        return <div >
-            {this.state.data ? this.state.data.list.map(item => 
-                <DetailsModal  
-                authUser={this.props.authUser}
-                hideModal={this.fetchData.bind(this)} item={item} />) : null }
-        </div>
-    }
-}
-class AdminDashboard extends Component{
+
+class Dashboard extends Component{
     constructor(arg) {
         super(arg);
         this.state =   {
             data:null,
             search:'',
-            mobileMenu:'w3-hide',
-            modal:null,
+            mobileMenu:'w3-hide', 
             form: {},
             errors: {}, 
             successMessage: ''
         } 
-    }
-    hideModal(msg){
-        this.setState({modal:null})
-    }
- 
-    newRequest(){
-        this.setState({modal:<AddRequestModal hideModal={this.hideModal.bind(this)} />})
     } 
+    componentDidMount(){
+        const {requestId} = this.props.match.params;
+        console.log('there we go',requestId);
+        if (requestId){
+            console.log('opening modal');
+            this.props.showModal('update_request',{
+                id:requestId
+            });
+        }
+    }
+    componentWillReceiveProps(nextProps){ 
+        if (this.props.match.params.requestId == nextProps.match.params.requestId){
+            return;
+        }
+        const {requestId} = nextProps.match.params;
+        if (requestId){
+            this.props.showModal('update_request',{
+                id:requestId
+            });
+        }
+    }
+
     togggleMobile(){
         this.setState({mobileMenu:(this.state.mobileMenu == 'w3-hide')? 'w3-show' : 'w3-hide'})
     }
     render () {
-        let { page=1, status='all' } = this.props.match.params; 
-        let content = null,secondLevelFilter = null,subHeader= null; 
-        let flag = false;
-        if (this.props.match.url.indexOf('dashboard') >= 0  && this.props.searchText == ""){
+        let { page=1, status='all',requestId } = this.props.match.params; 
+        let content = null, subHeader= null;  
+        if (this.props.match.url.indexOf('dashboard') >= 0  ){
             content = <DashboardInfo />
+            if(this.props.searchText != ""){
+                content = <div className="w3-panel"> <RequestLister /></div>
+            }  
         } else if (status == 'one_item'){
             content = <OneAtATime status={page} authUser={this.props.authUser}/> 
         } else {
-                subHeader = 'requests'
-                flag = true;
-                content = <RequestPanel 
-                    page={page} 
-                    status={status}  /> 
+            subHeader = 'requests' 
+            content = <RequestPanel page={page}  status={status}  /> 
         }
         return (
             <div >
@@ -137,8 +118,6 @@ class AdminDashboard extends Component{
         )
     }
 } 
-
-
 function mapStateToProps(state) {
     return {
         authUser: state.authUser,
@@ -150,5 +129,6 @@ function mapStateToProps(state) {
 }
 export default withRouter(connect(mapStateToProps, { 
     showMessage,
-    hideMessage
-})(AdminDashboard));
+    hideMessage,
+    showModal
+})(Dashboard));

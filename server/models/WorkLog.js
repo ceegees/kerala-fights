@@ -29,8 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     tableName: 'work_logs',
-    timestamps: true,
-    underscored: true
+    timestamps: true, 
   });
   WorkLog.associate = function(models) {
     // associations can be defined here

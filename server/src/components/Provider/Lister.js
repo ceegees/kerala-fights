@@ -7,7 +7,8 @@ import {NavLink,Link,withRouter} from 'react-router-dom';
 
 import ProviderFilter from './Filter';
 import Header from '../Common/Header';
-import { Spinner,Reveal} from './../Common/Helper';  
+import { Spinner} from './../Common/Helper';  
+import Reveal from './../Common/Reveal';
 
 class ServiceProvider extends Component {
 

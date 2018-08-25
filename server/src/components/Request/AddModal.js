@@ -1,11 +1,18 @@
 import  React,{ Component } from 'react'; 
-import { FormTextField,FormTextarea,GooglePlacesAutoComplete,GoogleMapWidget ,SelectField,Reveal} from './../Common/Helper.js';  
+import { FormTextField,
+    FormTextarea,
+    GooglePlacesAutoComplete,
+    SelectField
+} from './../Common/Helper.js';  
+import Reveal from './../Common/Reveal';
+
+import GoogleMapWidget from './../Widgets/GoogleMap';
+
 import axios from 'axios';
 import { connect } from 'react-redux';
-
 import { showMessage, hideMessage } from './../../redux/actions.js';
 
-class AddRequestModal extends Component{
+class AddRequest extends Component{
 
     constructor(arg) {
         super(arg);
@@ -126,7 +133,7 @@ class AddRequestModal extends Component{
                             label="എന്ത് സഹായം ആണ് വേണ്ടത്"
                             placeholder="What Help you want"
                             name="help_type"
-                            selectClass="w3-select w3-border"
+                            selectClass="w3-select w3-border kf-form-input-select"
                             isMandatory="true"
                             value = {this.state.form.help_type}
                             valueChange={this.changeFormValue.bind(this)}
@@ -188,7 +195,7 @@ class AddRequestModal extends Component{
                             label="ജില്ല"
                             place="district"
                             name="district"
-                            selectClass="w3-select w3-border"
+                            selectClass="w3-select w3-border kf-form-input-select"
                             isMandatory="true"
                             value = {this.state.form.district}
                             valueChange={this.changeFormValue.bind(this)}
@@ -274,4 +281,4 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, { 
     showMessage,
     hideMessage
-})(AddRequestModal);
+})(AddRequest);

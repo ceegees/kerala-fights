@@ -8,7 +8,7 @@ const passport = require('passport');
 const app = express();
 const models = require('./models');
 const cookieSession = require('cookie-session');
-
+const {COOKIE_KEYS} = require('./config/keys');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cookieSession({ 
     maxAge: 24*60*60*1000,
-    keys: ["C##GEESESESSION","@#skdsldk2323","@#ksldkslds"], 
+    keys: COOKIE_KEYS
 }));
 
 

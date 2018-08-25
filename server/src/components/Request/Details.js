@@ -1,5 +1,7 @@
 import  React,{ Component } from 'react'; 
-import { FormTextField,FormTextarea,Spinner ,GoogleMapWidget,SelectField, GooglePlacesAutoComplete} from './../Common/Helper.js';  
+import { FormTextField,FormTextarea,Spinner,SelectField, GooglePlacesAutoComplete} from './../Common/Helper.js';  
+
+import GoogleMapWidget from './../Widgets/GoogleMap';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -47,11 +49,10 @@ class DetailsModal extends Component {
         });
     } 
     componentDidMount(){
-        const {item} = this.props;
-        this.state.form.id = item.id;
-        this.state.form.severity = item.operatorSeverity;
-        $("#severity_select").val(item.operatorSeverity);
-        axios.get(`/api/v1/rescue-worklog?id=${item.id}`).then(resp=>{
+        const {item,id} = this.props;
+        this.state.form.id = id;
+        axios.post(`/api/v1/rescue-lock`,{id:this.props.id}).then(resp=>{
+            this.state.form.severity = resp.data.data.request.operatorSeverity;
             this.setState({
                 update:resp.data.data.request,
                 workLog:resp.data.data.log
@@ -59,7 +60,7 @@ class DetailsModal extends Component {
         })
     }
     componentWillUnmount(){
-        axios.post('/api/v1/rescue-release-lock',{id:this.props.item.id}).then(res => {
+        axios.post('/api/v1/rescue-release-lock',{id:this.props.id}).then(res => {
             console.log(res);
         });
     }
@@ -292,18 +293,10 @@ class DetailsModal extends Component {
         const {workLog,update} = this.state;
         if(update){
             item = update;
-        }
-        const obj = this.props.statusList.find(i=> i.key.toLowerCase() == item.status.toLowerCase());
-        const link = <a target="_blank" 
-            href={`https://www.keralarescue.in/request_details/${item.remoteId}/`} 
-            >{item.source}</a>;
+        } 
 
-
+        let flow = null,link = null;
         let mapStyle= { display:'none' };
-        if (item.latLng){
-            mapStyle = {minHeight:"200px"}
-        }
-
         let content = <Spinner />
         if (workLog){
             content = workLog.map(item => {
@@ -325,6 +318,19 @@ class DetailsModal extends Component {
                     <hr/>
                 </div>
             })
+        }
+        if (item){
+            flow = this.props.statusList.find(i=> 
+                i.key.toLowerCase() == item.status.toLowerCase()
+            );
+            if (item.latLng){
+                mapStyle = {minHeight:"200px"}
+            }
+            link = <a target="_blank" 
+            href={`https://www.keralarescue.in/request_details/${item.remoteId}/`} 
+            >{item.source}</a>;
+        } else{
+            return <Spinner />
         }
 
         let updateForm = null; 
@@ -349,8 +355,7 @@ class DetailsModal extends Component {
                     id="severity_select"
                     name="severity"
                     selectClass="w3-select w3-border"
-                    isMandatory="true"
-                    defaultVal={item.operatorSeverity}
+                    isMandatory="true" 
                     value = {this.state.form.severity}
                     valueChange={this.changeFormValue.bind(this)}
                     errors = {this.state.errors.severity}
@@ -375,7 +380,7 @@ class DetailsModal extends Component {
                         errors = {this.state.errors.status}
                         >
                         <option value="--">---</option>
-                    {obj && obj.nextStates.map(item => <option key={item.value} value={item.value}>{item.text}</option>)}
+                    {flow && flow.nextStates.map(item => <option key={item.value} value={item.value}>{item.text}</option>)}
                     </SelectField>
                 </div>
                 <div className="w3-col s12 w3-margin-top">
@@ -436,6 +441,7 @@ class DetailsModal extends Component {
 export default connect((state)=>{
     return {
         requestTypeList:state.requestTypeList,
+        authUser:state.authUser,
         severityList:state.severityList,
         statusList:state.statusList
     }

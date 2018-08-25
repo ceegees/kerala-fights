@@ -1,25 +1,27 @@
 
 import  React,{ Component } from 'react';   
-import {Spinner,Paginator ,Reveal} from '../Common/Helper.js';  
+import {Spinner } from '../Common/Helper.js'; 
+import Paginator from '../Common/Paginator.js';  
+import Reveal from './../Common/Reveal';
+
 import axios from 'axios';
 import moment from 'moment';;
 import {NavLink,Link,withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import qs from 'query-string'; 
 import DetailsModal from './Details';
-import { showMessage, hideMessage } from './../../redux/actions.js';   
+import { showMessage,showModal, setFilterStats } from './../../redux/actions.js';   
 class  RequestItem extends Component {
     render() {
 
         const {item,authUser,status,page,showDetailModal} = this.props;
         let inPageOption = null;
         if(item.parentId){
-            if (status == 'duplicates'  && item.status != 'RESOLVED' 
-            && item.parentId == page){
+            if (status == `duplicates:${item.parentId}` && item.status != 'RESOLVED' ){
                 inPageOption = <button onClick={e => this.props.markDuplicate(item) } className="w3-display-topright w3-small w3-round w3-button w3-amber">Mark Duplicate
                     of {item.parentId}-XXXX)</button> 
             } else if (page != item.parentId) {
-                inPageOption = <Link to={`/manage/duplicates/${item.parentId}`}   
+                inPageOption = <Link to={`/requests/duplicates:${item.parentId}`}   
                 className="w3-display-topright w3-small w3-button w3-round w3-amber" >
                 View Duplicates</Link>
             }
@@ -27,7 +29,7 @@ class  RequestItem extends Component {
 
         let actionItem = null;
         if (!authUser) {
-        actionItem = <a  className="w3-tag w3-round w3-padding-small w3-display-bottomright w3-yellow" href="/dashboard">Login to Help</a>
+            actionItem = <a  className="w3-tag w3-round w3-padding-small w3-display-bottomright w3-yellow" href="/dashboard">Login to Help</a>
         }else if (!item.operator  || item.operator.id ==  authUser.id) {
             actionItem = <button type="button" 
             className="w3-display-bottomright w3-small w3-round w3-button w3-green" 
@@ -79,19 +81,16 @@ class RequestLister extends Component {
     constructor(arg){
         super(arg);
         this.state = {
-            data:null,
-            modal:null
+            data:null, 
         }; 
     }
     showDetailModal(item){
-        this.setState({
-            modal:<Reveal  onClose={this.hideModal.bind(this)} >
-                <DetailsModal  authUser={this.props.authUser} 
-                hideModal={this.hideModal.bind(this)} 
-                 item={item}   />
-            </Reveal>
-        });
+        this.props.showModal('update_request',{
+            item:item,
+            id:item.id
+        })
     }
+
     hideModal(msg = ''){
         this.setState({modal:null});
         if (msg == 'reload'){
@@ -113,6 +112,10 @@ class RequestLister extends Component {
             this.setState({
                 data:resp.data.data
             });
+            this.props.setFilterStats({
+                total:resp.data.data.total,
+                demand:resp.data.data.demand
+            })
         });
     }
 
@@ -133,32 +136,28 @@ class RequestLister extends Component {
     }
 
     componentDidMount () {   
-        this.fetchData(this.props);
+        this.fetchData(this.props); 
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps){ 
         if (nextProps.page  != this.props.page){ 
             this.fetchData(nextProps);
         } else if (nextProps.status != this.props.status){
             this.fetchData(nextProps);   
         } else if (nextProps.search != this.props.search){
             this.fetchData(nextProps);       
+        } else if (nextProps.filter != this.props.filter){
+            this.fetchData(nextProps);
         }
     }
+ 
 
-    handleFilterData(filterData) {
-        this.filter = filterData;
-        this.fetchData(this.props);
-    }
-
-    render(){
+    render(){ 
         const {data} = this.state;
         const {page=1 ,status='all'} = this.props;
 
         let pagination = null;
-        let content = null;
-        let totalDemand= null;
-        let totalRequests = null;
+        let content = null; 
         if (!data){
             content = <Spinner />
         } else if (data.list.length == 0){
@@ -173,6 +172,7 @@ class RequestLister extends Component {
             />);
         }
         return <div > 
+            {this.state.modal}
             {content} 
             <div className="w3-center ">
             {pagination}
@@ -190,5 +190,7 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps,{
-    showMessage:showMessage
+    showMessage,
+    showModal,
+    setFilterStats
 })(RequestLister); 

@@ -2,12 +2,21 @@ import React,{Component} from 'react';
 import { connect } from 'react-redux'; 
 import { NavLink , withRouter} from 'react-router-dom';   
 import {setSearch} from '../../redux/actions';
+import AddRequestModal from './../Request/AddModal';
+import MarkSafe from './../Modals/MarkSafe'; 
+import RequestDetailModal from './../Request/Details';
+
+import Reveal from './../Common/Reveal';
+import ProviderAddModal from './../Provider/AddModal'; 
+import { showModal } from './../../redux/actions.js';   
+
 
 class Header extends Component {
     constructor(arg) {
         super(arg);
         this.state = {
-            mobileMenu: 'w3-hide'
+            mobileMenu: 'w3-hide',
+            modalContent:null
         }
     }
 
@@ -16,7 +25,39 @@ class Header extends Component {
     }
     componentDidMount(){
         this.props.setSearch('');
+    } 
+
+    hideModal() {
+        this.props.showModal('empty');
     }
+
+    showModal(name,data){
+        let content = null; 
+        if (name == 'help_center') {
+            content = <ProviderAddModal hideModal={this.hideModal.bind(this)} />
+        } else if (name == 'mark_safe') {
+            content = <MarkSafe type="SELF" hideModal={this.hideModal.bind(this)} />
+        } else if (name == 'mark_other_safe'){
+            content = <MarkSafe type="BEHALF" hideModal={this.hideModal.bind(this)}/>
+        } else if (name == 'willing_to_help'){
+            content = <MarkWillingToHelp  hideModal={this.hideModal.bind(this)}/>
+        } else if (name == 'add_request' || name =='request' ){
+            content = <AddRequestModal hideModal={this.hideModal.bind(this)}/>;
+        }  else if (name == 'update_request') {
+            content = <Reveal  onClose={this.hideModal.bind(this)} >
+                <RequestDetailModal  hideModal={this.hideModal.bind(this)} 
+                  id={data.id} />
+            </Reveal>
+        }
+        this.setState({modalContent:content})
+    }
+    componentWillReceiveProps(nextProps){ 
+        if (nextProps.modalInfo != this.props.modalInfo){
+            this.showModal(nextProps.modalInfo.name,
+                nextProps.modalInfo.data);
+        }
+    }
+ 
     changeSearch(e){  
         this.props.setSearch(e.target.value);
     }
@@ -30,7 +71,8 @@ class Header extends Component {
                     </div>
                     <button className="w3-bar-item w3-small w3-sand  w3-button  w3-hide-large w3-hide-medium w3-display-topright" onClick={this.togggleMobile.bind(this)}>&#9776;</button>
                     <div className="w3-right w3-hide-small">  
-                        {this.props.authUser ? <NavLink className="w3-bar-item   w3-button " to="/dashboard">Dasboard</NavLink> :  <a className="w3-bar-item  w3-yellow w3-button " href="/dashobard">Volunteer Login</a> } 
+                        <button className="w3-bar-item w3-button w3-green" onClick={e => this.showModal('add_request')}>New Request</button>
+                        {this.props.authUser ? <NavLink className="w3-bar-item   w3-button " to="/dashboard">Dasboard</NavLink> :  <a className="w3-bar-item  w3-deep-purple w3-button " href="/dashboard">Volunteer Login</a> } 
                         <NavLink className="w3-bar-item   w3-button "  to="/requests/">Requests</NavLink>  
                         <NavLink className="w3-bar-item w3-button " to="/heatmap/">HeatMap</NavLink>
                         <a target="_blank" href="https://www.keralarescue.in/relief_camps/" className="w3-bar-item w3-button w3-hide ">Rescue Centers</a>  
@@ -56,6 +98,7 @@ class Header extends Component {
                 </div>
                 }
                 {this.props.children}
+                {this.state.modalContent}
             </section> 
         )
     }
@@ -63,10 +106,12 @@ class Header extends Component {
 const mapStateToProps = (state) => {
     return {
         authUser: state.authUser, 
-        statusList:state.statusList
+        statusList:state.statusList,
+        modalInfo:state.modalInfo
     }
 }
 
 export default withRouter(connect(mapStateToProps,{
-    setSearch:setSearch
+    setSearch,
+    showModal
 })(Header));

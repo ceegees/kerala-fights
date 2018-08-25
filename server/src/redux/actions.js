@@ -8,6 +8,21 @@ export const respMessage = (resp)=>{
     return appMessage(resp.message,resp.success);
 }
 
+export const showModal = (name,data=null) => {
+    return {
+        type: "MODAL_UPDATE", 
+        name:name,
+        data: data
+    };
+}
+
+export const setFilterStats = (data) => {
+    return {
+        type: "REQUEST_FILTER_STATS", 
+        data: data
+    };
+}
+
 export const showMessage = (type, text,stay=0) => {
     return {
         type: "MESSAGE_STATUS",

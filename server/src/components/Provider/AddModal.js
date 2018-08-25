@@ -1,8 +1,11 @@
 import  React,{ Component } from 'react'; 
-import { FormTextField,FormTextarea,GooglePlacesAutoComplete,GoogleMapWidget ,SelectField,Reveal} from './../Common/Helper.js';  
+import { FormTextField,FormTextarea,GooglePlacesAutoComplete ,SelectField} from './../Common/Helper.js';  
+import Reveal from './../Common/Reveal';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
+
+import GoogleMapWidget from './../Widgets/GoogleMap';
 import { showMessage, hideMessage } from './../../redux/actions.js';
 
 class AddHelpCentre extends Component{

@@ -253,10 +253,11 @@ router.get('/rescue-status',function(req,res){
     })
 });
 
-router.get('/rescue-worklog',function(req,res){
+
+function lockRequest(req,res){
     let request = null;
     models.HelpRequest.find({
-        where:{id:req.query.id},
+        where:{id:(req.query.id || req.body.id)},
         include :[ { 
             model: models.User ,as:'operator' 
         }]
@@ -288,11 +289,25 @@ router.get('/rescue-worklog',function(req,res){
             request:request,
             log:list
         }));
+
+        if(req.user){
+            // models.workLog.create({
+            //     requestId:request.id,
+            //     actorId:req.user.id,
+            //     statusIn:request.status,
+            //     statusOut:request.status,
+            //     message:'Viwed'
+            // });
+        }
+
     }).catch(ex => {
         console.log(ex);
         res.json(jsonError(ex.message));
     })
-});
+}
+
+router.post('/rescue-lock',lockRequest);
+router.get('/rescue-worklog',lockRequest);
 
 router.post('/rescue-release-lock',function(req,res){
     models.HelpRequest.findById(req.body.id).then(item => {
@@ -393,15 +408,15 @@ router.get('/rescue-list',function(req,res){
     const state = statusList.find(i => i.key == params.status);
     let whereQuery = {};
 
-    if (params.status == 'duplicates'){
-        if (params.q){
-            whereQuery = {
-                [Op.or] : {
-                    parentId:params.q,
-                    id:params.q
-                },    
-            }
-        } else {
+    if (params.status && params.status.indexOf("duplicates:") >= 0) {
+        var id =  params.status.replace("duplicates:",'');
+        whereQuery = {
+            [Op.or] : {
+                parentId:id,
+                id:id
+            },    
+        };
+    } else if (params.status == 'duplicates'){ 
             whereQuery = { 
                 parentId:{
                     [Op.ne] :null
@@ -410,7 +425,7 @@ router.get('/rescue-list',function(req,res){
                     [Op.ne]:'RESOLVED'
                 } 
             }  
-        }
+        
     } else if (req.query.q){
         const query = req.query.q.toLowerCase();
         let ors = {}

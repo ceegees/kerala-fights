@@ -1,7 +1,8 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import {NavLink,withRouter,Switch,Route} from 'react-router-dom';
-import {Reveal,DemandSupplyTab} from './Common/Helper';
+import {DemandSupplyTab} from './Common/Helper';
+import Reveal from './Common/Reveal';
 import Header from './Common/Header';
 import axios from 'axios';   
 import AppMessage from './Common/AppMessage.js';
@@ -25,8 +26,78 @@ class HeatMap extends Component {
         this.filter = {};
     }
 
+    fetchDemand(str,REQUEST_TYPES) {
+        const { mapIconList} = this.props;
+        axios.get(`/api/v1/rescue-list?${str}`).then(resp => {
+            resp.data.data.list.map(item => {
+                var marker = new google.maps.Marker({
+                    position: getLatLng(item),
+                    map: this.map,
+                    icon: (REQUEST_TYPES.indexOf(item.type) != -1)? mapIconList[item.type]['demand'].icon : null,
+                }); 
+                this.attachInfo(marker, item, 'demand');
+                this.markers.push(marker); 
+            });
+            this.markerCluster = new MarkerClusterer(this.map, this.markers, {
+                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+            }); 
+            this.setState({
+                data:resp.data.data
+            });
+        });
+
+    }
+
+    fetchSupply(str,REQUEST_TYPES) {
+        const { mapIconList} = this.props;
+
+        axios.get(`/api/v1/service-provider-list?${str}`).then(resp => {
+            resp.data.data.list.map(item => {
+                if (REQUEST_TYPES.indexOf(item.type) == -1) {
+                    return;
+                }
+                var marker = new google.maps.Marker({
+                    position: getLatLng(item),
+                    icon: (REQUEST_TYPES.indexOf(item.type) != -1)? mapIconList[item.type]['provider'].icon : null,
+                    map: this.map
+                }); 
+                this.attachInfo(marker, item, 'provider');
+                this.markers.push(marker); 
+            });
+        });
+    }
+
+    fetchVolunteers(str,REQUEST_TYPES){
+
+        const { mapIconList} = this.props;
+
+        let volQuery = {
+            status: 'ACTIVE',
+            per_page: 3000
+        }
+        volQuery = Object.assign(volQuery, this.filter);
+        const volQueryString = qs.stringify(volQuery);
+        axios.get(`/api/v1/volunteer-list?${volQueryString}`).then(resp => {
+            resp.data.data.list.map(item => {
+                if (REQUEST_TYPES.indexOf(item.type) == -1) {
+                    return;
+                }
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: parseFloat(""+item.latitude),
+                        lng: parseFloat(""+item.longitude)
+                    },
+                    icon: (REQUEST_TYPES.indexOf(item.type) != -1)? mapIconList[item.type]['volunteer'].icon : null,
+                    map: this.map
+                }); 
+                this.attachInfo(marker, item, 'volunteer');
+                this.markers.push(marker); 
+            });
+        });
+
+    }
     fetchData(){
-        const {requestTypeList, mapIconList} = this.props;
+        const {requestTypeList} = this.props;
 
         const REQUEST_TYPES = requestTypeList.map((reqType) => {
             return reqType.value;
@@ -54,62 +125,9 @@ class HeatMap extends Component {
         
         obj = Object.assign(obj,this.filter);
         const str = qs.stringify(obj); 
-        axios.get(`/api/v1/rescue-list?${str}`).then(resp => {
-            resp.data.data.list.map(item => {
-                var marker = new google.maps.Marker({
-                    position: getLatLng(item),
-                    map: this.map,
-                    icon: (REQUEST_TYPES.indexOf(item.type) != -1)? mapIconList[item.type]['demand'].icon : null,
-                }); 
-                this.attachInfo(marker, item, 'demand');
-                this.markers.push(marker); 
-            });
-            // this.markerCluster = new MarkerClusterer(this.map, this.markers, {
-            //     imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-            // }); 
-            this.setState({
-                data:resp.data.data
-            });
-        });
-
-        axios.get(`/api/v1/service-provider-list?${str}`).then(resp => {
-            resp.data.data.list.map(item => {
-                if (REQUEST_TYPES.indexOf(item.type) == -1) {
-                    return;
-                }
-                var marker = new google.maps.Marker({
-                    position: getLatLng(item),
-                    icon: (REQUEST_TYPES.indexOf(item.type) != -1)? mapIconList[item.type]['provider'].icon : null,
-                    map: this.map
-                }); 
-                this.attachInfo(marker, item, 'provider');
-                this.markers.push(marker); 
-            });
-        });
-
-        let volQuery = {
-            status: 'ACTIVE',
-            per_page: 3000
-        }
-        volQuery = Object.assign(volQuery, this.filter);
-        const volQueryString = qs.stringify(volQuery);
-        axios.get(`/api/v1/volunteer-list?${volQueryString}`).then(resp => {
-            resp.data.data.list.map(item => {
-                if (REQUEST_TYPES.indexOf(item.type) == -1) {
-                    return;
-                }
-                var marker = new google.maps.Marker({
-                    position: {
-                        lat: parseFloat(""+item.latitude),
-                        lng: parseFloat(""+item.longitude)
-                    },
-                    icon: (REQUEST_TYPES.indexOf(item.type) != -1)? mapIconList[item.type]['volunteer'].icon : null,
-                    map: this.map
-                }); 
-                this.attachInfo(marker, item, 'volunteer');
-                this.markers.push(marker); 
-            });
-        });
+        this.fetchDemand(str,REQUEST_TYPES);
+        this.fetchSupply(str,REQUEST_TYPES);
+        this.fetchVolunteers(str,REQUEST_TYPES);
     }
     hideModal(msg){
         this.setState({modal:null})
@@ -202,8 +220,10 @@ class HeatMap extends Component {
                 </div>
                 <div className="w3-col s12 l9 m9">
                     <DemandSupplyTab >
-                        <div id="google-map" style={{height:"90vh"}}></div> 
-                        <div>Demand</div>
+                        <div>
+                            <div id="google-map" style={{height:"90vh"}}></div> 
+                        </div>
+                        <div />
                     </DemandSupplyTab>
                 </div>
             </div>

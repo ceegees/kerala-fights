@@ -1,6 +1,7 @@
 
 import  React,{ Component } from 'react';   
 import {Spinner} from '../Common/Helper';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment'
 
@@ -30,8 +31,8 @@ export default class Activity extends Component {
                 const message = item.statusIn == item.statusOut ? 'Information Edited': 
                 `${item.statusIn} to ${item.statusOut}`;
                 return <div key={`key_${item.id}`} className="w3-padding" style={{borderBottom:"solid 1px #EEE"}}>
-                        <a className="w3-small" href={`/manage/search/id:${item.requestId}`}> 
-                        Request Id:{item.requestId} - {message}</a>
+                        <Link className="w3-small" to={`/dashboard/${item.requestId}`}> 
+                        Request Id:{item.requestId} - {message}</Link>
                         <div className="w3-small w3-color-grey w3-right-align">
                             {moment(item.createdAt).fromNow()}
                         </div>
@@ -39,7 +40,7 @@ export default class Activity extends Component {
             })
         }
         return <div className="w3-white">
-            <h4 className="w3-blue-grey w3-center w3-padding">Your Activity</h4>
+            <h5 className="w3-blue-grey w3-center w3-padding">Your Activity</h5>
             <div style={{maxHeight:"500px",overflowX:'auto'}}>
                 {content}
             </div>

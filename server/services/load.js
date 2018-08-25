@@ -102,7 +102,9 @@ async function loadData(offset=0){
         }
 
         let type = 'rescue_request';
-        if (data.needwater || data.needfood){
+        if (data.needrescue){
+            type = 'rescue';
+        }else if (data.needwater || data.needfood){
             type = 'food_and_water';
         } else if (data.needmed){
             type = 'medicine_blankets';

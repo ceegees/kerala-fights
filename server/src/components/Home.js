@@ -2,42 +2,13 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import {withRouter} from 'react-router-dom' 
 import AppMessage from './Common/AppMessage';
-import AddRequestModal from './Request/AddModal';
-import MarkSafe from './Modals/MarkSafe'; 
-import ProviderAddModal from './Provider/AddModal'; 
 import StatusWidget from './Widgets/Status';
 import Header from './Common/Header';
-import RequestLister from './Request/Lister';
-import { FormTextField,Reveal} from './Common/Helper.js';  
+import RequestLister from './Request/Lister'; 
 import { NavLink } from 'react-router-dom';
 import Leaderboard from './Widgets/Leaderboard.js';
+import {  showModal } from './../redux/actions.js';   
 
-
-class MarkSafeModal extends Component {
-    render(){
-        return (
-            <Reveal onClose={this.props.hideModal}>
-                <FormTextField label="Enter Your Phone Number"/>
-            </Reveal>
-        )
-    }
-}
-
-class MarkElseSafeModal extends Component {
-    render(){
-        return <Reveal onClose={this.props.hideModal}>
-            <div>The reveal comes</div>
-        </Reveal>
-    }
-}
-
-class MarkWillingToHelp extends Component {
-    render(){
-        return <Reveal onClose={this.props.hideModal}>
-            <div>The reveal comes</div>
-        </Reveal>
-    }
-}
 
 class Home extends Component {
     
@@ -51,31 +22,10 @@ class Home extends Component {
 
     componentDidMount(){ 
         if(this.props.match.params.label){
-            this.showModal(this.props.match.params.label);
+            this.props.showModal(this.props.match.params.label);
         }
     }  
 
-    hideModal() {
-        this.setState({modalContent:null});
-    }
-
-    showModal(name){
-        let content = null;
-        if (name == 'help_center') {
-            content = <ProviderAddModal hideModal={this.hideModal.bind(this)} />
-        } else if (name == 'mark_safe') {
-            content = <MarkSafe type="SELF" hideModal={this.hideModal.bind(this)} />
-        } else if (name == 'mark_other_safe'){
-            content = <MarkSafe type="BEHALF" hideModal={this.hideModal.bind(this)}/>
-        } else if (name == 'willing_to_help'){
-            content = <MarkWillingToHelp  hideModal={this.hideModal.bind(this)}/>
-
-        } else {
-            content = <AddRequestModal hideModal={this.hideModal.bind(this)}/>;
-        }
-        this.setState({modalContent:content})
-    }
- 
     renderHome(){
 
         return <div className="w3-content ">
@@ -85,19 +35,19 @@ class Home extends Component {
                     <NavLink className="w3-margin-bottom w3-block w3-right-align" to="/service-providers/list/">Service Providers List</NavLink>
                     <button className="w3-button w3-round w3-large 
                     w3-padding-32    w3-margin-bottom w3-block w3-blue-grey" 
-                    onClick={this.showModal.bind(this,'request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
+                    onClick={e => this.props.showModal('request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
                     <button className="w3-button w3-margin-bottom w3-padding-32 w3-block w3-cyan w3-round" 
-                onClick={this.showModal.bind(this, 'help_center')}>Add Service Provider / <br className="w3-hide-large" />സേവനദാതാവ്</button>
+                onClick={e => this.props.showModal('help_center')}>Add Service Provider / <br className="w3-hide-large" />സേവനദാതാവ്</button>
                     <a  href="https://dfb7zgpusuvzh.cloudfront.net/kf_00.apk" className="w3-block w3-green w3-margin-bottom w3-padding w3-round">
                         <img  style={{width:"80px",height:"80px",marginRight:"20px"}} src="https://image.flaticon.com/icons/png/512/61/61120.png" />
                         Download Field Volunteer Android App
                     </a>
 
-                    <button  onClick={this.showModal.bind(this,'mark_other_safe')} className="w3-button w3-round w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
-                    
-                    <button  onClick={this.showModal.bind(this,'mark_safe')} className="w3-button w3-margin-bottom w3-round w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
+                    <button  onClick={e => this.props.showModal('mark_other_safe')} className="w3-button w3-round w3-margin-bottom w3-block w3-green">Mark People Whom you know are Safe /<br className="w3-hide-large" /> നിങ്ങൾക്കറിയാവുന്ന സുരക്ഷിതരായവരുടെ വിവരം </button>
 
-                    <button onClick={this.showModal.bind(this,'willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
+                    <button  onClick={e => this.props.showModal('mark_safe')} className="w3-button w3-margin-bottom w3-round w3-block w3-green">Mark Yourselves Safe /<br className="w3-hide-large" />നിങ്ങൾ സുരക്ഷിതനാണോ </button>
+
+                    <button onClick={e => this.props.showModal('willing_to_help')} className="w3-button   w3-margin-bottom w3-hide w3-block w3-blue">Register as an On Field Volunteer /<br className="w3-hide-large" /> നിങ്ങൾ സേവന സന്നദ്ധനാണെന്ന് അടയാളപ്പെടുത്തുക </button>
                     
                 </div>
                 <div className="w3-row-padding">
@@ -112,11 +62,14 @@ class Home extends Component {
                             <li><a target="_blank" href="https://docs.google.com/document/d/1jM_hdHgP-kxkzOtxl0n8mUGY4EzP6di2NyHIEvFp8YI/edit" >How To Use</a> , <a target="_blank"  href="https://docs.google.com/document/d/1oMs4JwHMDS9agR3voVpeGL0SMhfE35fETYNbD5rZLN8/edit">ഉപയോഗക്രമം </a></li>
                         </ul>
                         <div className="w3-padding">
-                            <a href="/auth/facebook" className="w3-indigo w3-block w3-margin-bottom w3-round w3-padding ">What are you waiting for ? Login with your Facebook Id and be part of the Cause</a>
                         <StatusWidget />
                         </div>
                     </div>
                     <div className="w3-col m6 s12">
+                        { !this.props.authUser &&
+                            <a href="/auth/facebook" style={{textDecoration:'none'}} className="w3-indigo w3-center w3-block w3-margin-bottom w3-round w3-padding ">Be a Volunteer and Help people.<br/> Login with your facebook id</a>
+                            }
+
                         <Leaderboard />
                     </div> 
                 </div>
@@ -131,7 +84,7 @@ class Home extends Component {
         let content = null;
         if (search != ''){
             content = 
-            <div className="w3-section">
+            <div className="w3-panel">
             <RequestLister  status="all" page={page} />
             </div>
         } else {
@@ -164,4 +117,6 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(withRouter(Home))
+export default connect(mapStateToProps,{
+    showModal
+})(withRouter(Home))

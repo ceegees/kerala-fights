@@ -1,8 +1,8 @@
 
 import  React,{ Component } from 'react';   
-import {DemandSupplyTab,Spinner,Paginator ,SelectField,Reveal} from './../Common/Helper.js'; 
+import {DemandSupplyTab} from './../Common/Helper.js'; 
 import RequestFilter from './Filter';
-import {NavLink,Link,withRouter} from 'react-router-dom'; 
+import {withRouter} from 'react-router-dom'; 
 import Lister from './Lister';
 
 class RequestPanel extends Component {
@@ -15,14 +15,12 @@ class RequestPanel extends Component {
     }
    
     handleFilterData(filterData) {
-        this.setState({filter:filterData});
+        this.setState({filter:Object.assign({},filterData)});
     }
     render(){
         const {data} = this.state;
         const {page=1 ,status='all'} = this.props;
-
-        let pagination = null;
-        let content = null; 
+ 
         return <div  style={{minHeight:"100vh"}} > 
             {this.state.modal}
             <div className="w3-row-padding">
@@ -31,9 +29,7 @@ class RequestPanel extends Component {
                     handleFilterData={this.handleFilterData.bind(this)} />
                 </div>
                 <div className="w3-col l9">
-                    <DemandSupplyTab>
-                        <Lister fitler={this.state.filter} />
-                    </DemandSupplyTab>
+                    <Lister filter={this.state.filter} {...this.props} />
                 </div>
             </div> 
         </div> 

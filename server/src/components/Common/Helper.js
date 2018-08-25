@@ -22,32 +22,6 @@ export class ErrorHelperText extends Component {
     }
 }
 
-export const Paginator = ({page,base,data}) => {
-    page = page - 10;
-    const pages = [];
-    if(page < 1){
-        page = 1;
-    }
-    const lastPage = data.page_max;
-    for(var idx = page;idx < page + 18 && idx < lastPage;idx++){
-        pages.push(idx);
-    }
-
-    if (data.total < data.per_page){
-        return <div></div>
-    }
-
-    return <div className="w3-bar">
-        <NavLink to={`${base}/1`} className="w3-button">&laquo;</NavLink> 
-        {
-            pages.map( page=> <NavLink key={`page_${page}`} to={`${base}/${page}`} 
-                className="w3-button">{page}</NavLink> )
-        }
-        <NavLink to={`${base}/${lastPage}`} className="w3-button">&raquo;</NavLink>
-    </div>
-}
-
-
 export const Spinner = (props = {message:'Loading Data', mode:'big' }) => { 
     let  paddingCls = 'w3-padding-64';
     if (props.mode == 'small'){
@@ -61,33 +35,6 @@ export const Spinner = (props = {message:'Loading Data', mode:'big' }) => {
     </div>
 }
 
-export class Reveal extends Component {
-
-    static get defaultProps() {
-        return {
-            openCls: '',
-            modalClass:''
-        }
-    }
-    
-    render() {
-        let cls ='';
- 
-        return (
-            <div className={ this.props.modalClass+" w3-modal w3-show "  } >     
-                <div className={"w3-modal-content  "}  >
-                    { this.props.onClose ?
-                        <button className="w3-button w3-right w3-large close-button" 
-                            onClick={this.props.onClose}  type="button">
-                            <span aria-hidden="true">&times;</span>
-                        </button> : null
-                    }
-                    {this.props.children}
-                </div>  
-            </div>
-        )
-    }
-}
 
 export class FormTextField extends Component {
     static get defaultProps() {
@@ -281,8 +228,7 @@ export class SelectField extends Component {
                     defaultValue={this.props.defaultValue}
                     value={this.state.value ? this.state.value : ''}
                     className={this.props.selectClass + " " + errorClass}
-                    placeholder={this.props.label}
-                    style={{height:"40px"}}
+                    placeholder={this.props.label} 
                     onChange = {this.onChange.bind(this)}> 
                     {this.props.children}
                 </select>
@@ -324,127 +270,6 @@ export class GooglePlacesAutoComplete extends Component {
     }
 }
 
-export class GoogleMapWidget extends Component {
-    constructor(arg){
-        super(arg);
-        this.map = null;
-        this.marker = null;
-
-        this.setMarker = this.setMarker.bind(this);
-        this.onChangePosition = this.onChangePosition.bind(this);
-    }
-    componentDidMount () {
-        const {location = {lat:10.034,lng : 76.32460} } = this.props;
-        this.initialiseGMap(location);
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-        // if (nextProps.location && nextProps.location != this.props.location) {
-        //     this.setMarker(nextProps.location);
-        //     return;
-        // }
- 
-        if (nextProps.place == this.props.place) {
-            return;
-        }
-    
-        const {place} = nextProps;
-        if (!place) {
-            return;
-        }
-
-        this.marker.setVisible(false);
-        if (place.geometry.viewport) {
-            this.map.fitBounds(place.geometry.viewport);
-        } else {
-            this.map.setCenter(place.geometry.location);
-            this.map.setZoom(17);  
-        }
-
-        this.setMarker({
-            lat:place.geometry.location.lat(),
-            lng:place.geometry.location.lng()
-        }); 
-    }
-
-    setMarker(location){  
-        if (this.marker == null) {
-            this.marker = new google.maps.Marker({
-                position: location,
-                map: this.map,
-                draggable:  this.props.locationSelect ? true:false
-            });
-
-            google.maps.event.addListener(this.marker, 'dragend', (event) => {
-                this.onChangePosition(this.marker.getPosition())
-            });
-        } else {                    
-            this.marker.setPosition(location);
-        }
-        if (this.props.locationSelect){
-            this.props.locationSelect(location.lat,location.lng);  
-        }
-        this.map.setCenter(location);
-        this.marker.setVisible(true);
-    }
-
-    onChangePosition(location) {
-        if(!this.props.locationSelect){
-            return;
-        }
-        let geocoder = new google.maps.Geocoder();
-        geocoder.geocode({
-            latLng: location
-        }, (responses) => {
-            if (responses && responses.length > 0) {
-                if (this.props.locationSelect){
-                    this.props.locationSelect(location.lat(),location.lng(), responses[0]);  
-                }
-            } else { 
-                if (this.props.locationSelect){
-                    this.props.locationSelect(location.lat(),location.lng());  
-                }
-            }
-        });
-    }
-
-    initialiseGMap (location) { 
-        if (this.map){
-            return;
-        }
-
-        this.map = new google.maps.Map(document.getElementById(this.props.mapId), {
-            center: location,
-            zoom: 10    ,
-            zoomControl: true,
-            scaleControl:true,
-            mapTypeControl: false,
-            streetViewControl: false,
-            rotateControl: false,
-            fullscreenControl: true,
-            styles: [{
-                featureType: 'poi',
-                stylers: [{ visibility: 'off' }]  // Turn off points of interest.
-            }, {
-                featureType: 'transit.station',
-                stylers: [{ visibility: 'off' }]  // Turn off bus stations, train stations, etc.
-            }],
-        });
-
-        this.map.addListener('click',  (e) => {
-            this.setMarker({lat:e.latLng.lat(),lng:e.latLng.lng()});
-        }); 
-        this.setMarker(location);        
-    }
-
-    render() {
-        return  <div id={this.props.mapId} style={this.props.mapStyle}>
-        </div>
-    }
-}
-
-
 export class DemandSupplyTab extends Component {
     constructor(arg){
         super(arg);
@@ -483,14 +308,18 @@ export class DemandSupplyTab extends Component {
                 <div className="w3-bar-item" >
                     <span className="w3-small w3-text-red">{message}</span></div>
             </div>
-            <div className={this.state.demandTab}>
+            <div className={this.state.demandTab} style={{minHeight:"100wh"}}>
                 {this.props.children[0]}
             </div>
             <div className={`${this.state.supplyTab} google-maps-supply`}   >
-                <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5"  style={{  
-                                border:"0"
-                            }} onLoad={this.hideAfterLoad.bind(this)}/> 
+               
             </div>
         </div> 
     }
 }
+
+/*
+ <iframe  src="https://www.google.com/maps/d/embed?mid=19pdXYBAk8RyaMjazX7mjJIJ9EqAyoRs5"  style={{  
+                                border:"0"
+                            }} onLoad={this.hideAfterLoad.bind(this)}/> 
+*/

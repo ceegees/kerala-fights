@@ -2,13 +2,12 @@
     <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title> <%= title %> </title>
+        <title> Kerala Fights </title>
         <link rel="icon" type="image/png" href="https://d1xp9ts0bx8s2q.cloudfront.net/website/cgs_sq_logo_sm.png">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400" rel="stylesheet">
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
         <!-- Global site tag (gtag.js) - Google Analytics -->
-        <% if (process.env.NODE_ENV == 'production' ) { %>
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-30327290-15"></script>
         <script>
         window.dataLayer = window.dataLayer || [];
@@ -16,9 +15,8 @@
         gtag('js', new Date());
         gtag('config', 'UA-30327290-15');
         </script>
-        <% } %>
 
-        <link rel='stylesheet' href='/css/new.css?r=<%=version%>' /> 
+        <link rel='stylesheet' href='/css/new.css?r=1' /> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
         <meta property="og:image" content="https://d1xp9ts0bx8s2q.cloudfront.net/vow/kerala_fights.png">
@@ -37,28 +35,26 @@
         </script> 
     </head>
     <body> 
-        <div id="app"><%- content %></div> 
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYa0Gwg2QGqXguL7LI7pe2nxi4v45pHVg&libraries=places"
-        type="text/javascript"></script>
+<div class="w3-padding-64">
+    <div class="w3-content">
+        <div class="w3-bar"><a href="/">Home</a></div>
+
+    <h3>Disclaimer</h3>
+    <p class="w3-large">
         
-        <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-        </script>
-        <script type="application/javascript">
-            window.__STATE__ = <%- JSON.stringify(state) %>
-        </script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <% if (process.env.NODE_ENV == 'production') { %>
-        <script src="/js/client.prod.js?r=<%=version%>"></script>
-        <% } else { %> 
-        <script src="/js/client.js"></script>
-        <% } %>
-    </body>
+    This portal has been developed for effective collaboration between various stakeholders such as citizen, Government authorities, various NGOs and volunteers. Ceegees makes no representation regarding the completeness, accuracy of any information and data contained on this portal or that such information and data will be error-free. Stakeholders are trying to make their best effort to support, any information received through the portal the requests received through this portal doesn’t warrant any commitment on the services. By using this site you acknowledge that you have read and agree to this
 
-    <!-- 
-        This site id developed for helping the rescue operations 
-    All of the data collected are available through API's is any one want to use them
-    Will Enable CORS as well if there is any integration required
-    for any queries send a mail to keralafights@ceegees.in
+    </p>
 
-    -->
-</html>
+    <h3>GDPR Compliance</h3>
+    <p class="w3-large">
+        
+    By providing your personal information, you consent to making such information accessible to persons who visit this website. You further acknowledge and agree that in order to serve the specific purposes for which personal information is volunteered by you, such information needs to be accessible to the public at large and therefore, by volunteering your information on this website, you consent to making such information public. By providing your phone number and email address, you further consent to being contacted by anyone who accesses such information through this website. The creators of this website or the government of Kerala shall not be liable for any unauthorized use, misuse or sharing of such information
+
+    </p>
+
+    </div>
+
+</div>
+</body>
+</html> 

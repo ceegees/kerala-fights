@@ -1,6 +1,6 @@
 import Home from './components/Home' 
-import AdminDashboard from './components/AdminDashboard'
-import ServiceProviderList from './components/Provider/Lister'
+import Dashboard from './components/Dashboard'
+import ProviderList from './components/Provider/Lister'
 import HeatMap from './components/HeatMap'
 import AddRequestModal from './components/Request/AddModal'
 
@@ -16,23 +16,23 @@ const routes =  [
     component:HeatMap
   },
   {
-    path: '/dashboard', 
-    component: AdminDashboard,
+    path: '/dashboard/:requestId?', 
+    component: Dashboard,
   },
   {
     path: '/manage/:status?/:page?',
     exact: true,
-    component: AdminDashboard,
+    component: Dashboard,
   },
   {
     path: '/requests/:status?/:page?',
     exact: true,
-    component: AdminDashboard,
+    component: Dashboard,
   },
   {
     path: '/service-providers/:status?/:page?',
     exact: true,
-    component: ServiceProviderList,
+    component: ProviderList,
   },
   {
     path: '/home/:label',  

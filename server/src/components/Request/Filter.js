@@ -58,7 +58,6 @@ class FilterComponent extends React.Component {
     }
 
     handleFilterData(type,e) {
-    
         const { handleFilterData } = this.props;
         let { filterData } = this.state;
         filterData[type] = e.target.value;
@@ -83,19 +82,19 @@ class FilterComponent extends React.Component {
     }
 
     render() {
-        const { districtMap,data } = this.props;
-        const { sortConfig, timeConfig } = this.state;
+        const { districtMap,filterStats } = this.props;
+        const { timeConfig } = this.state;
         const {requestTypeList,severityList,searchText} = this.props; 
         return (
             <div className=""> 
                 <div className="w3-aligh-left w3-padding w3-blue w3-margin-bottom">
-                    <h4 >Total Requests {data &&  data.total} </h4>
+                    <h4 >Total Requests {filterStats &&  filterStats.total} </h4>
                 </div>
                   <div className="w3-align-left w3-padding w3-orange">
-                    <h4 >Total Demand {data && data.demand}</h4>
+                    <h4 >Total Demand {filterStats && filterStats.demand}</h4>
                 </div>
                 <div className="w3-small w3-margin-top">
-                {searchText && `Searching " ${searchText}"`}
+                {searchText && `Searching "${searchText}"`}
                 </div>
                 <div className="w3-margin-top">
                     <FilterSelect
@@ -155,6 +154,7 @@ const mapStateToProps = (state) => {
         statusList: state.statusList,
         searchText:state.searchText,
         severityList:state.severityList,
+        filterStats:state.requestFilterStats,
         requestTypeList:state.requestTypeList
     }
 }

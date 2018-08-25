@@ -9,6 +9,13 @@ var Sequelize = require('sequelize');
 
 var models = require('../models');
 const VERSION = 2.2;
+const {
+    GOOGLE_APP_ID,
+    GOOGLE_APP_SECRET,
+    FACEBOOK_APP_ID,
+    FACEBOOK_APP_SECRET,
+    PARTNER_1_KEY,
+}  = require('../config/keys');
 
 const initialState = require('../config/data');
 const Op = Sequelize.Op;
@@ -17,14 +24,10 @@ var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 
-GOOGLE_APP_ID = '634343394363-lgpiebfiddkac72v25ao1ld1b3tnre8i.apps.googleusercontent.com';
-GOOGLE_APP_SECRET = 'Z0KAE4ZU2rnX5kt0qSVsbm4T'
+//SSR function import
+const ssr = require('./../views/ssr.js'); 
+var crypto = require('crypto');
 
-// FACEBOOK_APP_ID = '756308454761013'; // test idsss
-// FACEBOOK_APP_SECRET = '27525342c32b054d7056fcdeb6f072f3';
-
-FACEBOOK_APP_ID = '286493875499029'; // live ids
-FACEBOOK_APP_SECRET = '39147871f13aaefa2f2ae07f9f37a33f';
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_APP_ID,
@@ -72,9 +75,10 @@ passport.use(new GoogleStrategy({
 ));
 
 
+
 router.get('/auth/google-callback', passport.authenticate('google',{
     failureRedirect: '/?failed_login=true',
-    successRedirect:'/dashboard'   
+    successRedirect:'/dashboard/'   
 })); 
 
 router.get('/auth/google', passport.authenticate('google'));
@@ -146,12 +150,79 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', {
     successRedirect: '/dashboard', 
 }));
 
-//SSR function import
-const ssr = require('./../views/ssr.js'); 
+
+router.get('/update',function(req,res){
+
+    console.log(req.query);
+    if(!req.query.p){
+        return res.redirect('/?missing_phone=4'+req.query.p);
+    }
+
+    if(!req.query.t || req.query.t.length < 5){
+        return res.redirect('/?missing_token=1');
+    }
+    if(!req.query.n){
+        return res.redirect('/?missing_name=1');
+    }
+    
+    if(!req.query.kr){
+        return res.redirect('/?missing_ticket_id=1');
+    }
+    
+    const hash = crypto.createHmac('sha1', PARTNER_1_KEY).update(req.query.p).digest('hex');
+//http://localhost:5050/update?p=9740525347&n=giju&t=2e1a04b2c3&kr=45409
+    console.log('hash:',hash);
+    if (hash.indexOf(req.query.t) !== 0) {
+        return res.redirect('/?token_missmatch=1');
+    }
+
+    models.User.findOne({
+        where: {
+            phoneNumber:req.query.phoneNumber
+        }
+    }).then(u => {
+        if(u){
+            return u;
+        }
+        return models.User.create({
+            name:req.query.n,
+            phoneNumber:req.query.p,
+            source:'partner',
+            email:`ph.${req.query.p}@kf-partner.com`,
+            profileLink:'https://d2uvvge0uswb28.cloudfront.net/static/dist/v0/img/profile_default.png'
+        });
+    }).then(user => {
+        return new Promise(function(resolve,reject){
+            req.login(user, function(err) {
+                if (err) { 
+                    return reject(err);
+                }
+                return resolve(user);
+
+            });
+        });
+    }).then(item => {
+       return models.HelpRequest.findOne({
+            where:{
+                remoteId:req.query.kr,
+                source:'www.keralarescue.in'
+            }
+        });
+    }).then(item=>{
+        if (!item){
+            return res.redirect(`/missing_kr_id=${req.query.kr}`)
+        }
+        return res.redirect('/dashboard/' + item.id);
+    }).catch(ex => {
+        console.log(ex);
+        return res.redirect('/login_failed');
+    })
+
+});
 
 router.get([  
     '/manage/:status?/:page?',
-    '/dashboard'
+    '/dashboard/:requestId?'
     ], googleAuth,(req, res) => {
     let context = {};
     initialState.authUser = req.user;
