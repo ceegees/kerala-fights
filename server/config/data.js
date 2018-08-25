@@ -51,6 +51,14 @@ module.exports = {
             name:'വസ്ത്രങ്ങൾ / Clothing'
         },
         {
+            value:'electrical_works',
+            name:'ഇലെക്ട്രിക്കൽ ജോലികൾ  / Electrical Works'
+        },
+        {
+            value:'pest_animal_control',
+            name:'ജന്തുക്കൾ  ജീവികൾ / Pests Animal Control'
+        },
+        {
             value:'home_lost',
             name:'വീട് നഷ്ടപ്പെട്ടവർ - ഷെൽട്ടർ ക്യാംപുകൾ  / Lost Home'
         },

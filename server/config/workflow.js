@@ -18,6 +18,7 @@ module.exports = [
         type:STATUS.PHONE_DUPLICATE,
         title:'0.Duplicate',
         name:'Duplicates',
+        color:'grey',
         db:[STATUS.PHONE_DUPLICATE.toUpperCase()],
         cls:'w3-hide',
         nextStates:[
@@ -43,6 +44,7 @@ module.exports = [
         title:'1.Check',
         db:[STATUS.NEW.toUpperCase()],
         cls:'w3-blue',
+        color:'blue',
         name:'Check',
         nextStates:[
                 {
@@ -81,6 +83,7 @@ module.exports = [
         key:STATUS.CONTACT,
         title:'2.Contact',
         cls:'w3-yellow',
+        color:'yellow',
         db:[STATUS.CONTACT.toUpperCase()],
         nextStates:[ 
             {
@@ -119,6 +122,7 @@ module.exports = [
         key:STATUS.RETRY,
         title:'3.Retry',
         cls:'w3-hide',
+        color:'orange',
         db:[STATUS.RETRY.toUpperCase()],
         nextStates:[  
         {
@@ -156,6 +160,7 @@ module.exports = [
         key:STATUS.NEED_HELP,
         title:'3.Confirmed',
         cls:'w3-orange',
+        color:'orange',
         db:[STATUS.NEED_HELP.toUpperCase()],
         nextStates:[ 
             {
@@ -188,6 +193,7 @@ module.exports = [
         key:STATUS.ESCALATED,
         title:'x.Escalated',
         cls:'w3-hide',
+        color:'dee-orange',
         db:[STATUS.ESCALATED.toUpperCase()],
         nextStates:[ 
             {
@@ -215,6 +221,7 @@ module.exports = [
         key:STATUS.ASSIGNED,
         title:'4.Assigned',
         cls:'w3-light-green',
+        color:'light-green',
         db:[STATUS.ASSIGNED.toUpperCase()],
         nextStates:[
             {
@@ -240,6 +247,7 @@ module.exports = [
         key:STATUS.RESOLVED,
         title:'5.Resolved',
         cls:'w3-green',
+        color:'green',
         db:[STATUS.RESOLVED.toUpperCase()],
         nextStates:[]
     },
@@ -247,6 +255,7 @@ module.exports = [
         key:STATUS.EXTERNAL,
         title:'External',
         cls:'w3-hide',
+        color:'w3-grey',
         db:['PRO'],
         nextStates:[]
     }
