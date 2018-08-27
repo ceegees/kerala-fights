@@ -126,7 +126,7 @@ class AddHelpCentre extends Component{
         this.setState({
             isSending: true
         });
-        axios.post('/api/v1/add-service-provider',formData)
+        axios.post('/api/v1/service-provider/add',formData)
         .then(resp=> {
             resp = resp.data;
             if (!resp.meta.success) {

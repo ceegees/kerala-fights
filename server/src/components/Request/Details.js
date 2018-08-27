@@ -51,7 +51,7 @@ class DetailsModal extends Component {
     componentDidMount(){
         const {item,id} = this.props;
         this.state.form.id = id;
-        axios.post(`/api/v1/rescue-lock`,{id:this.props.id}).then(resp=>{
+        axios.post(`/api/v1/rescue/lock`,{id:this.props.id}).then(resp=>{
             this.state.form.severity = resp.data.data.request.operatorSeverity;
             this.setState({
                 update:resp.data.data.request,
@@ -60,7 +60,7 @@ class DetailsModal extends Component {
         })
     }
     componentWillUnmount(){
-        axios.post('/api/v1/rescue-release-lock',{id:this.props.id}).then(res => {
+        axios.post('/api/v1/rescue/release-lock',{id:this.props.id}).then(res => {
             console.log(res);
         });
     }
@@ -83,7 +83,7 @@ class DetailsModal extends Component {
     }
 
     handleUpdate(e){
-        axios.post('/api/v1/rescue-update',this.state.form).then(resp=>{
+        axios.post('/api/v1/rescue/update',this.state.form).then(resp=>{
             if(!resp.data.meta.success){
                 this.props.showMessage('fail',resp.data.meta.message);  
                 if (resp.data.meta.message.indexOf('login') != -1) {

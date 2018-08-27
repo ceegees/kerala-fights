@@ -12,7 +12,7 @@ export default class Status extends Component {
         this.timer = null;     
     }
     updateStats(){
-        axios.get('/api/v1/rescue-status').then(resp=>{
+        axios.get('/api/v1/rescue/status').then(resp=>{
             this.setState({
                 status:resp.data.data
             });

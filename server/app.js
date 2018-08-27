@@ -41,7 +41,11 @@ passport.deserializeUser(function(id, done) {
     })
 });
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api/v1/rescue',require('./routes/api/rescue'));
+app.use('/api/v1/service-provider',require('./routes/api/provider'));
 app.use('/api/v1',require('./routes/api'));
+
 app.use('/', require('./routes/index'));
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

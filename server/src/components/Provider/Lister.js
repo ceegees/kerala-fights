@@ -167,7 +167,7 @@ class ServiceProviderList extends Component {
         }
         obj = Object.assign(obj,this.filter);
         const str = qs.stringify(obj); 
-        axios.get(`/api/v1/service-provider-list?${str}`).then(resp=>{
+        axios.get(`/api/v1/service-provider/list?${str}`).then(resp=>{
             this.setState({
                 data:resp.data.data
             });

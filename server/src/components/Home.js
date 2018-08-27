@@ -31,11 +31,13 @@ class Home extends Component {
         return <div className="w3-content ">
             {this.state.modalContent}
             <div className=" ">
-                <div className="w3-padding-32" style={{padding:"10px"}}>
-                    <NavLink className="w3-margin-bottom w3-block w3-right-align" to="/service-providers/list/">Service Providers List</NavLink>
+                <div className="w3-padding-64" >
+
+                     
                     <button className="w3-button w3-round w3-large 
                     w3-padding-32    w3-margin-bottom w3-block w3-blue-grey" 
                     onClick={e => this.props.showModal('request')}>Request For Help / <br className="w3-hide-large" />സേവനം ആവശ്യപ്പെടുക  </button>
+
                     <button className="w3-button w3-margin-bottom w3-padding-32 w3-block w3-cyan w3-round" 
                 onClick={e => this.props.showModal('help_center')}>Add Service Provider / <br className="w3-hide-large" />സേവനദാതാവ്</button>
                     <a  href="https://dfb7zgpusuvzh.cloudfront.net/kf_00.apk" className="w3-block w3-green w3-margin-bottom w3-padding w3-round">

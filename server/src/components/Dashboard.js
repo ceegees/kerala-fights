@@ -23,8 +23,8 @@ export class DashboardInfo extends  Component {
                                 <ul className="w3-ul">
                                     <ol>1.Check - for data correctness / Duplicates</ol>
                                     <ol>2.Call and Confirm - The person might still need help, Call and Confirm the same.  </ol>
-                                    <ol>3.Retry - If you are not able to reach on previous step, update status, so that you can retry</ol>
-                                    <ol>4.Need Help - The Verified requests that need help which you understood after the call.</ol>
+                                    <ol>2.Retry - If you are not able to reach on previous step, update status, so that you can retry</ol>
+                                    <ol>3.Confirmed .Need Help - The Verified requests that need help which you understood after the call.</ol>
                                     <ol>5.Assinged - The items that are currently being worked on</ol>
                                     <ol>6.Resolved - Shows the resolved issues</ol>
                                 </ul>

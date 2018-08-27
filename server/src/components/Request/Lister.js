@@ -108,7 +108,7 @@ class RequestLister extends Component {
         }
         obj = Object.assign(obj,props.filter);
         const str = qs.stringify(obj); 
-        axios.get(`/api/v1/rescue-list?${str}`).then(resp=>{
+        axios.get(`/api/v1/rescue/list?${str}`).then(resp=>{
             this.setState({
                 data:resp.data.data
             });
@@ -120,7 +120,7 @@ class RequestLister extends Component {
     }
 
     markDuplicate(item){
-        axios.post('/api/v1/rescue-update',{
+        axios.post('/api/v1/rescue/update',{
             id:item.id,
             comments:'Duplicate Confirmed',
             severity:1,

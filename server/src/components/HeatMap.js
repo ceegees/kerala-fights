@@ -28,7 +28,7 @@ class HeatMap extends Component {
 
     fetchDemand(str,REQUEST_TYPES) {
         const { mapIconList} = this.props;
-        axios.get(`/api/v1/rescue-list?${str}`).then(resp => {
+        axios.get(`/api/v1/rescue/list?${str}`).then(resp => {
             resp.data.data.list.map(item => {
                 var marker = new google.maps.Marker({
                     position: getLatLng(item),
@@ -51,7 +51,7 @@ class HeatMap extends Component {
     fetchSupply(str,REQUEST_TYPES) {
         const { mapIconList} = this.props;
 
-        axios.get(`/api/v1/service-provider-list?${str}`).then(resp => {
+        axios.get(`/api/v1/service-provider/list?${str}`).then(resp => {
             resp.data.data.list.map(item => {
                 if (REQUEST_TYPES.indexOf(item.type) == -1) {
                     return;
